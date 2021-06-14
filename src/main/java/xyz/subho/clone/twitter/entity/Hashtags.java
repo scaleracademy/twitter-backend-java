@@ -2,6 +2,7 @@ package xyz.subho.clone.twitter.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -33,6 +34,109 @@ public class Hashtags {
 	@OneToMany(mappedBy = "hashtags", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<HashtagPosts> hashtagPosts = new ArrayList<>();
+
+	/**
+	 * @param id
+	 * @param tag
+	 * @param recentPostCount
+	 * @param hashtagPosts
+	 */
+	public Hashtags(UUID id, String tag, Long recentPostCount, List<HashtagPosts> hashtagPosts) {
+		
+		this.id = id;
+		this.tag = tag;
+		this.recentPostCount = recentPostCount;
+		this.hashtagPosts = hashtagPosts;
+	}
 	
+	/**
+	 * @param tag
+	 * @param recentPostCount
+	 * @param hashtagPosts
+	 */
+	public Hashtags(String tag, Long recentPostCount, List<HashtagPosts> hashtagPosts) {
+		
+		this.tag = tag;
+		this.recentPostCount = recentPostCount;
+		this.hashtagPosts = hashtagPosts;
+	}
+
+	/**
+	 * @return the id
+	 */
+	protected UUID getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	protected void setId(UUID id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the tag
+	 */
+	protected String getTag() {
+		return tag;
+	}
+
+	/**
+	 * @param tag the tag to set
+	 */
+	protected void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	/**
+	 * @return the recentPostCount
+	 */
+	protected Long getRecentPostCount() {
+		return recentPostCount;
+	}
+
+	/**
+	 * @param recentPostCount the recentPostCount to set
+	 */
+	protected void setRecentPostCount(Long recentPostCount) {
+		this.recentPostCount = recentPostCount;
+	}
+
+	/**
+	 * @return the hashtagPosts
+	 */
+	protected List<HashtagPosts> getHashtagPosts() {
+		return hashtagPosts;
+	}
+
+	/**
+	 * @param hashtagPosts the hashtagPosts to set
+	 */
+	protected void setHashtagPosts(List<HashtagPosts> hashtagPosts) {
+		this.hashtagPosts = hashtagPosts;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(hashtagPosts, id, recentPostCount, tag);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Hashtags))
+			return false;
+		Hashtags other = (Hashtags) obj;
+		return Objects.equals(hashtagPosts, other.hashtagPosts) && Objects.equals(id, other.id)
+				&& Objects.equals(recentPostCount, other.recentPostCount) && Objects.equals(tag, other.tag);
+	}
+
+	@Override
+	public String toString() {
+		return "Hashtags [id=" + id + ", tag=" + tag + ", recentPostCount=" + recentPostCount + ", hashtagPosts="
+				+ hashtagPosts + "]";
+	}
 	
 }

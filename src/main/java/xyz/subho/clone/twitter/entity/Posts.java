@@ -140,182 +140,182 @@ public class Posts {
 	/**
 	 * @return the id
 	 */
-	protected UUID getId() {
+	public UUID getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	protected void setId(UUID id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the text
 	 */
-	protected String getText() {
+	public String getText() {
 		return text;
 	}
 
 	/**
 	 * @param text the text to set
 	 */
-	protected void setText(String text) {
+	public void setText(String text) {
 		this.text = text;
 	}
 
 	/**
 	 * @return the users
 	 */
-	protected Users getUsers() {
+	public Users getUsers() {
 		return users;
 	}
 
 	/**
 	 * @param users the users to set
 	 */
-	protected void setUsers(Users users) {
+	public void setUsers(Users users) {
 		this.users = users;
 	}
 
 	/**
 	 * @return the images
 	 */
-	protected Set<String> getImages() {
+	public Set<String> getImages() {
 		return images;
 	}
 
 	/**
 	 * @param images the images to set
 	 */
-	protected void setImages(Set<String> images) {
+	public void setImages(Set<String> images) {
 		this.images = images;
 	}
 
 	/**
 	 * @return the likeCount
 	 */
-	protected Long getLikeCount() {
+	public Long getLikeCount() {
 		return likeCount;
 	}
 
 	/**
 	 * @param likeCount the likeCount to set
 	 */
-	protected void setLikeCount(Long likeCount) {
+	public void setLikeCount(Long likeCount) {
 		this.likeCount = likeCount;
 	}
 
 	/**
 	 * @return the repostCount
 	 */
-	protected Long getRepostCount() {
+	public Long getRepostCount() {
 		return repostCount;
 	}
 
 	/**
 	 * @param repostCount the repostCount to set
 	 */
-	protected void setRepostCount(Long repostCount) {
+	public void setRepostCount(Long repostCount) {
 		this.repostCount = repostCount;
 	}
 
 	/**
 	 * @return the originalPostId
 	 */
-	protected UUID getOriginalPostId() {
+	public UUID getOriginalPostId() {
 		return originalPostId;
 	}
 
 	/**
 	 * @param originalPostId the originalPostId to set
 	 */
-	protected void setOriginalPostId(UUID originalPostId) {
+	public void setOriginalPostId(UUID originalPostId) {
 		this.originalPostId = originalPostId;
 	}
 
 	/**
 	 * @return the replyToId
 	 */
-	protected UUID getReplyToId() {
+	public UUID getReplyToId() {
 		return replyToId;
 	}
 
 	/**
 	 * @param replyToId the replyToId to set
 	 */
-	protected void setReplyToId(UUID replyToId) {
+	public void setReplyToId(UUID replyToId) {
 		this.replyToId = replyToId;
 	}
 
 	/**
 	 * @return the timestamp
 	 */
-	protected Date getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 
 	/**
 	 * @param timestamp the timestamp to set
 	 */
-	protected void setTimestamp(Date timestamp) {
+	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
 
 	/**
 	 * @return the hashtags
 	 */
-	protected Set<String> getHashtags() {
+	public Set<String> getHashtags() {
 		return hashtags;
 	}
 
 	/**
 	 * @param hashtags the hashtags to set
 	 */
-	protected void setHashtags(Set<String> hashtags) {
+	public void setHashtags(Set<String> hashtags) {
 		this.hashtags = hashtags;
 	}
 
 	/**
 	 * @return the mentions
 	 */
-	protected Map<String, UUID> getMentions() {
+	public Map<String, UUID> getMentions() {
 		return mentions;
 	}
 
 	/**
 	 * @param mentions the mentions to set
 	 */
-	protected void setMentions(Map<String, UUID> mentions) {
+	public void setMentions(Map<String, UUID> mentions) {
 		this.mentions = mentions;
 	}
 
 	/**
 	 * @return the postHashtags
 	 */
-	protected List<HashtagPosts> getPostHashtags() {
+	public List<HashtagPosts> getPostHashtags() {
 		return postHashtags;
 	}
 
 	/**
 	 * @param postHashtags the postHashtags to set
 	 */
-	protected void setPostHashtags(List<HashtagPosts> postHashtags) {
+	public void setPostHashtags(List<HashtagPosts> postHashtags) {
 		this.postHashtags = postHashtags;
 	}
 
 	/**
 	 * @return the postLikes
 	 */
-	protected List<Likes> getPostLikes() {
+	public List<Likes> getPostLikes() {
 		return postLikes;
 	}
 
 	/**
 	 * @param postLikes the postLikes to set
 	 */
-	protected void setPostLikes(List<Likes> postLikes) {
+	public void setPostLikes(List<Likes> postLikes) {
 		this.postLikes = postLikes;
 	}
 

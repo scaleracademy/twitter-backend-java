@@ -17,6 +17,6 @@ public class PostMentions {
 	private UUID id;
 	
 	//TODO: fields
-	private String todo; 
+	private String todo;
 
 }

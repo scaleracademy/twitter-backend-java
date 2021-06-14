@@ -52,42 +52,42 @@ public class Likes {
 	/**
 	 * @return the id
 	 */
-	protected UUID getId() {
+	public UUID getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	protected void setId(UUID id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the posts
 	 */
-	protected Posts getPosts() {
+	public Posts getPosts() {
 		return posts;
 	}
 
 	/**
 	 * @param posts the posts to set
 	 */
-	protected void setPosts(Posts posts) {
+	public void setPosts(Posts posts) {
 		this.posts = posts;
 	}
 
 	/**
 	 * @return the users
 	 */
-	protected Users getUsers() {
+	public Users getUsers() {
 		return users;
 	}
 
 	/**
 	 * @param users the users to set
 	 */
-	protected void setUsers(Users users) {
+	public void setUsers(Users users) {
 		this.users = users;
 	}
 

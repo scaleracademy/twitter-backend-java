@@ -49,42 +49,42 @@ public class UserFollowings {
 	/**
 	 * @return the id
 	 */
-	protected UUID getId() {
+	public UUID getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	protected void setId(UUID id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the followee
 	 */
-	protected Users getFollowee() {
+	public Users getFollowee() {
 		return followee;
 	}
 
 	/**
 	 * @param followee the followee to set
 	 */
-	protected void setFollowee(Users followee) {
+	public void setFollowee(Users followee) {
 		this.followee = followee;
 	}
 
 	/**
 	 * @return the follower
 	 */
-	protected Users getFollower() {
+	public Users getFollower() {
 		return follower;
 	}
 
 	/**
 	 * @param follower the follower to set
 	 */
-	protected void setFollower(Users follower) {
+	public void setFollower(Users follower) {
 		this.follower = follower;
 	}
 

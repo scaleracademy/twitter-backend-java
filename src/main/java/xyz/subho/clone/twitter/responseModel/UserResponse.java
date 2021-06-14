@@ -1,68 +1,50 @@
-package xyz.subho.clone.twitter.entity;
+package xyz.subho.clone.twitter.responseModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import xyz.subho.clone.twitter.entity.Likes;
+import xyz.subho.clone.twitter.entity.Posts;
+import xyz.subho.clone.twitter.entity.UserFollowings;
+import xyz.subho.clone.twitter.entity.Users;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-@Entity
-@Table(name = "users")
-public class Users {
+public class UserResponse {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
-	
-	@Column(unique = true, length = 30)
 	private String username;
-	
-	private String password;
-	
-	@Column(length = 50)
 	private String name;
-	
 	private String avatar;
-	
-	@Column(length = 240)
 	private String bio;
-	
-	@Column(name = "follower_count")
 	private String followerCount;
-	
-	@Column(name = "following_count")
 	private String followingCount;
-	
 	private Boolean verified;
-	
-	@OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
 	private List<Likes> userLikes = new ArrayList<>();
-	
-	@ManyToMany(mappedBy = "followee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
 	private List<UserFollowings> userFollowers = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
 	private List<Posts> userPosts = new ArrayList<>();
+
+	/**
+	 * @param Users (Entity)
+	 */
+	public UserResponse(Users userEntity) {
+		
+		this.id = userEntity.getId();
+		this.username = userEntity.getUsername();
+		this.name = userEntity.getName();
+		this.avatar = userEntity.getAvatar();
+		this.bio = userEntity.getBio();
+		this.followerCount = userEntity.getFollowerCount();
+		this.followingCount = userEntity.getFollowingCount();
+		this.verified = userEntity.getVerified();
+		this.userLikes = userEntity.getUserLikes();
+		this.userFollowers = userEntity.getUserFollowers();
+		this.userPosts = userEntity.getUserPosts();
+	}
 
 	/**
 	 * @param id
 	 * @param username
-	 * @param password
 	 * @param name
 	 * @param avatar
 	 * @param bio
@@ -73,43 +55,11 @@ public class Users {
 	 * @param userFollowers
 	 * @param userPosts
 	 */
-	public Users(UUID id, String username, String password, String name, String avatar, String bio,
-			String followerCount, String followingCount, Boolean verified, List<Likes> userLikes,
-			List<UserFollowings> userFollowers, List<Posts> userPosts) {
-		
+	public UserResponse(UUID id, String username, String name, String avatar, String bio, String followerCount,
+			String followingCount, Boolean verified, List<Likes> userLikes, List<UserFollowings> userFollowers,
+			List<Posts> userPosts) {
 		this.id = id;
 		this.username = username;
-		this.password = password;
-		this.name = name;
-		this.avatar = avatar;
-		this.bio = bio;
-		this.followerCount = followerCount;
-		this.followingCount = followingCount;
-		this.verified = verified;
-		this.userLikes = userLikes;
-		this.userFollowers = userFollowers;
-		this.userPosts = userPosts;
-	}
-	
-	/**
-	 * @param username
-	 * @param password
-	 * @param name
-	 * @param avatar
-	 * @param bio
-	 * @param followerCount
-	 * @param followingCount
-	 * @param verified
-	 * @param userLikes
-	 * @param userFollowers
-	 * @param userPosts
-	 */
-	public Users(String username, String password, String name, String avatar, String bio,
-			String followerCount, String followingCount, Boolean verified, List<Likes> userLikes,
-			List<UserFollowings> userFollowers, List<Posts> userPosts) {
-		
-		this.username = username;
-		this.password = password;
 		this.name = name;
 		this.avatar = avatar;
 		this.bio = bio;
@@ -147,20 +97,6 @@ public class Users {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	/**
@@ -291,32 +227,31 @@ public class Users {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(avatar, bio, followerCount, followingCount, id, name, password, userFollowers, userLikes,
-				userPosts, username, verified);
+		return Objects.hash(avatar, bio, followerCount, followingCount, id, name, userFollowers, userLikes, userPosts,
+				username, verified);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!(obj instanceof Users))
+		if (!(obj instanceof UserResponse))
 			return false;
-		Users other = (Users) obj;
+		UserResponse other = (UserResponse) obj;
 		return Objects.equals(avatar, other.avatar) && Objects.equals(bio, other.bio)
 				&& Objects.equals(followerCount, other.followerCount)
 				&& Objects.equals(followingCount, other.followingCount) && Objects.equals(id, other.id)
-				&& Objects.equals(name, other.name) && Objects.equals(password, other.password)
-				&& Objects.equals(userFollowers, other.userFollowers) && Objects.equals(userLikes, other.userLikes)
-				&& Objects.equals(userPosts, other.userPosts) && Objects.equals(username, other.username)
-				&& Objects.equals(verified, other.verified);
+				&& Objects.equals(name, other.name) && Objects.equals(userFollowers, other.userFollowers)
+				&& Objects.equals(userLikes, other.userLikes) && Objects.equals(userPosts, other.userPosts)
+				&& Objects.equals(username, other.username) && Objects.equals(verified, other.verified);
 	}
 
 	@Override
 	public String toString() {
-		return "Users [id=" + id + ", username=" + username + ", password=" + password + ", name=" + name + ", avatar="
-				+ avatar + ", bio=" + bio + ", followerCount=" + followerCount + ", followingCount=" + followingCount
-				+ ", verified=" + verified + ", userLikes=" + userLikes + ", userFollowers=" + userFollowers
-				+ ", userPosts=" + userPosts + "]";
+		return "UserResponse [id=" + id + ", username=" + username + ", name=" + name + ", avatar=" + avatar + ", bio="
+				+ bio + ", followerCount=" + followerCount + ", followingCount=" + followingCount + ", verified="
+				+ verified + ", userLikes=" + userLikes + ", userFollowers=" + userFollowers + ", userPosts="
+				+ userPosts + "]";
 	}
 	
 }

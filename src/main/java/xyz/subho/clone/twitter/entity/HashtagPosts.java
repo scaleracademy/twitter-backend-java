@@ -52,42 +52,42 @@ public class HashtagPosts {
 	/**
 	 * @return the id
 	 */
-	protected UUID getId() {
+	public UUID getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	protected void setId(UUID id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the hashtags
 	 */
-	protected Hashtags getHashtags() {
+	public Hashtags getHashtags() {
 		return hashtags;
 	}
 
 	/**
 	 * @param hashtags the hashtags to set
 	 */
-	protected void setHashtags(Hashtags hashtags) {
+	public void setHashtags(Hashtags hashtags) {
 		this.hashtags = hashtags;
 	}
 
 	/**
 	 * @return the posts
 	 */
-	protected Posts getPosts() {
+	public Posts getPosts() {
 		return posts;
 	}
 
 	/**
 	 * @param posts the posts to set
 	 */
-	protected void setPosts(Posts posts) {
+	public void setPosts(Posts posts) {
 		this.posts = posts;
 	}
 

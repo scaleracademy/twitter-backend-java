@@ -64,56 +64,56 @@ public class Hashtags {
 	/**
 	 * @return the id
 	 */
-	protected UUID getId() {
+	public UUID getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	protected void setId(UUID id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the tag
 	 */
-	protected String getTag() {
+	public String getTag() {
 		return tag;
 	}
 
 	/**
 	 * @param tag the tag to set
 	 */
-	protected void setTag(String tag) {
+	public void setTag(String tag) {
 		this.tag = tag;
 	}
 
 	/**
 	 * @return the recentPostCount
 	 */
-	protected Long getRecentPostCount() {
+	public Long getRecentPostCount() {
 		return recentPostCount;
 	}
 
 	/**
 	 * @param recentPostCount the recentPostCount to set
 	 */
-	protected void setRecentPostCount(Long recentPostCount) {
+	public void setRecentPostCount(Long recentPostCount) {
 		this.recentPostCount = recentPostCount;
 	}
 
 	/**
 	 * @return the hashtagPosts
 	 */
-	protected List<HashtagPosts> getHashtagPosts() {
+	public List<HashtagPosts> getHashtagPosts() {
 		return hashtagPosts;
 	}
 
 	/**
 	 * @param hashtagPosts the hashtagPosts to set
 	 */
-	protected void setHashtagPosts(List<HashtagPosts> hashtagPosts) {
+	public void setHashtagPosts(List<HashtagPosts> hashtagPosts) {
 		this.hashtagPosts = hashtagPosts;
 	}
 

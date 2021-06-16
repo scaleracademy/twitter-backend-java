@@ -10,8 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "user_followings")
+@NoArgsConstructor
 public class UserFollowings {
 
 	@Id

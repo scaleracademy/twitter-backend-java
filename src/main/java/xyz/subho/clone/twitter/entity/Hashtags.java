@@ -17,8 +17,11 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "hashtags")
+@NoArgsConstructor
 public class Hashtags {
 
 	@Id

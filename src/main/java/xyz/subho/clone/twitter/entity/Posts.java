@@ -25,8 +25,11 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "posts")
+@NoArgsConstructor
 public class Posts {
 	
 	@Id
@@ -261,6 +264,13 @@ public class Posts {
 	 */
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
+	}
+	
+	/**
+	 * Sets the current Time
+	 */
+	public void setTimestamp() {
+		this.timestamp = new Date(System.currentTimeMillis());
 	}
 
 	/**

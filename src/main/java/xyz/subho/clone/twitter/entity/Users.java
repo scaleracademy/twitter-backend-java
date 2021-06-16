@@ -18,8 +18,11 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class Users {
 	
 	@Id
@@ -40,10 +43,10 @@ public class Users {
 	private String bio;
 	
 	@Column(name = "follower_count")
-	private String followerCount;
+	private Long followerCount;
 	
 	@Column(name = "following_count")
-	private String followingCount;
+	private Long followingCount;
 	
 	private Boolean verified;
 	
@@ -54,6 +57,11 @@ public class Users {
 	@ManyToMany(mappedBy = "followee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<UserFollowings> userFollowers = new ArrayList<>();
+	
+	/*
+	@ManyToMany(mappedBy = "followee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<UserFollowings> userFollowees = new ArrayList<>();*/
 	
 	@OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
@@ -74,7 +82,7 @@ public class Users {
 	 * @param userPosts
 	 */
 	public Users(UUID id, String username, String password, String name, String avatar, String bio,
-			String followerCount, String followingCount, Boolean verified, List<Likes> userLikes,
+			Long followerCount, Long followingCount, Boolean verified, List<Likes> userLikes,
 			List<UserFollowings> userFollowers, List<Posts> userPosts) {
 		
 		this.id = id;
@@ -105,7 +113,7 @@ public class Users {
 	 * @param userPosts
 	 */
 	public Users(String username, String password, String name, String avatar, String bio,
-			String followerCount, String followingCount, Boolean verified, List<Likes> userLikes,
+			Long followerCount, Long followingCount, Boolean verified, List<Likes> userLikes,
 			List<UserFollowings> userFollowers, List<Posts> userPosts) {
 		
 		this.username = username;
@@ -208,28 +216,28 @@ public class Users {
 	/**
 	 * @return the followerCount
 	 */
-	public String getFollowerCount() {
+	public Long getFollowerCount() {
 		return followerCount;
 	}
 
 	/**
 	 * @param followerCount the followerCount to set
 	 */
-	public void setFollowerCount(String followerCount) {
+	public void setFollowerCount(Long followerCount) {
 		this.followerCount = followerCount;
 	}
 
 	/**
 	 * @return the followingCount
 	 */
-	public String getFollowingCount() {
+	public Long getFollowingCount() {
 		return followingCount;
 	}
 
 	/**
 	 * @param followingCount the followingCount to set
 	 */
-	public void setFollowingCount(String followingCount) {
+	public void setFollowingCount(Long followingCount) {
 		this.followingCount = followingCount;
 	}
 

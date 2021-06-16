@@ -11,8 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "hashtag_posts")
+@NoArgsConstructor
 public class HashtagPosts {
 	
 	@Id

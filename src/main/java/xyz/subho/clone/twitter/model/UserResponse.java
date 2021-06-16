@@ -1,4 +1,4 @@
-package xyz.subho.clone.twitter.responseModel;
+package xyz.subho.clone.twitter.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,8 @@ public class UserResponse {
 	private String name;
 	private String avatar;
 	private String bio;
-	private String followerCount;
-	private String followingCount;
+	private Long followerCount;
+	private Long followingCount;
 	private Boolean verified;
 	private List<Likes> userLikes = new ArrayList<>();
 	private List<UserFollowings> userFollowers = new ArrayList<>();
@@ -55,8 +55,8 @@ public class UserResponse {
 	 * @param userFollowers
 	 * @param userPosts
 	 */
-	public UserResponse(UUID id, String username, String name, String avatar, String bio, String followerCount,
-			String followingCount, Boolean verified, List<Likes> userLikes, List<UserFollowings> userFollowers,
+	public UserResponse(UUID id, String username, String name, String avatar, String bio, Long followerCount,
+			Long followingCount, Boolean verified, List<Likes> userLikes, List<UserFollowings> userFollowers,
 			List<Posts> userPosts) {
 		this.id = id;
 		this.username = username;
@@ -144,28 +144,28 @@ public class UserResponse {
 	/**
 	 * @return the followerCount
 	 */
-	public String getFollowerCount() {
+	public Long getFollowerCount() {
 		return followerCount;
 	}
 
 	/**
 	 * @param followerCount the followerCount to set
 	 */
-	public void setFollowerCount(String followerCount) {
+	public void setFollowerCount(Long followerCount) {
 		this.followerCount = followerCount;
 	}
 
 	/**
 	 * @return the followingCount
 	 */
-	public String getFollowingCount() {
+	public Long getFollowingCount() {
 		return followingCount;
 	}
 
 	/**
 	 * @param followingCount the followingCount to set
 	 */
-	public void setFollowingCount(String followingCount) {
+	public void setFollowingCount(Long followingCount) {
 		this.followingCount = followingCount;
 	}
 

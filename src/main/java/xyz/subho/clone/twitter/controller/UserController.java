@@ -1,18 +1,17 @@
 package xyz.subho.clone.twitter.controller;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
 
 import lombok.extern.slf4j.Slf4j;
-import xyz.subho.clone.twitter.responseModel.UserResponse;
+import xyz.subho.clone.twitter.model.UserResponse;
 import xyz.subho.clone.twitter.service.UserService;
+import xyz.subho.clone.twitter.utility.Utility;
 
 @RestController
 @RequestMapping("/users")
@@ -22,23 +21,30 @@ public class UserController {
 	//@Autowired
 	private UserService userService;
 	
-	@GetMapping("/{userId}")
-	ResponseEntity<String> getUserByUserIdOrUserName(String userId)	{
+	@Autowired
+	private Utility utility;
+	
+	@GetMapping("/{userNameOrUserId}")
+	ResponseEntity<UserResponse> getUserByUserIdOrUserName(
+			@PathVariable("userNameOrUserId") String userNameOrUserId)	{
 		
-		try	{		
-			
-			//if (userIdOrUserName.equals("^@"))
-				//return new ResponseEntity<>(new UserResponse(userService.getUserByUserName(userId)), HttpStatus.OK);
-			
-			return ResponseEntity.ok(userId);
-		}
-		catch (NotFound notFound)	{
-			log.warn(notFound.getMessage());
-			return ResponseEntity.notFound().build();
-		}
-		catch (Exception exception)	{
+		UserResponse userResponse;
+		
+		try	{
+			if(utility.isUUID(userNameOrUserId))	{
+				var uuid = utility.converStringToUUID(userNameOrUserId);
+				userResponse = new UserResponse(userService.getUserByUserId(uuid));
+				return new ResponseEntity<>(userResponse, HttpStatus.OK);
+			}
+			else {
+				var username = userNameOrUserId.startsWith("@") ? userNameOrUserId.substring(1) : userNameOrUserId;
+				userResponse = new UserResponse(userService.getUserByUserName(username));
+				return new ResponseEntity<>(userResponse, HttpStatus.OK);
+			}
+				
+		} catch (Exception exception)	{
 			log.error(exception.getMessage());
-			return ResponseEntity.internalServerError().build();
+			return ResponseEntity.badRequest().build();
 		}
 	}
 

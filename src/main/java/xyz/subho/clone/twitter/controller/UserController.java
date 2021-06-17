@@ -30,22 +30,18 @@ public class UserController {
 		
 		UserResponse userResponse;
 		
-		try	{
-			if(utility.isUUID(userNameOrUserId))	{
-				var uuid = utility.converStringToUUID(userNameOrUserId);
-				userResponse = new UserResponse(userService.getUserByUserId(uuid));
-				return new ResponseEntity<>(userResponse, HttpStatus.OK);
-			}
-			else {
-				var username = userNameOrUserId.startsWith("@") ? userNameOrUserId.substring(1) : userNameOrUserId;
-				userResponse = new UserResponse(userService.getUserByUserName(username));
-				return new ResponseEntity<>(userResponse, HttpStatus.OK);
-			}
-				
-		} catch (Exception exception)	{
-			log.error(exception.getMessage());
-			return ResponseEntity.badRequest().build();
+		if(utility.isUUID(userNameOrUserId))	{
+			var uuid = utility.converStringToUUID(userNameOrUserId);
+			userResponse = new UserResponse(userService.getUserByUserId(uuid));
+			return new ResponseEntity<>(userResponse, HttpStatus.OK);
+		}
+		else {
+			var username = userNameOrUserId.startsWith("@") ? userNameOrUserId.substring(1) : userNameOrUserId;
+			userResponse = new UserResponse(userService.getUserByUserName(username));
+			return new ResponseEntity<>(userResponse, HttpStatus.OK);
 		}
 	}
+	
+	//ResponseEntity<Boolean> makeNewUser	()
 
 }

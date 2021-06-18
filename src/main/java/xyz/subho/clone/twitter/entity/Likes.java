@@ -44,5 +44,4 @@ public class Likes {
   @ManyToOne(targetEntity = User.class)
   @JoinColumn(name = "user_id")
   private User user;
-  
 }

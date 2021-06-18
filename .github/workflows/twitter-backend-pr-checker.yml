@@ -20,8 +20,8 @@ name: Maven PR Checker
 
 on:
   pull_request:
-    branches: [ '**' ]
-    types: [opened, synchronize, reopened]
+    branches: master
+    types: [ opened, synchronize, reopened ]
 
 jobs:
 

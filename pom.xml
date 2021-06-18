@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
+    Copyright © 2021 Subhrodip Mohanta (hello@subho.xyz)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -14,7 +33,9 @@
 	<artifactId>twitter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Twitter Backend</name>
-	<description>Backend for Twitter Clone Application by Scaler</description>
+	<description>Moo: Twitter Clone Application Backend by Scaler</description>
+	
+	<inceptionYear>2021</inceptionYear>
 	
 	<properties>
 		<java.version>11</java.version>
@@ -22,7 +43,7 @@
 		<jacoco.version>0.8.6</jacoco.version>
 		<google-java-format.version>1.9</google-java-format.version>
 		<license-maven-plugin.version>3.0</license-maven-plugin.version>
-		<sonar.projectKey>ohbus_covid-help</sonar.projectKey>
+		<sonar.projectKey>ohbus_twitter-backend</sonar.projectKey>
 		<sonar.organization>ohbus</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
@@ -75,6 +96,27 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+            
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.plugin.version}</version>
+                <configuration>
+                    <java>
+                        <googleJavaFormat>
+                            <version>${google-java-format.version}</version>
+                        </googleJavaFormat>
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			
 			<plugin>
 				<groupId>com.mycila</groupId>
@@ -105,6 +147,7 @@
 				</executions>
 			</plugin>
 			
+			<!-- 
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
@@ -123,37 +166,8 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>	 -->
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>spotless-apply</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<pluginManagement>
-					<plugins>
-						<!-- Apply code format by default -->
-						<plugin>
-							<groupId>com.diffplug.spotless</groupId>
-							<artifactId>spotless-maven-plugin</artifactId>
-							<executions>
-								<execution>
-									<id>spotless-apply</id>
-									<phase>validate</phase>
-									<goals>
-										<goal>apply</goal>
-									</goals>
-								</execution>
-							</executions>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-			</build>
-		</profile>
-	</profiles>
 	
 </project>

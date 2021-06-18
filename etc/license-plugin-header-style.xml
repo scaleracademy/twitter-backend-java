@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
+    Copyright © 2021 Subhrodip Mohanta (hello@subho.xyz)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<!-- This is a license header template used by the com.mycila.license-maven-plugin.
+ This template is based on the SLASHSTAR_STYLE template provided in license-maven-plugin v3.0,
+ but it adds an empty line after the last line, so the package name can be "separated from the previous statement",
+ according to Google's Checkstyle format -->
+ 
+<additionalHeaders>
+    <slashstar_custom_style>
+        <firstLine>/*</firstLine>
+        <beforeEachLine> * </beforeEachLine>
+        <endLine> */EOL</endLine><!-- Added EOL here -->
+        <firstLineDetectionPattern>(\\s|\\t)*/\\*.*$</firstLineDetectionPattern>
+        <lastLineDetectionPattern>.*\\*/(\\s|\\t)*$</lastLineDetectionPattern>
+        <allowBlankLines>false</allowBlankLines>
+        <isMultiline>true</isMultiline>
+        <padLines>false</padLines>
+    </slashstar_custom_style>
+</additionalHeaders>

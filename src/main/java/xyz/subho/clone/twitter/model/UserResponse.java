@@ -1,257 +1,249 @@
+/*
+ * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
+ * Copyright © 2021 Subhrodip Mohanta (hello@subho.xyz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package xyz.subho.clone.twitter.model;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
 import xyz.subho.clone.twitter.entity.Likes;
 import xyz.subho.clone.twitter.entity.Posts;
-import xyz.subho.clone.twitter.entity.UserFollowings;
 import xyz.subho.clone.twitter.entity.Users;
 
 public class UserResponse {
-	
-	private UUID id;
-	private String username;
-	private String name;
-	private String avatar;
-	private String bio;
-	private Long followerCount;
-	private Long followingCount;
-	private Boolean verified;
-	private List<Likes> userLikes = new ArrayList<>();
-	private List<UserFollowings> userFollowers = new ArrayList<>();
-	private List<Posts> userPosts = new ArrayList<>();
 
-	/**
-	 * @param Users (Entity)
-	 */
-	public UserResponse(Users userEntity) {
-		
-		this.id = userEntity.getId();
-		this.username = userEntity.getUsername();
-		this.name = userEntity.getName();
-		this.avatar = userEntity.getAvatar();
-		this.bio = userEntity.getBio();
-		this.followerCount = userEntity.getFollowerCount();
-		this.followingCount = userEntity.getFollowingCount();
-		this.verified = userEntity.getVerified();
-		this.userLikes = userEntity.getUserLikes();
-		this.userFollowers = userEntity.getUserFollowers();
-		this.userPosts = userEntity.getUserPosts();
-	}
+  private UUID id;
+  private String username;
+  private String name;
+  private String avatar;
+  private String bio;
+  private Long followerCount;
+  private Long followingCount;
+  private Boolean verified;
+  private List<Likes> userLikes = new ArrayList<>();
+  private List<Posts> userPosts = new ArrayList<>();
 
-	/**
-	 * @param id
-	 * @param username
-	 * @param name
-	 * @param avatar
-	 * @param bio
-	 * @param followerCount
-	 * @param followingCount
-	 * @param verified
-	 * @param userLikes
-	 * @param userFollowers
-	 * @param userPosts
-	 */
-	public UserResponse(UUID id, String username, String name, String avatar, String bio, Long followerCount,
-			Long followingCount, Boolean verified, List<Likes> userLikes, List<UserFollowings> userFollowers,
-			List<Posts> userPosts) {
-		this.id = id;
-		this.username = username;
-		this.name = name;
-		this.avatar = avatar;
-		this.bio = bio;
-		this.followerCount = followerCount;
-		this.followingCount = followingCount;
-		this.verified = verified;
-		this.userLikes = userLikes;
-		this.userFollowers = userFollowers;
-		this.userPosts = userPosts;
-	}
+  /** @param Users (Entity) */
+  public UserResponse(Users userEntity) {
 
-	/**
-	 * @return the id
-	 */
-	public UUID getId() {
-		return id;
-	}
+    this.id = userEntity.getId();
+    this.username = userEntity.getUsername();
+    this.name = userEntity.getName();
+    this.avatar = userEntity.getAvatar();
+    this.bio = userEntity.getBio();
+    this.followerCount = userEntity.getFollowerCount();
+    this.followingCount = userEntity.getFollowingCount();
+    this.verified = userEntity.getVerified();
+    this.userLikes = userEntity.getUserLikes();
+    this.userPosts = userEntity.getUserPosts();
+  }
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(UUID id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   * @param username
+   * @param name
+   * @param avatar
+   * @param bio
+   * @param followerCount
+   * @param followingCount
+   * @param verified
+   * @param userLikes
+   * @param userFollowers
+   * @param userPosts
+   */
+  public UserResponse(
+      UUID id,
+      String username,
+      String name,
+      String avatar,
+      String bio,
+      Long followerCount,
+      Long followingCount,
+      Boolean verified,
+      List<Likes> userLikes,
+      List<Posts> userPosts) {
+    this.id = id;
+    this.username = username;
+    this.name = name;
+    this.avatar = avatar;
+    this.bio = bio;
+    this.followerCount = followerCount;
+    this.followingCount = followingCount;
+    this.verified = verified;
+    this.userLikes = userLikes;
+    this.userPosts = userPosts;
+  }
 
-	/**
-	 * @return the username
-	 */
-	public String getUsername() {
-		return username;
-	}
+  /** @return the id */
+  public UUID getId() {
+    return id;
+  }
 
-	/**
-	 * @param username the username to set
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
+  /** @param id the id to set */
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /** @return the username */
+  public String getUsername() {
+    return username;
+  }
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /** @param username the username to set */
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-	/**
-	 * @return the avatar
-	 */
-	public String getAvatar() {
-		return avatar;
-	}
+  /** @return the name */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param avatar the avatar to set
-	 */
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
+  /** @param name the name to set */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the bio
-	 */
-	public String getBio() {
-		return bio;
-	}
+  /** @return the avatar */
+  public String getAvatar() {
+    return avatar;
+  }
 
-	/**
-	 * @param bio the bio to set
-	 */
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
+  /** @param avatar the avatar to set */
+  public void setAvatar(String avatar) {
+    this.avatar = avatar;
+  }
 
-	/**
-	 * @return the followerCount
-	 */
-	public Long getFollowerCount() {
-		return followerCount;
-	}
+  /** @return the bio */
+  public String getBio() {
+    return bio;
+  }
 
-	/**
-	 * @param followerCount the followerCount to set
-	 */
-	public void setFollowerCount(Long followerCount) {
-		this.followerCount = followerCount;
-	}
+  /** @param bio the bio to set */
+  public void setBio(String bio) {
+    this.bio = bio;
+  }
 
-	/**
-	 * @return the followingCount
-	 */
-	public Long getFollowingCount() {
-		return followingCount;
-	}
+  /** @return the followerCount */
+  public Long getFollowerCount() {
+    return followerCount;
+  }
 
-	/**
-	 * @param followingCount the followingCount to set
-	 */
-	public void setFollowingCount(Long followingCount) {
-		this.followingCount = followingCount;
-	}
+  /** @param followerCount the followerCount to set */
+  public void setFollowerCount(Long followerCount) {
+    this.followerCount = followerCount;
+  }
 
-	/**
-	 * @return the verified
-	 */
-	public Boolean getVerified() {
-		return verified;
-	}
+  /** @return the followingCount */
+  public Long getFollowingCount() {
+    return followingCount;
+  }
 
-	/**
-	 * @param verified the verified to set
-	 */
-	public void setVerified(Boolean verified) {
-		this.verified = verified;
-	}
+  /** @param followingCount the followingCount to set */
+  public void setFollowingCount(Long followingCount) {
+    this.followingCount = followingCount;
+  }
 
-	/**
-	 * @return the userLikes
-	 */
-	public List<Likes> getUserLikes() {
-		return userLikes;
-	}
+  /** @return the verified */
+  public Boolean getVerified() {
+    return verified;
+  }
 
-	/**
-	 * @param userLikes the userLikes to set
-	 */
-	public void setUserLikes(List<Likes> userLikes) {
-		this.userLikes = userLikes;
-	}
+  /** @param verified the verified to set */
+  public void setVerified(Boolean verified) {
+    this.verified = verified;
+  }
 
-	/**
-	 * @return the userFollowers
-	 */
-	public List<UserFollowings> getUserFollowers() {
-		return userFollowers;
-	}
+  /** @return the userLikes */
+  public List<Likes> getUserLikes() {
+    return userLikes;
+  }
 
-	/**
-	 * @param userFollowers the userFollowers to set
-	 */
-	public void setUserFollowers(List<UserFollowings> userFollowers) {
-		this.userFollowers = userFollowers;
-	}
+  /** @param userLikes the userLikes to set */
+  public void setUserLikes(List<Likes> userLikes) {
+    this.userLikes = userLikes;
+  }
 
-	/**
-	 * @return the userPosts
-	 */
-	public List<Posts> getUserPosts() {
-		return userPosts;
-	}
+  /** @return the userPosts */
+  public List<Posts> getUserPosts() {
+    return userPosts;
+  }
 
-	/**
-	 * @param userPosts the userPosts to set
-	 */
-	public void setUserPosts(List<Posts> userPosts) {
-		this.userPosts = userPosts;
-	}
+  /** @param userPosts the userPosts to set */
+  public void setUserPosts(List<Posts> userPosts) {
+    this.userPosts = userPosts;
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(avatar, bio, followerCount, followingCount, id, name, userFollowers, userLikes, userPosts,
-				username, verified);
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        avatar,
+        bio,
+        followerCount,
+        followingCount,
+        id,
+        name,
+        userLikes,
+        userPosts,
+        username,
+        verified);
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof UserResponse))
-			return false;
-		UserResponse other = (UserResponse) obj;
-		return Objects.equals(avatar, other.avatar) && Objects.equals(bio, other.bio)
-				&& Objects.equals(followerCount, other.followerCount)
-				&& Objects.equals(followingCount, other.followingCount) && Objects.equals(id, other.id)
-				&& Objects.equals(name, other.name) && Objects.equals(userFollowers, other.userFollowers)
-				&& Objects.equals(userLikes, other.userLikes) && Objects.equals(userPosts, other.userPosts)
-				&& Objects.equals(username, other.username) && Objects.equals(verified, other.verified);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (!(obj instanceof UserResponse)) return false;
+    UserResponse other = (UserResponse) obj;
+    return Objects.equals(avatar, other.avatar)
+        && Objects.equals(bio, other.bio)
+        && Objects.equals(followerCount, other.followerCount)
+        && Objects.equals(followingCount, other.followingCount)
+        && Objects.equals(id, other.id)
+        && Objects.equals(name, other.name)
+        && Objects.equals(userLikes, other.userLikes)
+        && Objects.equals(userPosts, other.userPosts)
+        && Objects.equals(username, other.username)
+        && Objects.equals(verified, other.verified);
+  }
 
-	@Override
-	public String toString() {
-		return "UserResponse [id=" + id + ", username=" + username + ", name=" + name + ", avatar=" + avatar + ", bio="
-				+ bio + ", followerCount=" + followerCount + ", followingCount=" + followingCount + ", verified="
-				+ verified + ", userLikes=" + userLikes + ", userFollowers=" + userFollowers + ", userPosts="
-				+ userPosts + "]";
-	}
-	
+  @Override
+  public String toString() {
+    return "UserResponse [id="
+        + id
+        + ", username="
+        + username
+        + ", name="
+        + name
+        + ", avatar="
+        + avatar
+        + ", bio="
+        + bio
+        + ", followerCount="
+        + followerCount
+        + ", followingCount="
+        + followingCount
+        + ", verified="
+        + verified
+        + ", userLikes="
+        + userLikes
+        + ", userPosts="
+        + userPosts
+        + "]";
+  }
 }

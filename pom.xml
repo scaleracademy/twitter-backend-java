@@ -43,8 +43,8 @@
 		<jacoco.version>0.8.6</jacoco.version>
 		<google-java-format.version>1.9</google-java-format.version>
 		<license-maven-plugin.version>3.0</license-maven-plugin.version>
-		<sonar.projectKey>ohbus_twitter-backend</sonar.projectKey>
-		<sonar.organization>ohbus</sonar.organization>
+		<sonar.projectKey>scaleracademy_twitter-backend-java</sonar.projectKey>
+		<sonar.organization>scaleracademy</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	

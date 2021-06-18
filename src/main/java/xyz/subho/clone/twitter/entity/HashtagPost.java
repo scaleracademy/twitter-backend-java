@@ -16,10 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.repository;
+package xyz.subho.clone.twitter.entity;
 
 import java.util.UUID;
-import org.springframework.data.jpa.repository.JpaRepository;
-import xyz.subho.clone.twitter.entity.UserFollowings;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import lombok.Data;
 
-public interface UserFollowingsRepository extends JpaRepository<UserFollowings, UUID> {}
+@Entity
+@Table(name = "hashtag_post")
+@Data
+public class HashtagPost {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private UUID id;
+
+  @ManyToOne
+  @JoinColumn(name = "hashtag_id")
+  private Hashtag hashtag;
+
+  @ManyToOne
+  @JoinColumn(name = "post_id")
+  private Post post;
+}

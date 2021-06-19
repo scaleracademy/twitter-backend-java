@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
-import xyz.subho.clone.twitter.entity.Like;
 import xyz.subho.clone.twitter.entity.User;
 
 @Data

@@ -18,156 +18,188 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.1</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	
-	<groupId>xyz.subho.clone</groupId>
-	<artifactId>twitter</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Twitter Backend</name>
-	<description>Moo: Twitter Clone Application Backend by Scaler</description>
-	
-	<inceptionYear>2021</inceptionYear>
-	
-	<properties>
-		<java.version>11</java.version>
-		<spotless.plugin.version>2.8.1</spotless.plugin.version>
-		<jacoco.version>0.8.6</jacoco.version>
-		<google-java-format.version>1.9</google-java-format.version>
-		<license-maven-plugin.version>3.0</license-maven-plugin.version>
-		<sonar.projectKey>scaleracademy_twitter-backend-java</sonar.projectKey>
-		<sonar.organization>scaleracademy</sonar.organization>
-		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-	</properties>
-	
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>	
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.5.1</version>
+    <relativePath />
+    <!-- lookup parent from repository -->
+  </parent>
+  
+  <groupId>xyz.subho.clone</groupId>
+  <artifactId>twitter</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Twitter Backend</name>
+  <description>Moo: Twitter Clone Application Backend by Scaler</description>
+  
+  <inceptionYear>2021</inceptionYear>
+  
+  <licenses>
+    <license>
+      <name>AGPL-3.0</name>
+      <url>https://github.com/scaleracademy/twitter-backend-java/blob/master/LICENSE</url>
+    </license>
+  </licenses>
+  
+  <developers>
+    <developer>
+      <name>Subhrodip Mohanta</name>
+      <id>ohbus</id>
+      <email>hello@subho.xyz</email>
+      <url>https://subho.xyz</url>
+      <timezone>Asia/Kolkata</timezone>
+    </developer>
+  </developers>
+  
+  <scm>
+    <url>git://github.com/scaleracademy/twitter-backend-java.git</url>
+    <connection>scm:git:git://github.com/scaleracademy/twitter-backend-java.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/scaleracademy/twitter-backend-java.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+  
+  <properties>
+    <java.version>11</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spotless.plugin.version>2.8.1</spotless.plugin.version>
+    <google-java-format.version>1.9</google-java-format.version>
+    <license-maven-plugin.version>3.0</license-maven-plugin.version>
+    <jacoco.version>0.8.6</jacoco.version>
+    
+    <sonar.projectKey>scaleracademy_twitter-backend-java</sonar.projectKey>
+    <sonar.organization>scaleracademy</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-            
-            <plugin>
-                <groupId>com.diffplug.spotless</groupId>
-                <artifactId>spotless-maven-plugin</artifactId>
-                <version>${spotless.plugin.version}</version>
-                <configuration>
-                    <java>
-                        <googleJavaFormat>
-                            <version>${google-java-format.version}</version>
-                        </googleJavaFormat>
-                    </java>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>apply</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-			
-			<plugin>
-				<groupId>com.mycila</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<version>${license-maven-plugin.version}</version>
-				<configuration>
-					<header>com/mycila/maven/plugin/license/templates/AGPL-3.txt</header>
-					<properties>
-						<owner>Subhrodip Mohanta</owner>
-						<email>hello@subho.xyz</email>
-					</properties>
-					<skipExistingHeaders>true</skipExistingHeaders>
-					<headerDefinitions>
-						<headerDefinition>etc/license-plugin-header-style.xml</headerDefinition>
-					</headerDefinitions>
-					<mapping>
-						<java>SLASHSTAR_CUSTOM_STYLE</java>
-					</mapping>
-				</configuration>
-				<executions>
-					<execution>
-						<id>install-format</id>
-						<phase>install</phase>
-						<goals>
-							<goal>format</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<!-- 
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.version}</version>
-				<executions>
-					<execution>
-						<id>prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>	 -->
-		</plugins>
-	</build>
-	
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <scope>runtime</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.plugin.version}</version>
+        <configuration>
+          <java>
+            <googleJavaFormat>
+              <version>${google-java-format.version}</version>
+            </googleJavaFormat>
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <goal>apply</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>${license-maven-plugin.version}</version>
+        <configuration>
+          <header>com/mycila/maven/plugin/license/templates/AGPL-3.txt</header>
+          <properties>
+            <owner>Subhrodip Mohanta</owner>
+            <email>hello@subho.xyz</email>
+          </properties>
+          <skipExistingHeaders>true</skipExistingHeaders>
+          <headerDefinitions>
+            <headerDefinition>etc/license-plugin-header-style.xml</headerDefinition>
+          </headerDefinitions>
+          <mapping>
+            <java>SLASHSTAR_CUSTOM_STYLE</java>
+          </mapping>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install-format</id>
+            <phase>install</phase>
+            <goals>
+              <goal>format</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

@@ -32,7 +32,7 @@
   
   <groupId>xyz.subho.clone</groupId>
   <artifactId>twitter</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <name>Twitter Backend</name>
   <description>Moo: Twitter Clone Application Backend by Scaler</description>
   

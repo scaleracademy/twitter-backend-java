@@ -48,8 +48,6 @@ public class User {
   @Column(unique = true, length = 30)
   private String username;
 
-  private String password;
-
   @Column(length = 50)
   private String name;
 
@@ -68,7 +66,7 @@ public class User {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
-  private List<Likes> userLikes = new ArrayList<>();
+  private List<Like> userLikes = new ArrayList<>();
 
   @ElementCollection Map<UUID, String> follower = new HashMap<>();
 

@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import xyz.subho.clone.twitter.model.UserResponse;
+import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.service.UserService;
 import xyz.subho.clone.twitter.utility.Utility;
 
@@ -48,54 +48,54 @@ public class UserController {
   @Autowired private Utility utility;
 
   @GetMapping("/{userNameOrUserId}")
-  ResponseEntity<UserResponse> getUserByUserIdOrUserName(
+  public ResponseEntity<UserModel> getUserByUserIdOrUserName(
       @PathVariable("userNameOrUserId") String userNameOrUserId) {
 
-    UserResponse userResponse;
+    UserModel userResponse;
 
     if (userNameOrUserId.startsWith("@")) {
       var username = userNameOrUserId.substring(1);
-      userResponse = new UserResponse(userService.getUserByUserName(username));
+      userResponse = userService.getUserByUserName(username);
       return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
     var userId = utility.converStringToUUID(userNameOrUserId);
-    userResponse = new UserResponse(userService.getUserByUserId(userId));
+    userResponse = userService.getUserByUserId(userId);
     return new ResponseEntity<>(userResponse, HttpStatus.OK);
   }
 
   @PostMapping
-  ResponseEntity<UserResponse> createUser(@RequestBody UserResponse userResponse) {
-    UserResponse createdUser = new UserResponse(userService.addUser(userResponse));
+  public ResponseEntity<UserModel> createUser(@RequestBody UserModel userResponse) {
+    UserModel createdUser = userService.addUser(userResponse);
     return new ResponseEntity<>(createdUser, HttpStatus.OK);
   }
 
   @PatchMapping
-  ResponseEntity<UserResponse> updateUser(@RequestBody UserResponse userResponse) {
-    UserResponse updatedUser = new UserResponse(userService.editUser(userResponse));
+  public ResponseEntity<UserModel> updateUser(@RequestBody UserModel userResponse) {
+    UserModel updatedUser = userService.editUser(userResponse);
     return new ResponseEntity<>(updatedUser, HttpStatus.OK);
   }
 
   @PutMapping("/{userId}/follow")
-  ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId) {
+  public ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId) {
     userService.addFollower(userId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @DeleteMapping("/{userId}/follow")
-  ResponseEntity<HttpStatus> removeFollower(@PathVariable("userId") UUID userId) {
+  public ResponseEntity<HttpStatus> removeFollower(@PathVariable("userId") UUID userId) {
     userService.removeFollower(userId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @GetMapping("/{userId}/followers")
-  ResponseEntity<List<UserResponse>> getFollowers(@PathVariable("userId") UUID userId) {
-    List<UserResponse> followers = userService.getFollowers(userId);
+  public ResponseEntity<List<UserModel>> getFollowers(@PathVariable("userId") UUID userId) {
+    List<UserModel> followers = userService.getFollowers(userId);
     return new ResponseEntity<>(followers, HttpStatus.OK);
   }
 
   @GetMapping("/{userId}/followings")
-  ResponseEntity<List<UserResponse>> getFollowings(@PathVariable("userId") UUID userId) {
-    List<UserResponse> followings = userService.getFollowings(userId);
+  public ResponseEntity<List<UserModel>> getFollowings(@PathVariable("userId") UUID userId) {
+    List<UserModel> followings = userService.getFollowings(userId);
     return new ResponseEntity<>(followings, HttpStatus.OK);
   }
 }

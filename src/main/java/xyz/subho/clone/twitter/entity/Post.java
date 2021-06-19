@@ -83,5 +83,5 @@ public class Post {
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
-  private List<Likes> postLikes = new ArrayList<>();
+  private List<Like> postLikes = new ArrayList<>();
 }

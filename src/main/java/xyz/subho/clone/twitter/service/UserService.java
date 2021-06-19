@@ -20,24 +20,23 @@ package xyz.subho.clone.twitter.service;
 
 import java.util.List;
 import java.util.UUID;
-import xyz.subho.clone.twitter.entity.User;
-import xyz.subho.clone.twitter.model.UserResponse;
+import xyz.subho.clone.twitter.model.UserModel;
 
 public interface UserService {
 
-  public User getUserByUserName(String username);
+  public UserModel getUserByUserName(String username);
 
-  public User getUserByUserId(UUID userId);
+  public UserModel getUserByUserId(UUID userId);
 
-  public User addUser(UserResponse user);
+  public UserModel addUser(UserModel user);
 
-  public User editUser(UserResponse user);
+  public UserModel editUser(UserModel user);
 
   public boolean addFollower(UUID followerId);
 
   public boolean removeFollower(UUID followerId);
 
-  public List<UserResponse> getFollowers(UUID userId);
+  public List<UserModel> getFollowers(UUID userId);
 
-  public List<UserResponse> getFollowings(UUID userId);
+  public List<UserModel> getFollowings(UUID userId);
 }

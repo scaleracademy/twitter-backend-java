@@ -16,32 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.entity;
+package xyz.subho.clone.twitter.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import lombok.Data;
 
-@Entity
-@Table(name = "likes")
 @Data
-public class Likes {
+public class UserModel {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
-
-  @ManyToOne
-  @JoinColumn(name = "post_id")
-  private Post post;
-
-  @ManyToOne(targetEntity = User.class)
-  @JoinColumn(name = "user_id")
-  private User user;
+  private String username;
+  private String name;
+  private String avatar;
+  private String bio;
+  private Long followerCount;
+  private Long followingCount;
+  private Boolean verified;
+  private List<LikeModel> userLikes = new ArrayList<>();
+  private List<PostModel> userPosts = new ArrayList<>();
 }

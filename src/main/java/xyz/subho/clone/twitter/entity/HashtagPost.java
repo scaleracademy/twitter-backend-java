@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.entity;
 
+import java.util.Date;
 import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,4 +45,7 @@ public class HashtagPost {
   @ManyToOne
   @JoinColumn(name = "post_id")
   private Post post;
+
+  private Date createdAt;
+  private Date updatedAt;
 }

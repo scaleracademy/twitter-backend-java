@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.entity;
 
+import java.util.Date;
 import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,4 +45,7 @@ public class Like {
   @ManyToOne(targetEntity = User.class)
   @JoinColumn(name = "user_id")
   private User user;
+
+  private Date createdAt;
+  private Date updatedAt;
 }

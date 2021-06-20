@@ -20,6 +20,7 @@ package xyz.subho.clone.twitter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.CascadeType;
@@ -51,4 +52,7 @@ public class Hashtag {
   @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<HashtagPost> hashtagPosts = new ArrayList<>();
+
+  private Date createdAt;
+  private Date updatedAt;
 }

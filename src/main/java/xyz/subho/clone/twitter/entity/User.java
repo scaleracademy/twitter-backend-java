@@ -20,6 +20,7 @@ package xyz.subho.clone.twitter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,13 +46,16 @@ public class User {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @Column(unique = true, length = 30)
+  @Column(unique = true, nullable = false, length = 30)
   private String username;
 
-  @Column(length = 50)
+  @Column(nullable = false, length = 50)
   private String name;
 
   private String avatar;
+
+  @Column(nullable = false, unique = true)
+  private String email;
 
   @Column(length = 240)
   private String bio;
@@ -64,13 +68,16 @@ public class User {
 
   private Boolean verified;
 
+  private Date createdAt;
+  private Date updatedAt;
+
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Like> userLikes = new ArrayList<>();
 
-  @ElementCollection Map<UUID, String> follower = new HashMap<>();
+  @ElementCollection Map<UUID, Date> follower = new HashMap<>();
 
-  @ElementCollection Map<UUID, String> following = new HashMap<>();
+  @ElementCollection Map<UUID, Date> following = new HashMap<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore

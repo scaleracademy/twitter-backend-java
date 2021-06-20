@@ -22,10 +22,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -57,7 +55,7 @@ public class Post {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @ElementCollection private Set<String> images = new HashSet<>(4); // maximum of 4 images
+  @ElementCollection private Map<String, Date> images = new HashMap<>(4); // maximum of 4 images
 
   @Column(name = "like_count")
   private Long likeCount;
@@ -72,10 +70,12 @@ public class Post {
   private UUID replyToId;
 
   private Date timestamp;
+  private Date createdAt;
+  private Date updatedAt;
 
-  @ElementCollection private Map<UUID, String> hashtags = new HashMap<>();
+  @ElementCollection private Map<UUID, Date> hashtags = new HashMap<>();
 
-  @ElementCollection private Map<UUID, String> mentions = new HashMap<>();
+  @ElementCollection private Map<UUID, Date> mentions = new HashMap<>();
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore

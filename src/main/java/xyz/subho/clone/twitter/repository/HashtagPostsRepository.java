@@ -18,8 +18,16 @@
 
 package xyz.subho.clone.twitter.repository;
 
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import xyz.subho.clone.twitter.entity.Hashtag;
 import xyz.subho.clone.twitter.entity.HashtagPost;
+import xyz.subho.clone.twitter.entity.Post;
 
-public interface HashtagPostsRepository extends JpaRepository<HashtagPost, UUID> {}
+public interface HashtagPostsRepository extends JpaRepository<HashtagPost, UUID> {
+
+  public List<Post> findByHashtag(Hashtag hashtag);
+
+  public List<Hashtag> findByPost(Post post);
+}

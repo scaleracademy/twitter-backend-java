@@ -8,5 +8,5 @@ public interface HashtagService {
 
   public List<HashtagModel> getHashtags();
 
-  public List<PostModel> getPosts();
+  public List<PostModel> getPosts(String tag);
 }

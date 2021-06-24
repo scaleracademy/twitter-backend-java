@@ -1,0 +1,48 @@
+#
+# Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
+# Copyright © 2021 Subhrodip Mohanta (hello@subho.xyz)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+version: "3"
+    
+services:
+  
+  db:
+    image: mariadb:10.5
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: twitter
+      MYSQL_USER: twitter
+      MYSQL_PASSWORD: twitter
+    
+  twitter-backend:
+    depends_on:
+      - db
+    image: subhrodip/twitter-backend:latest
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      MYSQL_DB_HOST: db
+      MYSQL_DB_PORT: 3306
+      MYSQL_DB_UNAME: root
+      MYSQL_DB_PASSWD: root
+
+volumes:
+  db_data: {}

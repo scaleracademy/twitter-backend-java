@@ -22,5 +22,5 @@ public interface Mapper<S, T> {
 
   T transform(S source);
 
-  S transformback(T source);
+  S transformBack(T source);
 }

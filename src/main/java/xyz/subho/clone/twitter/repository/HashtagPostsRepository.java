@@ -27,7 +27,7 @@ import xyz.subho.clone.twitter.entity.Posts;
 
 public interface HashtagPostsRepository extends JpaRepository<HashtagPosts, UUID> {
 
-  public List<Posts> findByHashtag(Hashtags hashtag);
+  public List<Posts> findByHashtags(Hashtags hashtag);
 
-  public List<Hashtags> findByPost(Posts post);
+  public List<Hashtags> findByPosts(Posts post);
 }

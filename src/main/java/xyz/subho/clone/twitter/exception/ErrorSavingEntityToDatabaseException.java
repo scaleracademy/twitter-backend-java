@@ -16,27 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.utility;
+package xyz.subho.clone.twitter.exception;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
-import xyz.subho.clone.twitter.entity.Hashtags;
-import xyz.subho.clone.twitter.model.HashtagModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-@Component("HashtagMapper")
-public class HashtagMapper implements Mapper<Hashtags, HashtagModel> {
+@ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+public class ErrorSavingEntityToDatabaseException extends RuntimeException {
 
-  @Override
-  public HashtagModel transform(Hashtags hashtag) {
-    var hashtagModel = new HashtagModel();
-    BeanUtils.copyProperties(hashtag, hashtagModel);
-    return hashtagModel;
+  public ErrorSavingEntityToDatabaseException() {
+    super();
   }
 
-  @Override
-  public Hashtags transformBack(HashtagModel hashtagModel) {
-    var hashtag = new Hashtags();
-    BeanUtils.copyProperties(hashtagModel, hashtag);
-    return hashtag;
+  public ErrorSavingEntityToDatabaseException(final String message, final Throwable cause) {
+    super(message, cause);
+  }
+
+  public ErrorSavingEntityToDatabaseException(final String message) {
+    super(message);
+  }
+
+  public ErrorSavingEntityToDatabaseException(final Throwable cause) {
+    super(cause);
   }
 }

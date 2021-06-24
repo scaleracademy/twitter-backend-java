@@ -18,8 +18,6 @@
 
 package xyz.subho.clone.twitter.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 
@@ -34,6 +32,4 @@ public class UserModel {
   private Long followerCount;
   private Long followingCount;
   private Boolean verified;
-  private List<LikeModel> userLikes = new ArrayList<>();
-  private List<PostModel> userPosts = new ArrayList<>();
 }

@@ -30,6 +30,7 @@ public class PostModel {
   private UUID id;
   private String text;
   private UUID userId;
+  private Map<String, Date> images = new HashMap<>(4);
   private Long likeCount;
   private Long repostCount;
   private UUID originalPostId;

@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -54,10 +55,13 @@ public class UserController {
     UserModel userResponse;
 
     if (userNameOrUserId.startsWith("@")) {
+      log.info("input resource is a username");
       var username = userNameOrUserId.substring(1);
       userResponse = userService.getUserByUserName(username);
       return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
+
+    log.info("input resource is a UUID");
     var userId = utility.converStringToUUID(userNameOrUserId);
     userResponse = userService.getUserByUserId(userId);
     return new ResponseEntity<>(userResponse, HttpStatus.OK);
@@ -65,37 +69,35 @@ public class UserController {
 
   @PostMapping
   public ResponseEntity<UserModel> createUser(@RequestBody UserModel userResponse) {
-    UserModel createdUser = userService.addUser(userResponse);
-    return new ResponseEntity<>(createdUser, HttpStatus.OK);
+    var user = userService.addUser(userResponse);
+    return new ResponseEntity<>(user, HttpStatus.CREATED);
   }
 
   @PatchMapping
-  public ResponseEntity<UserModel> updateUser(@RequestBody UserModel userResponse) {
-    UserModel updatedUser = userService.editUser(userResponse);
-    return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+  public UserModel updateUser(@RequestBody UserModel userResponse, Principal principal) {
+    return userService.editUser(userResponse);
   }
 
   @PutMapping("/{userId}/follow")
-  public ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId) {
-    userService.addFollower(userId);
-    return new ResponseEntity<>(HttpStatus.OK);
+  public ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId, Principal principal) {
+    userService.addFollower(userId, UUID.randomUUID()); // TODO: Extract from Principal
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @DeleteMapping("/{userId}/follow")
-  public ResponseEntity<HttpStatus> removeFollower(@PathVariable("userId") UUID userId) {
-    userService.removeFollower(userId);
-    return new ResponseEntity<>(HttpStatus.OK);
+  public ResponseEntity<HttpStatus> removeFollower(
+      @PathVariable("userId") UUID userId, Principal principal) {
+    userService.removeFollower(userId, UUID.randomUUID()); // TODO: Extract from Principal
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @GetMapping("/{userId}/followers")
-  public ResponseEntity<List<UserModel>> getFollowers(@PathVariable("userId") UUID userId) {
-    List<UserModel> followers = userService.getFollowers(userId);
-    return new ResponseEntity<>(followers, HttpStatus.OK);
+  public List<UserModel> getFollowers(@PathVariable("userId") UUID userId) {
+    return userService.getFollowers(userId);
   }
 
   @GetMapping("/{userId}/followings")
-  public ResponseEntity<List<UserModel>> getFollowings(@PathVariable("userId") UUID userId) {
-    List<UserModel> followings = userService.getFollowings(userId);
-    return new ResponseEntity<>(followings, HttpStatus.OK);
+  public List<UserModel> getFollowings(@PathVariable("userId") UUID userId) {
+    return userService.getFollowings(userId);
   }
 }

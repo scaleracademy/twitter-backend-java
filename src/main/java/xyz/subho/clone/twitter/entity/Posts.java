@@ -38,6 +38,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "posts")
@@ -52,8 +55,9 @@ public class Posts {
   private String text;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
-  private Users user;
+  @JoinColumn(name = "users_id")
+  @CreatedBy
+  private Users users;
 
   @ElementCollection private Map<String, Date> images = new HashMap<>(4); // maximum of 4 images
 
@@ -69,19 +73,37 @@ public class Posts {
   @Column(name = "reply_to_id")
   private UUID replyToId;
 
-  private Date timestamp;
-  private Date createdAt;
-  private Date updatedAt;
+  @CreatedDate private Date timestamp;
+
+  @CreatedDate private Date createdAt;
+
+  @UpdateTimestamp private Date updatedAt;
 
   @ElementCollection private Map<UUID, Date> hashtags = new HashMap<>();
 
   @ElementCollection private Map<UUID, Date> mentions = new HashMap<>();
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<HashtagPosts> postHashtags = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Likes> postLikes = new ArrayList<>();
+
+  public long incrementLikeCount() {
+    return ++likeCount;
+  }
+
+  public long decrementLikeCount() {
+    return --likeCount;
+  }
+
+  public long incrementRepostCount() {
+    return ++repostCount;
+  }
+
+  public long decrementRepostCount() {
+    return --repostCount;
+  }
 }

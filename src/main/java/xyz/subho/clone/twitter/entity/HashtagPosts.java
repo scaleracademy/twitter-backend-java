@@ -28,6 +28,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "hashtag_posts")
@@ -39,13 +41,14 @@ public class HashtagPosts {
   private UUID id;
 
   @ManyToOne
-  @JoinColumn(name = "hashtag_id")
-  private Hashtags hashtag;
+  @JoinColumn(name = "hashtags_id")
+  private Hashtags hashtags;
 
   @ManyToOne
-  @JoinColumn(name = "post_id")
-  private Posts post;
+  @JoinColumn(name = "posts_id")
+  private Posts posts;
 
-  private Date createdAt;
-  private Date updatedAt;
+  @CreatedDate private Date createdAt;
+
+  @UpdateTimestamp private Date updatedAt;
 }

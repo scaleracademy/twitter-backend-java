@@ -20,23 +20,23 @@ package xyz.subho.clone.twitter.utility;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
-import xyz.subho.clone.twitter.entity.Hashtags;
-import xyz.subho.clone.twitter.model.HashtagModel;
+import xyz.subho.clone.twitter.entity.Users;
+import xyz.subho.clone.twitter.model.UserModel;
 
-@Component("HashtagMapper")
-public class HashtagMapper implements Mapper<Hashtags, HashtagModel> {
+@Component("UserMapper")
+public class UserMapper implements Mapper<Users, UserModel> {
 
   @Override
-  public HashtagModel transform(Hashtags hashtag) {
-    var hashtagModel = new HashtagModel();
-    BeanUtils.copyProperties(hashtag, hashtagModel);
-    return hashtagModel;
+  public UserModel transform(Users user) {
+    var userModel = new UserModel();
+    BeanUtils.copyProperties(user, userModel);
+    return userModel;
   }
 
   @Override
-  public Hashtags transformBack(HashtagModel hashtagModel) {
-    var hashtag = new Hashtags();
-    BeanUtils.copyProperties(hashtagModel, hashtag);
-    return hashtag;
+  public Users transformBack(UserModel userModel) {
+    var user = new Users();
+    BeanUtils.copyProperties(userModel, user);
+    return user;
   }
 }

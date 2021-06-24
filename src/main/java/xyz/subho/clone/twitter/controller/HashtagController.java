@@ -19,10 +19,7 @@
 package xyz.subho.clone.twitter.controller;
 
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +29,6 @@ import xyz.subho.clone.twitter.repository.HashtagsRepository;
 import xyz.subho.clone.twitter.service.HashtagService;
 
 @RestController
-@Slf4j
 public class HashtagController {
 
   @Autowired private HashtagService hashtagService;
@@ -40,14 +36,12 @@ public class HashtagController {
   @Autowired HashtagsRepository hashtagsRepository;
 
   @GetMapping("/hashtags")
-  public ResponseEntity<List<HashtagModel>> getAllHashtags() {
-    List<HashtagModel> hashtags = hashtagService.getHashtags();
-    return new ResponseEntity<>(hashtags, HttpStatus.OK);
+  public List<HashtagModel> getAllHashtags() {
+    return hashtagService.getHashtags();
   }
 
   @GetMapping("/hashtag/{tag}/posts")
-  public ResponseEntity<List<PostModel>> getPosts(@PathVariable("tag") String tag) {
-    List<PostModel> posts = hashtagService.getPosts(tag);
-    return new ResponseEntity<>(posts, HttpStatus.OK);
+  public List<PostModel> getPosts(@PathVariable("tag") String tag) {
+    return hashtagService.getPosts(tag);
   }
 }

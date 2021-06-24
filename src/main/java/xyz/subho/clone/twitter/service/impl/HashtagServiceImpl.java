@@ -48,32 +48,28 @@ public class HashtagServiceImpl implements HashtagService {
   @Qualifier("PostMapper")
   private Mapper<Posts, PostModel> postMapper;
 
-  // TODO: Create a stored procedure in DB.
   @Override
   public List<HashtagModel> getHashtags() {
+
     var hashtags = hashtagsRepository.findAll();
     List<HashtagModel> hashtagModels = new ArrayList<>();
     Optional.ofNullable(hashtags)
         .ifPresent(
-            hashtag -> {
-              hashtag.forEach(hTag -> hashtagModels.add(hashtagMapper.transform(hTag)));
-            });
+            hashtag -> hashtag.forEach(hTag -> hashtagModels.add(hashtagMapper.transform(hTag))));
     return hashtagModels;
-  }
+  } // TODO: Create a stored procedure in DB.
 
   @Override
   public List<PostModel> getPosts(String tag) {
+
     var hashtag = hashtagsRepository.findByTag(tag);
     List<Posts> posts = new ArrayList<>();
     if (null != hashtag) {
-      posts = hashtagPostsRepository.findByHashtag(hashtag);
+      posts = hashtagPostsRepository.findByHashtags(hashtag);
     }
     List<PostModel> postModels = new ArrayList<>();
     Optional.ofNullable(posts)
-        .ifPresent(
-            post -> {
-              post.forEach(pst -> postModels.add(postMapper.transform(pst)));
-            });
+        .ifPresent(post -> post.forEach(pst -> postModels.add(postMapper.transform(pst))));
     return postModels;
   }
 }

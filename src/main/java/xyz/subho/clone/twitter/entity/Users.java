@@ -38,9 +38,9 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Data
-public class User {
+public class Users {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -73,7 +73,7 @@ public class User {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
-  private List<Like> userLikes = new ArrayList<>();
+  private List<Likes> userLikes = new ArrayList<>();
 
   @ElementCollection Map<UUID, Date> follower = new HashMap<>();
 
@@ -81,5 +81,5 @@ public class User {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
-  private List<Post> userPosts = new ArrayList<>();
+  private List<Posts> userPosts = new ArrayList<>();
 }

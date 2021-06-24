@@ -20,6 +20,9 @@ package xyz.subho.clone.twitter.repository;
 
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import xyz.subho.clone.twitter.entity.Hashtag;
+import xyz.subho.clone.twitter.entity.Hashtags;
 
-public interface HashtagsRepository extends JpaRepository<Hashtag, UUID> {}
+public interface HashtagsRepository extends JpaRepository<Hashtags, UUID> {
+
+  public Hashtags findByTag(String tag);
+}

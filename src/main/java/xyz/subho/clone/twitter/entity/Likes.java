@@ -18,40 +18,33 @@
 
 package xyz.subho.clone.twitter.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "hashtag")
+@Table(name = "likes")
 @Data
-public class Hashtag {
+public class Likes {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @Column(unique = true)
-  private String tag;
+  @ManyToOne
+  @JoinColumn(name = "post_id")
+  private Posts post;
 
-  @Column(name = "recent_post_count")
-  private Long recentPostCount;
-
-  @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JsonIgnore
-  private List<HashtagPost> hashtagPosts = new ArrayList<>();
+  @ManyToOne(targetEntity = Users.class)
+  @JoinColumn(name = "user_id")
+  private Users user;
 
   private Date createdAt;
   private Date updatedAt;

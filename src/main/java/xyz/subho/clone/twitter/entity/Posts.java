@@ -18,34 +18,70 @@
 
 package xyz.subho.clone.twitter.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "hashtag_post")
+@Table(name = "posts")
 @Data
-public class HashtagPost {
+public class Posts {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @ManyToOne
-  @JoinColumn(name = "hashtag_id")
-  private Hashtag hashtag;
+  @Column(length = 240)
+  private String text;
 
   @ManyToOne
-  @JoinColumn(name = "post_id")
-  private Post post;
+  @JoinColumn(name = "user_id")
+  private Users user;
 
+  @ElementCollection private Map<String, Date> images = new HashMap<>(4); // maximum of 4 images
+
+  @Column(name = "like_count")
+  private Long likeCount;
+
+  @Column(name = "repost_count")
+  private Long repostCount;
+
+  @Column(name = "orig_post_id")
+  private UUID originalPostId;
+
+  @Column(name = "reply_to_id")
+  private UUID replyToId;
+
+  private Date timestamp;
   private Date createdAt;
   private Date updatedAt;
+
+  @ElementCollection private Map<UUID, Date> hashtags = new HashMap<>();
+
+  @ElementCollection private Map<UUID, Date> mentions = new HashMap<>();
+
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<HashtagPosts> postHashtags = new ArrayList<>();
+
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<Likes> postLikes = new ArrayList<>();
 }

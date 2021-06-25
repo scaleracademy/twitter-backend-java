@@ -48,7 +48,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserModel getUserByUserId(UUID userId) {
-    return userMapper.transform(usersRepository.getById(userId));
+    var user = usersRepository.getById(userId);
+    return userMapper.transform(user);
   }
 
   @Override

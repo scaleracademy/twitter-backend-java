@@ -36,7 +36,11 @@ public class UserMapper implements Mapper<Users, UserModel> {
   @Override
   public Users transformBack(UserModel userModel) {
     var user = new Users();
-    BeanUtils.copyProperties(userModel, user);
+    BeanUtils.copyProperties(userModel, user, "followerCount", "followingCount", "verified");
+    user.setFollowerCount(userModel.getFollowerCount() != null ? userModel.getFollowerCount() : 0L);
+    user.setFollowingCount(
+        userModel.getFollowingCount() != null ? userModel.getFollowingCount() : 0L);
+    user.setVerified(userModel.getVerified() != null ? userModel.getVerified() : false);
     return user;
   }
 }

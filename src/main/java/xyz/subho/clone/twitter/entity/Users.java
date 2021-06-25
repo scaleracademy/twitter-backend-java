@@ -37,8 +37,8 @@ import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(
@@ -49,6 +49,7 @@ public class Users {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
   @Column(unique = true, nullable = false, length = 30)
@@ -66,14 +67,14 @@ public class Users {
   private String bio;
 
   @Column(name = "follower_count")
-  private Long followerCount;
+  private long followerCount = 0L;
 
   @Column(name = "following_count")
-  private Long followingCount;
+  private Long followingCount = 0L;
 
   private Boolean verified = false;
 
-  @CreatedDate private Date createdAt;
+  @CreationTimestamp private Date createdAt;
 
   @UpdateTimestamp private Date updatedAt;
 

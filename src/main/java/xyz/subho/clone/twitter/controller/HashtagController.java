@@ -25,15 +25,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.subho.clone.twitter.model.HashtagModel;
 import xyz.subho.clone.twitter.model.PostModel;
-import xyz.subho.clone.twitter.repository.HashtagsRepository;
 import xyz.subho.clone.twitter.service.HashtagService;
 
 @RestController
 public class HashtagController {
 
   @Autowired private HashtagService hashtagService;
-
-  @Autowired HashtagsRepository hashtagsRepository;
 
   @GetMapping("/hashtags")
   public List<HashtagModel> getAllHashtags() {

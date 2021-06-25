@@ -22,6 +22,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +41,7 @@ import xyz.subho.clone.twitter.service.PostService;
 @Slf4j
 public class PostController {
 
-  private PostService postService;
+  @Autowired private PostService postService;
 
   @GetMapping
   public ResponseEntity<List<PostModel>> getAllPosts() {

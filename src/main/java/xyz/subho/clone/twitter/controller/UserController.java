@@ -43,8 +43,7 @@ import xyz.subho.clone.twitter.utility.Utility;
 @Slf4j
 public class UserController {
 
-  // @Autowired
-  private UserService userService;
+  @Autowired private UserService userService;
 
   @Autowired private Utility utility;
 

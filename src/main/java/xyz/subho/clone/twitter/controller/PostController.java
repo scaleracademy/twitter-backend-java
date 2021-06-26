@@ -64,7 +64,7 @@ public class PostController {
 
   @DeleteMapping("/{postId}")
   public ResponseEntity<HttpStatus> deletePost(
-      @PathVariable("postid") UUID postId, Principal principal) {
+      @PathVariable("postId") UUID postId, Principal principal) {
 
     UUID userId = UUID.randomUUID(); // TODO: Extract from Principal
     postService.deletePost(postId, userId);
@@ -72,7 +72,7 @@ public class PostController {
   }
 
   @PutMapping("/{postId}/like")
-  public ResponseEntity<Long> likePost(@PathVariable("postid") UUID postId, Principal principal) {
+  public ResponseEntity<Long> likePost(@PathVariable("postId") UUID postId, Principal principal) {
 
     UUID userId = UUID.randomUUID(); // TODO: Extract from Principal
     return new ResponseEntity<>(postService.addLike(postId, userId), HttpStatus.CREATED);
@@ -80,7 +80,7 @@ public class PostController {
 
   @DeleteMapping("/{postId}/like")
   public ResponseEntity<Long> removeLikePost(
-      @PathVariable("postid") UUID postId, Principal principal) {
+      @PathVariable("postId") UUID postId, Principal principal) {
 
     UUID userId = UUID.randomUUID(); // TODO: Extract from Principal
     return new ResponseEntity<>(postService.removeLike(postId, userId), HttpStatus.OK);

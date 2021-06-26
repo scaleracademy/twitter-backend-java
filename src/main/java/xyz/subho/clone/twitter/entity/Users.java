@@ -72,6 +72,7 @@ public class Users {
   @Column(name = "following_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
   private Long followingCount = 0L;
 
+  @Column(columnDefinition = "boolean default false", nullable = false)
   private Boolean verified = false;
 
   @CreationTimestamp private Date createdAt;

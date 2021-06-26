@@ -42,12 +42,20 @@ public class HashtagPosts {
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @ManyToOne
-  @JoinColumn(name = "hashtags_id")
+  @ManyToOne(targetEntity = Hashtags.class)
+  @JoinColumn(
+      name = "hashtags_id",
+      columnDefinition = "BINARY(16)",
+      updatable = false,
+      nullable = false)
   private Hashtags hashtags;
 
-  @ManyToOne
-  @JoinColumn(name = "posts_id")
+  @ManyToOne(targetEntity = Posts.class)
+  @JoinColumn(
+      name = "posts_id",
+      columnDefinition = "BINARY(16)",
+      updatable = false,
+      nullable = false)
   private Posts posts;
 
   @CreationTimestamp private Date createdAt;

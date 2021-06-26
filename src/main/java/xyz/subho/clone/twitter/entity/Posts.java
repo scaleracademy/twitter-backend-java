@@ -56,17 +56,21 @@ public class Posts {
   private String text;
 
   @ManyToOne
-  @JoinColumn(name = "users_id")
+  @JoinColumn(
+      name = "users_id",
+      columnDefinition = "BINARY(16)",
+      updatable = false,
+      nullable = false)
   @CreatedBy
   private Users users;
 
   @ElementCollection private Map<String, Date> images = new HashMap<>(4); // maximum of 4 images
 
-  @Column(name = "like_count")
-  private Long likeCount;
+  @Column(name = "like_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
+  private Long likeCount = 0L;
 
-  @Column(name = "repost_count")
-  private Long repostCount;
+  @Column(name = "repost_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
+  private Long repostCount = 0L;
 
   @Column(name = "orig_post_id")
   private UUID originalPostId;
@@ -95,7 +99,7 @@ public class Posts {
   }
 
   public long decrementLikeCount() {
-    return --likeCount;
+    return (likeCount < 1) ? 0 : --likeCount;
   }
 
   public long incrementRepostCount() {
@@ -103,6 +107,6 @@ public class Posts {
   }
 
   public long decrementRepostCount() {
-    return --repostCount;
+    return (repostCount < 1) ? 0 : --repostCount;
   }
 }

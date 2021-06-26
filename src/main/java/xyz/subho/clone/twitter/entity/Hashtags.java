@@ -52,8 +52,8 @@ public class Hashtags {
   @Column(unique = true, nullable = false)
   private String tag;
 
-  @Column(name = "recent_post_count")
-  private Long recentPostCount;
+  @Column(name = "recent_post_count", columnDefinition = "BIGINT(20) default '1'", nullable = false)
+  private Long recentPostCount = 1L;
 
   @OneToMany(mappedBy = "hashtags", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore

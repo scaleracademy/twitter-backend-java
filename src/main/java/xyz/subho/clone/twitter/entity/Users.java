@@ -66,10 +66,10 @@ public class Users {
   @Column(length = 240)
   private String bio;
 
-  @Column(name = "follower_count")
+  @Column(name = "follower_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
   private long followerCount = 0L;
 
-  @Column(name = "following_count")
+  @Column(name = "following_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
   private Long followingCount = 0L;
 
   private Boolean verified = false;
@@ -82,9 +82,9 @@ public class Users {
   @JsonIgnore
   private List<Likes> userLikes = new ArrayList<>();
 
-  @ElementCollection Map<UUID, Date> follower = new HashMap<>();
+  @ElementCollection private Map<UUID, Date> follower = new HashMap<>();
 
-  @ElementCollection Map<UUID, Date> following = new HashMap<>();
+  @ElementCollection private Map<UUID, Date> following = new HashMap<>();
 
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore

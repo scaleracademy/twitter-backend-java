@@ -42,12 +42,20 @@ public class Likes {
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @ManyToOne
-  @JoinColumn(name = "posts_id")
+  @ManyToOne(targetEntity = Posts.class)
+  @JoinColumn(
+      name = "posts_id",
+      columnDefinition = "BINARY(16)",
+      updatable = false,
+      nullable = false)
   private Posts posts;
 
   @ManyToOne(targetEntity = Users.class)
-  @JoinColumn(name = "users_id")
+  @JoinColumn(
+      name = "users_id",
+      columnDefinition = "BINARY(16)",
+      updatable = false,
+      nullable = false)
   private Users users;
 
   @CreationTimestamp private Date createdAt;

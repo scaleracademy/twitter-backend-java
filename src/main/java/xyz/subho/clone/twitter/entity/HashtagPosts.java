@@ -20,6 +20,7 @@ package xyz.subho.clone.twitter.entity;
 
 import java.util.Date;
 import java.util.UUID;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,8 +29,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "hashtag_posts")
@@ -38,6 +39,7 @@ public class HashtagPosts {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
   @ManyToOne
@@ -48,7 +50,7 @@ public class HashtagPosts {
   @JoinColumn(name = "posts_id")
   private Posts posts;
 
-  @CreatedDate private Date createdAt;
+  @CreationTimestamp private Date createdAt;
 
   @UpdateTimestamp private Date updatedAt;
 }

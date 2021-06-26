@@ -34,9 +34,8 @@ import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(
@@ -47,7 +46,7 @@ public class Hashtags {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Type(type = "uuid-char")
+  @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
   @Column(unique = true, nullable = false)
@@ -60,7 +59,7 @@ public class Hashtags {
   @JsonIgnore
   private List<HashtagPosts> hashtagPosts = new ArrayList<>();
 
-  @CreatedDate private Date createdAt;
+  @CreationTimestamp private Date createdAt;
 
   @UpdateTimestamp private Date updatedAt;
 }

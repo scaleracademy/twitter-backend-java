@@ -45,21 +45,18 @@ public class PostController {
 
   @GetMapping
   public ResponseEntity<List<PostModel>> getAllPosts() {
-
     List<PostModel> posts = postService.getAllPosts();
     return new ResponseEntity<>(posts, HttpStatus.OK);
   }
 
   @GetMapping("/{postId}")
-  public ResponseEntity<PostModel> getPost(@PathVariable("postid") UUID postId) {
-
+  public ResponseEntity<PostModel> getPost(@PathVariable("postId") UUID postId) {
     PostModel post = postService.getPost(postId);
     return new ResponseEntity<>(post, HttpStatus.OK);
   }
 
   @PostMapping
   public ResponseEntity<PostModel> addPost(@RequestBody PostModel postModel, Principal principal) {
-
     UUID userId = UUID.randomUUID(); // TODO: Extract from Principal
     PostModel post = postService.addPost(postModel);
     return new ResponseEntity<>(post, HttpStatus.OK);

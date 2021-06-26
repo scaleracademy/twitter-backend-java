@@ -38,9 +38,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "posts")
@@ -49,6 +49,7 @@ public class Posts {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
   @Column(length = 240)
@@ -73,15 +74,13 @@ public class Posts {
   @Column(name = "reply_to_id")
   private UUID replyToId;
 
-  @CreatedDate private Date timestamp;
-
-  @CreatedDate private Date createdAt;
+  @CreationTimestamp private Date timestamp;
 
   @UpdateTimestamp private Date updatedAt;
 
-  @ElementCollection private Map<UUID, Date> hashtags = new HashMap<>();
+  @ElementCollection private Map<String, Date> hashtags = new HashMap<>();
 
-  @ElementCollection private Map<UUID, Date> mentions = new HashMap<>();
+  @ElementCollection private Map<String, Date> mentions = new HashMap<>();
 
   @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore

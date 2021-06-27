@@ -91,19 +91,27 @@ public class Users {
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
 
-  public void setFollower(final String username) {
+  public long setFollower(final String username) {
     follower.put(username, new Date());
+    followerCount = Long.valueOf(follower.size());
+    return followerCount;
   }
 
-  public void setFollowing(final String username) {
+  public long setFollowing(final String username) {
     following.put(username, new Date());
+    followingCount = Long.valueOf(following.size());
+    return ++followingCount;
   }
 
-  public void removeFollower(final String username) {
+  public long removeFollower(final String username) {
     follower.remove(username);
+    followerCount = Long.valueOf(follower.size());
+    return followerCount;
   }
 
-  public void removeFollowing(final String username) {
+  public long removeFollowing(final String username) {
     following.remove(username);
+    followingCount = Long.valueOf(following.size());
+    return followingCount;
   }
 }

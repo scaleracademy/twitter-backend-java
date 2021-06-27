@@ -21,6 +21,7 @@ package xyz.subho.clone.twitter.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -73,18 +74,39 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public boolean addFollower(UUID followerId, UUID userId) {
-    Users user = usersRepository.getById(userId);
-    user.setFollower(followerId);
-    usersRepository.save(user);
+  public boolean addFollowing(String followingUsername, String username) {
+    String[] usernames = {username, followingUsername};
+    List<Users> users = usersRepository.findByUsernameIn((Set.of(usernames)));
+    if (users.size() == 2) {
+      users.forEach(
+          user -> {
+            if (user.getUsername().equals(username)) {
+              user.setFollowing(followingUsername);
+            } else {
+              user.setFollower(username);
+            }
+          });
+    } // TODO : Throw Exception
+    usersRepository.saveAll(users);
     return true;
   }
 
   @Override
-  public boolean removeFollower(UUID followerId, UUID userId) {
-    Users user = usersRepository.getById(userId);
-    user.removeFollower(followerId);
-    usersRepository.save(user);
+  @Transactional
+  public boolean removeFollowing(String followingUsername, String username) {
+    String[] usernames = {username, followingUsername};
+    List<Users> users = usersRepository.findByUsernameIn(Set.of(usernames));
+    if (users.size() == 2) {
+      users.forEach(
+          user -> {
+            if (user.getUsername().equals(username)) {
+              user.removeFollowing(followingUsername);
+            } else {
+              user.removeFollower(username);
+            }
+          });
+    } // TODO : Throw Exception
+    usersRepository.saveAll(users);
     return true;
   }
 
@@ -92,7 +114,7 @@ public class UserServiceImpl implements UserService {
   public List<UserModel> getFollowers(UUID userId) {
     List<UserModel> followers = new ArrayList<>();
     Users user = usersRepository.getById(userId);
-    List<Users> users = usersRepository.findAllById(user.getFollower().keySet());
+    List<Users> users = usersRepository.findByUsernameIn(user.getFollower().keySet());
     Optional.ofNullable(users)
         .ifPresent(
             usersList ->
@@ -104,7 +126,7 @@ public class UserServiceImpl implements UserService {
   public List<UserModel> getFollowings(UUID userId) {
     List<UserModel> followings = new ArrayList<>();
     Users user = usersRepository.getById(userId);
-    List<Users> users = usersRepository.findAllById(user.getFollowing().keySet());
+    List<Users> users = usersRepository.findByUsernameIn(user.getFollowing().keySet());
     Optional.ofNullable(users)
         .ifPresent(
             usersList ->

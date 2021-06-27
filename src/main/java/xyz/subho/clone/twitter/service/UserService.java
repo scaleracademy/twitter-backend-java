@@ -35,9 +35,9 @@ public interface UserService {
 
   public UserModel editUser(UserModel user);
 
-  public boolean addFollower(UUID followerId, UUID userId);
+  public boolean addFollowing(String followerUsername, String username);
 
-  public boolean removeFollower(UUID followerId, UUID userId);
+  public boolean removeFollowing(String followerUsername, String username);
 
   public List<UserModel> getFollowers(UUID userId);
 

@@ -99,7 +99,12 @@ public class Posts {
   }
 
   public long decrementLikeCount() {
-    return (likeCount < 1) ? 0 : --likeCount;
+    if (likeCount < 1L) {
+      likeCount = 0L;
+    } else {
+      --likeCount;
+    }
+    return likeCount;
   }
 
   public long incrementRepostCount() {
@@ -107,6 +112,11 @@ public class Posts {
   }
 
   public long decrementRepostCount() {
-    return (repostCount < 1) ? 0 : --repostCount;
+    if (repostCount < 1L) {
+      repostCount = 0L;
+    } else {
+      --repostCount;
+    }
+    return repostCount;
   }
 }

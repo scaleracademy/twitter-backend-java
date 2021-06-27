@@ -105,8 +105,9 @@ public class PostServiceImpl implements PostService {
                   });
             });
     post.setPostHashtags(hashtagPosts);
+    var savedPosts = postsRepository.save(post);
     hashtagPostRepository.saveAll(hashtagPosts);
-    return postMapper.transform(postsRepository.save(post));
+    return postMapper.transform(savedPosts);
   }
 
   @Override
@@ -126,7 +127,7 @@ public class PostServiceImpl implements PostService {
 
     var post = postMapper.transformBack(getPost(postId));
     post.incrementLikeCount();
-    var user = userMapper.transformBack(userService.getUserByUserId(userId));
+    var user = userService.getUserEntityByUserId(userId);
 
     var likeMapping = new Likes();
     likeMapping.setPosts(post);
@@ -147,7 +148,7 @@ public class PostServiceImpl implements PostService {
 
     var post = postMapper.transformBack(getPost(postId));
     post.decrementLikeCount();
-    var user = userMapper.transformBack(userService.getUserByUserId(userId));
+    var user = userService.getUserEntityByUserId(userId);
 
     try {
       likeRepository.deleteByPostsAndUsers(post, user);

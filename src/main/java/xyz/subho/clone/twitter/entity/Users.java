@@ -83,27 +83,27 @@ public class Users {
   @JsonIgnore
   private List<Likes> userLikes = new ArrayList<>();
 
-  @ElementCollection private Map<UUID, Date> follower = new HashMap<>();
+  @ElementCollection private Map<String, Date> follower = new HashMap<>();
 
-  @ElementCollection private Map<UUID, Date> following = new HashMap<>();
+  @ElementCollection private Map<String, Date> following = new HashMap<>();
 
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
 
-  public void setFollower(final UUID userId) {
-    follower.put(userId, new Date());
+  public void setFollower(final String username) {
+    follower.put(username, new Date());
   }
 
-  public void setFollowing(final UUID userId) {
-    following.put(userId, new Date());
+  public void setFollowing(final String username) {
+    following.put(username, new Date());
   }
 
-  public void removeFollower(final UUID userId) {
-    follower.remove(userId);
+  public void removeFollower(final String username) {
+    follower.remove(username);
   }
 
-  public void removeFollowing(final UUID userId) {
-    following.remove(userId);
+  public void removeFollowing(final String username) {
+    following.remove(username);
   }
 }

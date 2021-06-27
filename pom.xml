@@ -18,7 +18,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
@@ -68,6 +67,8 @@
     <spotless.plugin.version>2.8.1</spotless.plugin.version>
     <google-java-format.version>1.9</google-java-format.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
+    <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
+    <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
     <jacoco.version>0.8.6</jacoco.version>
     
     <sonar.projectKey>scaleracademy_twitter-backend-java</sonar.projectKey>
@@ -125,7 +126,25 @@
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-boot-starter</artifactId>
-      <version>3.0.0</version>
+      <version>${springfox-boot-starter.version}</version>
+    </dependency>
+
+    <!-- <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency> -->
+
+    <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId>
+      <version>${jsonwebtoken.version}</version>
     </dependency>
   </dependencies>
   

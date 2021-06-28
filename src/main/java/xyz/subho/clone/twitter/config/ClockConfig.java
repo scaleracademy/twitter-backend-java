@@ -16,9 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.repository;
+package xyz.subho.clone.twitter.config;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import xyz.subho.clone.twitter.security.entity.UsersRoles;
+import java.time.Clock;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-public interface UserRoleRepository extends JpaRepository<UsersRoles, Long> {}
+@Configuration
+public class ClockConfig {
+
+  @Bean
+  public Clock clock() {
+    return Clock.systemUTC();
+  }
+}

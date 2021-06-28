@@ -31,7 +31,7 @@ import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.repository.UsersRepository;
 import xyz.subho.clone.twitter.service.UserService;
-import xyz.subho.clone.twitter.utility.Mapper;
+import xyz.subho.clone.twitter.utility.mapper.Mapper;
 
 @Service
 public class UserServiceImpl implements UserService {

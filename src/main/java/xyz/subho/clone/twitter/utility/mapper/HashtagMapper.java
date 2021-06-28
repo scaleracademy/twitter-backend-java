@@ -16,31 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.utility;
+package xyz.subho.clone.twitter.utility.mapper;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
-import xyz.subho.clone.twitter.entity.Users;
-import xyz.subho.clone.twitter.model.UserModel;
+import xyz.subho.clone.twitter.entity.Hashtags;
+import xyz.subho.clone.twitter.model.HashtagModel;
 
-@Component("UserMapper")
-public class UserMapper implements Mapper<Users, UserModel> {
+@Component("HashtagMapper")
+public class HashtagMapper implements Mapper<Hashtags, HashtagModel> {
 
   @Override
-  public UserModel transform(Users user) {
-    var userModel = new UserModel();
-    BeanUtils.copyProperties(user, userModel);
-    return userModel;
+  public HashtagModel transform(Hashtags hashtag) {
+    var hashtagModel = new HashtagModel();
+    BeanUtils.copyProperties(hashtag, hashtagModel);
+    return hashtagModel;
   }
 
   @Override
-  public Users transformBack(UserModel userModel) {
-    var user = new Users();
-    BeanUtils.copyProperties(userModel, user, "followerCount", "followingCount", "verified");
-    user.setFollowerCount(userModel.getFollowerCount() != null ? userModel.getFollowerCount() : 0L);
-    user.setFollowingCount(
-        userModel.getFollowingCount() != null ? userModel.getFollowingCount() : 0L);
-    user.setVerified(userModel.getVerified() != null ? userModel.getVerified() : false);
-    return user;
+  public Hashtags transformBack(HashtagModel hashtagModel) {
+    var hashtag = new Hashtags();
+    BeanUtils.copyProperties(hashtagModel, hashtag);
+    return hashtag;
   }
 }

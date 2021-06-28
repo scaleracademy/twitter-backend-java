@@ -16,12 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.entity;
+package xyz.subho.clone.twitter.security.entity;
 
-import java.util.Date;
-import java.util.UUID;
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,36 +27,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-@Entity(name = "HashtagPosts")
-@Table(name = "hashtag_posts")
+@Entity(name = "UsersRoles")
+@Table(name = "users_roles")
 @Data
-public class HashtagPosts {
+public class UsersRoles {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(columnDefinition = "BINARY(16)")
-  private UUID id;
+  private Long id;
 
-  @ManyToOne(targetEntity = Hashtags.class)
-  @JoinColumn(
-      name = "hashtags_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
-  private Hashtags hashtags;
+  @ManyToOne(targetEntity = UsersAuthenticationDetails.class, fetch = FetchType.EAGER)
+  @JoinColumn(name = "users_id")
+  private UsersAuthenticationDetails usersAuthenticationEntity;
 
-  @ManyToOne(targetEntity = Posts.class)
-  @JoinColumn(
-      name = "posts_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
-  private Posts posts;
-
-  @CreationTimestamp private Date createdAt;
-
-  @UpdateTimestamp private Date updatedAt;
+  @ManyToOne(targetEntity = Roles.class, fetch = FetchType.EAGER)
+  @JoinColumn(name = "roles_id")
+  private Roles roles;
 }

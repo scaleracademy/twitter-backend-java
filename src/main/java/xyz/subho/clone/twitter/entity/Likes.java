@@ -32,7 +32,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-@Entity
+@Entity(name = "Likes")
 @Table(name = "likes")
 @Data
 public class Likes {

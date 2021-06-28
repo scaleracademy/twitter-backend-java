@@ -40,7 +40,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-@Entity
+@Entity(name = "Users")
 @Table(
     name = "users",
     indexes = {@Index(columnList = "username")})
@@ -52,7 +52,7 @@ public class Users {
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @Column(unique = true, nullable = false, length = 30)
+  @Column(unique = true, nullable = false, length = 30, updatable = false)
   private String username;
 
   @Column(nullable = false, length = 50)
@@ -67,7 +67,7 @@ public class Users {
   private String bio;
 
   @Column(name = "follower_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
-  private long followerCount = 0L;
+  private Long followerCount = 0L;
 
   @Column(name = "following_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
   private Long followingCount = 0L;

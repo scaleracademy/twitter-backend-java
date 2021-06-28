@@ -18,9 +18,33 @@
 
 package xyz.subho.clone.twitter.utility;
 
-public interface Mapper<S, T> {
+import java.util.UUID;
 
-  T transform(S source);
+public class UUIDUtils {
 
-  S transformBack(T source);
+  private UUIDUtils() {
+    throw new IllegalStateException("Utility class");
+  }
+
+  /**
+   * @param String uuid
+   * @return TRUE or FALSE if the given String is a valid UUID
+   */
+  public static boolean isUUID(String uuid) {
+
+    try {
+      UUID.fromString(uuid);
+      return true;
+    } catch (Exception exp) {
+      return false;
+    }
+  }
+
+  /**
+   * @param String uuid
+   * @return UUID uuid or NULL if invalid
+   */
+  public static UUID converStringToUUID(String uuid) {
+    return isUUID(uuid) ? UUID.fromString(uuid) : null;
+  }
 }

@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.service.UserService;
-import xyz.subho.clone.twitter.utility.Utility;
+import xyz.subho.clone.twitter.utility.UUIDUtils;
 
 @RestController
 @RequestMapping("/users")
@@ -42,8 +42,6 @@ import xyz.subho.clone.twitter.utility.Utility;
 public class UserController {
 
   @Autowired private UserService userService;
-
-  @Autowired private Utility utility;
 
   @GetMapping("/{userNameOrUserId}")
   public ResponseEntity<UserModel> getUserByUserIdOrUserName(
@@ -59,7 +57,7 @@ public class UserController {
     }
 
     log.info("input resource is a UUID");
-    var userId = utility.converStringToUUID(userNameOrUserId);
+    var userId = UUIDUtils.converStringToUUID(userNameOrUserId);
     userResponse = userService.getUserByUserId(userId);
     return new ResponseEntity<>(userResponse, HttpStatus.OK);
   }

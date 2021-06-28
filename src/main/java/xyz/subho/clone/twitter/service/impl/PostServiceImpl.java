@@ -42,7 +42,7 @@ import xyz.subho.clone.twitter.repository.UsersRepository;
 import xyz.subho.clone.twitter.service.HashtagService;
 import xyz.subho.clone.twitter.service.PostService;
 import xyz.subho.clone.twitter.service.UserService;
-import xyz.subho.clone.twitter.utility.Mapper;
+import xyz.subho.clone.twitter.utility.mapper.Mapper;
 
 @Service
 @Slf4j

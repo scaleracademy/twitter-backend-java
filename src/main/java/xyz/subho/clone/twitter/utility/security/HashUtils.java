@@ -16,9 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.repository;
+package xyz.subho.clone.twitter.utility.security;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import xyz.subho.clone.twitter.security.entity.UsersRoles;
+public class HashUtils {
 
-public interface UserRoleRepository extends JpaRepository<UsersRoles, Long> {}
+  private HashUtils() {
+    throw new IllegalStateException("Utility class");
+  }
+
+  public static String generateSalt() {
+    return RandomStringUtil.getInstance().nextString();
+  }
+
+  public static String generateSalt(int hashSize) {
+    return (new RandomStringUtil(hashSize)).nextString();
+  }
+}

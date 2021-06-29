@@ -22,8 +22,8 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,11 +39,11 @@ public class UsersRoles implements Serializable {
   @EmbeddedId private UsersRolesId id;
 
   @ManyToOne
-  @JoinColumn(name = "users_id", updatable = false, insertable = false)
+  @MapsId("usersId")
   private UsersAuthenticationDetails usersAuthenticationEntity;
 
   @ManyToOne
-  @JoinColumn(name = "roles_id", updatable = false, insertable = false)
+  @MapsId("rolesId")
   private Roles roles;
 
   @CreationTimestamp private Date createdAt = new Date();

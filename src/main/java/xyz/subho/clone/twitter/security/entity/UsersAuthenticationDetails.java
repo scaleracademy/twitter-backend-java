@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -96,6 +97,7 @@ public class UsersAuthenticationDetails implements UserDetails, Serializable {
       cascade = CascadeType.ALL,
       orphanRemoval = true,
       fetch = FetchType.EAGER)
+  @JsonIgnore
   private List<UsersRoles> usersRoles = new ArrayList<>();
 
   public boolean addRole(Roles roles) {

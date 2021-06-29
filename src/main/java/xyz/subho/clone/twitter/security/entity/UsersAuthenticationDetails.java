@@ -95,7 +95,7 @@ public class UsersAuthenticationDetails implements UserDetails, Serializable {
   private Boolean credentialsNonExpired = true;
   
   @OneToMany(
-		  mappedBy = "users_authentication",
+		  mappedBy = "usersAuthenticationEntity",
 		  cascade = CascadeType.ALL,
 		  orphanRemoval = true,
 		  fetch = FetchType.EAGER)

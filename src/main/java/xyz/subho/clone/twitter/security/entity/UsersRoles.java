@@ -24,6 +24,8 @@ import java.util.Date;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
@@ -40,17 +42,17 @@ public class UsersRoles implements Serializable {
 
   private static final long serialVersionUID = 6266028818011079306L;
 
-  @EmbeddedId
-  private UsersRolesId id;
+//  @EmbeddedId
+//  private UsersRolesId id;
 
-  @ManyToOne(
-		  targetEntity = UsersAuthenticationDetails.class,
-		  fetch = FetchType.LAZY)
-  @MapsId("users_id")
+  @Id
+  @ManyToOne
+  @JoinColumn(name = "users_id")
   private UsersAuthenticationDetails usersAuthenticationEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @MapsId("rolesId")
+  @Id
+  @ManyToOne
+  @JoinColumn(name = "roles_id")
   private Roles roles;
 
   @CreationTimestamp private Date createdAt = new Date();
@@ -62,9 +64,9 @@ public class UsersRoles implements Serializable {
    * @param roles
    */
   public UsersRoles(UsersAuthenticationDetails usersAuthenticationEntity, Roles roles) {
-  	this.id = new UsersRolesId(
-  			usersAuthenticationEntity.getId(),
-  			roles.getRolesId());
+//  	this.id = new UsersRolesId(
+//  			usersAuthenticationEntity.getId(),
+//  			roles.getRolesId());
   	this.usersAuthenticationEntity = usersAuthenticationEntity;
   	this.roles = roles;
   }

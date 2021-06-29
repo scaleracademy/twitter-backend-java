@@ -19,6 +19,7 @@
 package xyz.subho.clone.twitter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,7 +46,9 @@ import org.hibernate.annotations.UpdateTimestamp;
     name = "users",
     indexes = {@Index(columnList = "username")})
 @Data
-public class Users {
+public class Users implements Serializable {
+
+  private static final long serialVersionUID = 5509244829545094653L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -90,6 +93,15 @@ public class Users {
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
+
+  /*
+  @OneToOne(
+    mappedBy = "user",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true,
+    optional = false)
+  @PrimaryKeyJoinColumn
+  private UsersAuthenticationDetails usersAuthenticationDetails;*/
 
   public long setFollower(final String username) {
     follower.put(username, new Date());

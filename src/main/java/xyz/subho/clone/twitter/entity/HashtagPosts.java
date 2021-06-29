@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -35,7 +36,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity(name = "HashtagPosts")
 @Table(name = "hashtag_posts")
 @Data
-public class HashtagPosts {
+public class HashtagPosts implements Serializable {
+
+  private static final long serialVersionUID = 859441133926L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.security.entity;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -31,14 +32,21 @@ import lombok.Data;
 @Entity(name = "UsersRoles")
 @Table(name = "users_roles")
 @Data
-public class UsersRoles {
+public class UsersRoles implements Serializable {
+
+  private static final long serialVersionUID = 6266028818011079306L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  /*
   @ManyToOne(targetEntity = UsersAuthenticationDetails.class, fetch = FetchType.EAGER)
-  @JoinColumn(name = "users_id")
+  @JoinColumn(
+       name = "users_id",
+       columnDefinition = "BINARY(16)",
+       updatable = false,
+       nullable = false)*/
   private UsersAuthenticationDetails usersAuthenticationEntity;
 
   @ManyToOne(targetEntity = Roles.class, fetch = FetchType.EAGER)

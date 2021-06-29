@@ -18,24 +18,19 @@
 
 package xyz.subho.clone.twitter.security.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Data;
@@ -45,20 +40,19 @@ import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.security.Authority;
 
 @Entity
-@Table(
-    indexes = {@Index(columnList = "username"), @Index(columnList = "users_id")})
+@Table(indexes = {@Index(columnList = "username"), @Index(columnList = "users_id")})
 @Data
 public class UsersAuthenticationDetails implements UserDetails, Serializable {
 
   private static final long serialVersionUID = 3577019301886090937L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(columnDefinition = "BINARY(16)")
+  @Column(name = "users_id", columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @OneToOne(fetch = FetchType.LAZY)
   @MapsId
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "users_id")
   private Users users;
 
   @OneToOne(fetch = FetchType.EAGER, targetEntity = Users.class)
@@ -86,12 +80,14 @@ public class UsersAuthenticationDetails implements UserDetails, Serializable {
       nullable = false)
   private Boolean credentialsNonExpired = true;
 
+  /*
   @OneToMany(
       mappedBy = "UsersAuthenticationDetails",
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY)
   @JsonIgnore
-  private Set<UsersRoles> usersRoles = new HashSet<>();
+  */
+  @ElementCollection private Set<UsersRoles> usersRoles = new HashSet<>();
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

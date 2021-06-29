@@ -19,6 +19,7 @@
 package xyz.subho.clone.twitter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,7 +46,9 @@ import org.springframework.data.annotation.CreatedBy;
 @Entity(name = "Posts")
 @Table(name = "posts")
 @Data
-public class Posts {
+public class Posts implements Serializable {
+
+  private static final long serialVersionUID = 3619919451923687L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

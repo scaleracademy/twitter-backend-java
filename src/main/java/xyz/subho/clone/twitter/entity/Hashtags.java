@@ -19,6 +19,7 @@
 package xyz.subho.clone.twitter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +43,9 @@ import org.hibernate.annotations.UpdateTimestamp;
     name = "hashtags",
     indexes = {@Index(columnList = "tag")})
 @Data
-public class Hashtags {
+public class Hashtags implements Serializable {
+
+  private static final long serialVersionUID = 9295165523670L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

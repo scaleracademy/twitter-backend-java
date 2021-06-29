@@ -19,6 +19,7 @@
 package xyz.subho.clone.twitter.security.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,7 +36,9 @@ import lombok.Data;
     name = "roles",
     indexes = {@Index(columnList = "roles_name")})
 @Data
-public class Roles {
+public class Roles implements Serializable {
+
+  private static final long serialVersionUID = 38920613133424876L;
 
   @Id private Integer rolesId;
 

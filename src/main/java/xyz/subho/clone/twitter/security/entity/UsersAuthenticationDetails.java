@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -93,20 +94,20 @@ public class UsersAuthenticationDetails implements UserDetails, Serializable {
   private Boolean credentialsNonExpired = true;
 
   @OneToMany(
-      mappedBy = "usersAuthenticationEntity",
+      mappedBy = "usersAuthentication",
       cascade = CascadeType.ALL,
       orphanRemoval = true,
       fetch = FetchType.EAGER)
   @JsonIgnore
   private List<UsersRoles> usersRoles = new ArrayList<>();
 
-  public boolean addRole(Roles roles) {
-    var userRoles = new UsersRoles(this, roles);
+  public boolean assignRole(Roles roles) {
+  	var userRoles = new UsersRoles(this, roles);
     this.usersRoles.add(userRoles);
     return roles.getUsersRoles().add(userRoles);
   }
 
-  public void removeRole(Roles role) {
+  public void deAssignRole(Roles role) {
     List<UsersRoles> toBeDeleted =
         usersRoles.stream()
             .filter(userRole -> userRole.getRoles().equals(role))

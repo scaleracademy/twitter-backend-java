@@ -40,7 +40,7 @@ public class UsersRoles implements Serializable {
 
   @ManyToOne
   @MapsId("usersId")
-  private UsersAuthenticationDetails usersAuthenticationEntity;
+  private UsersAuthenticationDetails usersAuthentication;
 
   @ManyToOne
   @MapsId("rolesId")
@@ -54,9 +54,9 @@ public class UsersRoles implements Serializable {
    * @param usersAuthenticationEntity
    * @param roles
    */
-  public UsersRoles(UsersAuthenticationDetails usersAuthenticationEntity, Roles roles) {
-    this.id = new UsersRolesId(usersAuthenticationEntity.getId(), roles.getRolesId());
-    this.usersAuthenticationEntity = usersAuthenticationEntity;
+  public UsersRoles(UsersAuthenticationDetails usersAuthentication, Roles roles) {
+    this.id = new UsersRolesId(usersAuthentication.getId(), roles.getRolesId());
+    this.usersAuthentication = usersAuthentication;
     this.roles = roles;
   }
 }

@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,10 +32,8 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.NaturalId;
-
 import lombok.Data;
+import org.hibernate.annotations.NaturalId;
 
 @Entity(name = "Roles")
 @Table(
@@ -57,18 +54,15 @@ public class Roles implements Serializable {
   private String rolesName;
 
   @OneToMany(
-		  mappedBy = "roles",
-		  cascade = CascadeType.ALL,
-		  fetch = FetchType.LAZY,
-		  orphanRemoval = true)
+      mappedBy = "roles",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      orphanRemoval = true)
   @JsonIgnore
   private List<UsersRoles> usersRoles = new ArrayList<>();
 
-	/**
-	 * @param rolesName
-	 */
-	public Roles(String rolesName) {
-		this.rolesName = rolesName;
-	}
-	
+  /** @param rolesName */
+  public Roles(String rolesName) {
+    this.rolesName = rolesName;
+  }
 }

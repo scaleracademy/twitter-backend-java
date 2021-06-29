@@ -40,10 +40,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import lombok.Data;
-import xyz.subho.clone.twitter.security.entity.UsersAuthenticationDetails;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import xyz.subho.clone.twitter.security.entity.UsersAuthenticationDetails;
 
 @Entity(name = "Users")
 @Table(
@@ -98,12 +97,7 @@ public class Users implements Serializable {
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
 
-  
-  @OneToOne(
-    mappedBy = "users",
-    cascade = CascadeType.ALL,
-    orphanRemoval = true,
-    optional = false)
+  @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
   @PrimaryKeyJoinColumn
   private UsersAuthenticationDetails usersAuthenticationDetails;
 

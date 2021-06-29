@@ -25,12 +25,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -41,7 +38,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Data;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalIdCache;
@@ -51,8 +47,9 @@ import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.security.Authority;
 
 @Entity(name = "UsersAuthenticationDetails")
-@Table(	name = "users_authentication",
-		indexes = {@Index(columnList = "username"), @Index(columnList = "users_id")})
+@Table(
+    name = "users_authentication",
+    indexes = {@Index(columnList = "username"), @Index(columnList = "users_id")})
 @NaturalIdCache
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
@@ -93,24 +90,26 @@ public class UsersAuthenticationDetails implements UserDetails, Serializable {
       columnDefinition = "boolean default true",
       nullable = false)
   private Boolean credentialsNonExpired = true;
-  
+
   @OneToMany(
-		  mappedBy = "usersAuthenticationEntity",
-		  cascade = CascadeType.ALL,
-		  orphanRemoval = true,
-		  fetch = FetchType.EAGER)
+      mappedBy = "usersAuthenticationEntity",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.EAGER)
   private List<UsersRoles> usersRoles = new ArrayList<>();
-  
+
   public boolean addRole(Roles roles) {
-	  var userRoles = new UsersRoles(this, roles);
-	  this.usersRoles.add(userRoles);
-	  return roles.getUsersRoles().add(userRoles);
+    var userRoles = new UsersRoles(this, roles);
+    this.usersRoles.add(userRoles);
+    return roles.getUsersRoles().add(userRoles);
   }
-  
+
   public void removeRole(Roles role) {
-	  List<UsersRoles> toBeDeleted = usersRoles.stream().filter(
-			  userRole -> userRole.getRoles().equals(role)).collect(Collectors.toList());
-	  usersRoles.removeAll(toBeDeleted);
+    List<UsersRoles> toBeDeleted =
+        usersRoles.stream()
+            .filter(userRole -> userRole.getRoles().equals(role))
+            .collect(Collectors.toList());
+    usersRoles.removeAll(toBeDeleted);
   }
 
   @Override

@@ -36,8 +36,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import lombok.Data;
+import xyz.subho.clone.twitter.security.entity.UsersAuthenticationDetails;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -94,14 +98,14 @@ public class Users implements Serializable {
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
 
-  /*
+  
   @OneToOne(
-    mappedBy = "user",
+    mappedBy = "users",
     cascade = CascadeType.ALL,
     orphanRemoval = true,
     optional = false)
   @PrimaryKeyJoinColumn
-  private UsersAuthenticationDetails usersAuthenticationDetails;*/
+  private UsersAuthenticationDetails usersAuthenticationDetails;
 
   public long setFollower(final String username) {
     follower.put(username, new Date());

@@ -19,14 +19,18 @@
 package xyz.subho.clone.twitter.security.entity;
 
 import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import lombok.Data;
 
 @Entity(name = "UsersRoles")
@@ -36,20 +40,32 @@ public class UsersRoles implements Serializable {
 
   private static final long serialVersionUID = 6266028818011079306L;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+  @EmbeddedId
+  private UsersRolesId id;
 
-  /*
-  @ManyToOne(targetEntity = UsersAuthenticationDetails.class, fetch = FetchType.EAGER)
-  @JoinColumn(
-       name = "users_id",
-       columnDefinition = "BINARY(16)",
-       updatable = false,
-       nullable = false)*/
+  @ManyToOne(
+		  targetEntity = UsersAuthenticationDetails.class,
+		  fetch = FetchType.LAZY)
+  @MapsId("users_id")
   private UsersAuthenticationDetails usersAuthenticationEntity;
 
-  @ManyToOne(targetEntity = Roles.class, fetch = FetchType.EAGER)
-  @JoinColumn(name = "roles_id")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @MapsId("rolesId")
   private Roles roles;
+
+  @CreationTimestamp private Date createdAt = new Date();
+
+  @UpdateTimestamp private Date updatedAt = new Date();
+  
+  /**
+   * @param usersAuthenticationEntity
+   * @param roles
+   */
+  public UsersRoles(UsersAuthenticationDetails usersAuthenticationEntity, Roles roles) {
+  	this.id = new UsersRolesId(
+  			usersAuthenticationEntity.getId(),
+  			roles.getRolesId());
+  	this.usersAuthenticationEntity = usersAuthenticationEntity;
+  	this.roles = roles;
+  }
 }

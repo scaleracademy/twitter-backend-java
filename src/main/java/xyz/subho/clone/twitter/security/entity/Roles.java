@@ -20,15 +20,22 @@ package xyz.subho.clone.twitter.security.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.NaturalId;
+
 import lombok.Data;
 
 @Entity(name = "Roles")
@@ -40,12 +47,27 @@ public class Roles implements Serializable {
 
   private static final long serialVersionUID = 38920613133424876L;
 
-  @Id private Integer rolesId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer rolesId;
 
   @Column(name = "roles_name", nullable = false, length = 30, unique = true)
+  @NaturalId
   private String rolesName;
 
-  @OneToMany(mappedBy = "roles", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(
+		  mappedBy = "roles",
+		  cascade = CascadeType.ALL,
+		  fetch = FetchType.LAZY,
+		  orphanRemoval = true)
   @JsonIgnore
-  private Set<UsersRoles> usersRoles;
+  private List<UsersRoles> usersRoles = new ArrayList<>();
+
+	/**
+	 * @param rolesName
+	 */
+	public Roles(String rolesName) {
+		this.rolesName = rolesName;
+	}
+	
 }

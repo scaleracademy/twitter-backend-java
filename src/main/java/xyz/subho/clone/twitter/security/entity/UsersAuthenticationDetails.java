@@ -50,7 +50,7 @@ import xyz.subho.clone.twitter.security.Authority;
 @Entity(name = "UsersAuthenticationDetails")
 @Table(
     name = "users_authentication",
-    indexes = {@Index(columnList = "username"), @Index(columnList = "users_id")})
+    indexes = {@Index(columnList = "username")})
 @NaturalIdCache
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
@@ -64,7 +64,7 @@ public class UsersAuthenticationDetails implements UserDetails, Serializable {
 
   @MapsId
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "users_id")
+  @JoinColumn(name = "users_id", columnDefinition = "BINARY(16)")
   private Users users;
 
   @OneToOne(fetch = FetchType.EAGER, targetEntity = Users.class)

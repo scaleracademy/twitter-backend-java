@@ -51,8 +51,21 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/} | tr / -)"
+        id: extract_branch
+      
       - name: Build Package
-        run: mvn -B clean verify
+        run: |
+            if [ -n "${{ github.event.pull_request.number }}" ]; then
+              MAVEN_OPTS="-Xmx4096m" xvfb-run ./mvnw -B clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                 -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
+                 -Dsonar.pullrequest.branch=${{ steps.extract_branch.outputs.branch }} \
+                 -Dsonar.pullrequest.base=master
+            else
+              echo "No Sonar PR analysis as this is not a Pull Request"
+            fi
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1

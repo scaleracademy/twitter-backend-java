@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -102,7 +101,7 @@ public class UsersAuthenticationDetails implements UserDetails, Serializable {
   private List<UsersRoles> usersRoles = new ArrayList<>();
 
   public boolean assignRole(Roles roles) {
-  	var userRoles = new UsersRoles(this, roles);
+    var userRoles = new UsersRoles(this, roles);
     this.usersRoles.add(userRoles);
     return roles.getUsersRoles().add(userRoles);
   }

@@ -20,48 +20,45 @@ package xyz.subho.clone.twitter.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.UUID;
-import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity(name = "Likes")
 @Table(name = "likes")
 @Data
+@RequiredArgsConstructor
 public class Likes implements Serializable {
 
   private static final long serialVersionUID = 10299532548L;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(columnDefinition = "BINARY(16)")
-  private UUID id;
+  @EmbeddedId private UserPostsId id;
 
-  @ManyToOne(targetEntity = Posts.class)
-  @JoinColumn(
-      name = "posts_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
+  @ManyToOne
+  @MapsId("postId")
   private Posts posts;
 
-  @ManyToOne(targetEntity = Users.class)
-  @JoinColumn(
-      name = "users_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
+  @ManyToOne
+  @MapsId("userId")
   private Users users;
 
-  @CreationTimestamp private Date createdAt;
+  @CreationTimestamp private Date createdAt = new Date();
 
-  @UpdateTimestamp private Date updatedAt;
+  @UpdateTimestamp private Date updatedAt = new Date();
+
+  /**
+   * @param posts
+   * @param users
+   */
+  public Likes(Posts posts, Users users) {
+    this.id = new UserPostsId(users.getId(), posts.getId());
+    this.posts = posts;
+    this.users = users;
+  }
 }

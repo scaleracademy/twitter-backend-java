@@ -35,14 +35,22 @@ import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.NaturalIdCache;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity(name = "Hashtags")
 @Table(
     name = "hashtags",
     indexes = {@Index(columnList = "tag")})
+@NaturalIdCache
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
+@NoArgsConstructor
 public class Hashtags implements Serializable {
 
   private static final long serialVersionUID = 9295165523670L;
@@ -52,17 +60,28 @@ public class Hashtags implements Serializable {
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @Column(unique = true, nullable = false)
+  @Column(name = "tag", unique = true, nullable = false, length = 240)
+  @NaturalId
   private String tag;
 
   @Column(name = "recent_post_count", columnDefinition = "BIGINT(20) default '1'", nullable = false)
   private Long recentPostCount = 1L;
 
-  @OneToMany(mappedBy = "hashtags", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(
+      mappedBy = "hashtags",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      orphanRemoval = true)
   @JsonIgnore
   private List<HashtagPosts> hashtagPosts = new ArrayList<>();
 
-  @CreationTimestamp private Date createdAt;
+  @CreationTimestamp private Date createdAt = new Date();
 
-  @UpdateTimestamp private Date updatedAt;
+  @UpdateTimestamp private Date updatedAt = new Date();
+
+  /** @param tag */
+  public Hashtags(String tag) {
+    this.tag = tag;
+    recentPostCount = 1L;
+  }
 }

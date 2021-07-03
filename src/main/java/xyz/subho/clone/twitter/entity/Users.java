@@ -81,17 +81,13 @@ public class Users implements Serializable {
   @Column(columnDefinition = "boolean default false", nullable = false)
   private Boolean verified = false;
 
-  @CreationTimestamp private Date createdAt;
+  @ElementCollection private Map<String, Date> follower = new HashMap<>();
 
-  @UpdateTimestamp private Date updatedAt;
+  @ElementCollection private Map<String, Date> following = new HashMap<>();
 
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Likes> userLikes = new ArrayList<>();
-
-  @ElementCollection private Map<String, Date> follower = new HashMap<>();
-
-  @ElementCollection private Map<String, Date> following = new HashMap<>();
 
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
@@ -100,6 +96,10 @@ public class Users implements Serializable {
   @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
   @PrimaryKeyJoinColumn
   private UsersAuthenticationDetails usersAuthenticationDetails;
+
+  @CreationTimestamp private Date createdAt = new Date();
+
+  @UpdateTimestamp private Date updatedAt = new Date();
 
   public long setFollower(final String username) {
     follower.put(username, new Date());

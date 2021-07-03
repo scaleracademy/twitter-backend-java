@@ -126,7 +126,7 @@ public class PostServiceImpl implements PostService {
   public long addLike(UUID postId, UUID userId) {
 
     var post = postMapper.transformBack(getPost(postId));
-    post.incrementLikeCount();
+    // post.incrementLikeCount();
     var user = userService.getUserEntityByUserId(userId);
 
     var likeMapping = new Likes();
@@ -147,7 +147,7 @@ public class PostServiceImpl implements PostService {
   public long removeLike(UUID postId, UUID userId) {
 
     var post = postMapper.transformBack(getPost(postId));
-    post.decrementLikeCount();
+    // post.decrementLikeCount();
     var user = userService.getUserEntityByUserId(userId);
 
     try {

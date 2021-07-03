@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -75,15 +76,11 @@ public class Posts implements Serializable {
   @Column(name = "repost_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
   private Long repostCount = 0L;
 
-  @Column(name = "orig_post_id")
+  @Column(name = "orig_post_id", columnDefinition = "BINARY(16)")
   private UUID originalPostId;
 
-  @Column(name = "reply_to_id")
+  @Column(name = "reply_to_id", columnDefinition = "BINARY(16)")
   private UUID replyToId;
-
-  @CreationTimestamp private Date timestamp;
-
-  @UpdateTimestamp private Date updatedAt;
 
   @ElementCollection private Map<String, Date> hashtags = new HashMap<>();
 
@@ -97,17 +94,29 @@ public class Posts implements Serializable {
   @JsonIgnore
   private List<Likes> postLikes = new ArrayList<>();
 
-  public long incrementLikeCount() {
-    return ++likeCount;
+  @CreationTimestamp private Date createdAt = new Date();
+
+  @UpdateTimestamp private Date updatedAt = new Date();
+
+  public long incrementLikeCount(Users likedByUser) {
+    var likes = new Likes(this, likedByUser);
+    this.postLikes.add(likes);
+    return this.postLikes.stream()
+        .filter(thisPost -> thisPost.getPosts().equals(this))
+        .collect(Collectors.toList())
+        .size();
   }
 
-  public long decrementLikeCount() {
-    if (likeCount < 1L) {
-      likeCount = 0L;
-    } else {
-      --likeCount;
-    }
-    return likeCount;
+  public long decrementLikeCount(Users unlikedByUser) {
+    List<Likes> toBeDeleted =
+        postLikes.stream()
+            .filter(like -> like.getUsers().equals(unlikedByUser) && like.getPosts().equals(this))
+            .collect(Collectors.toList());
+    postLikes.removeAll(toBeDeleted);
+    return this.postLikes.stream()
+        .filter(thisPost -> thisPost.getPosts().equals(this))
+        .collect(Collectors.toList())
+        .size();
   }
 
   public long incrementRepostCount() {

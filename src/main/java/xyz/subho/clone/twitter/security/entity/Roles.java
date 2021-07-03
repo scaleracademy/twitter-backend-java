@@ -21,6 +21,7 @@ package xyz.subho.clone.twitter.security.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,13 +34,17 @@ import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity(name = "Roles")
 @Table(
     name = "roles",
     indexes = {@Index(columnList = "roles_name")})
 @Data
+@RequiredArgsConstructor
 public class Roles implements Serializable {
 
   private static final long serialVersionUID = 38920613133424876L;
@@ -60,6 +65,10 @@ public class Roles implements Serializable {
       orphanRemoval = true)
   @JsonIgnore
   private List<UsersRoles> usersRoles = new ArrayList<>();
+
+  @CreationTimestamp private Date createdAt = new Date();
+
+  @UpdateTimestamp private Date updatedAt = new Date();
 
   /** @param rolesName */
   public Roles(String rolesName) {

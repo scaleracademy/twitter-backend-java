@@ -26,12 +26,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity(name = "UsersRoles")
 @Table(name = "users_roles")
 @Data
+@RequiredArgsConstructor
 public class UsersRoles implements Serializable {
 
   private static final long serialVersionUID = 6266028818011079306L;

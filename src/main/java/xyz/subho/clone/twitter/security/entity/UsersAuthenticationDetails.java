@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +42,9 @@ import javax.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.NaturalIdCache;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import xyz.subho.clone.twitter.entity.Users;
@@ -71,10 +74,10 @@ public class UsersAuthenticationDetails implements UserDetails, Serializable {
   @JoinColumn(name = "username", nullable = false, unique = true, updatable = false)
   private String username;
 
-  @Column(name = "password", length = 150)
+  @Column(name = "password", length = 150, nullable = false)
   private String password;
 
-  @Column(name = "salt")
+  @Column(name = "salt", nullable = false)
   private String salt;
 
   @Column(name = "enabled", columnDefinition = "boolean default true", nullable = false)
@@ -100,16 +103,23 @@ public class UsersAuthenticationDetails implements UserDetails, Serializable {
   @JsonIgnore
   private List<UsersRoles> usersRoles = new ArrayList<>();
 
+  @CreationTimestamp private Date createdAt = new Date();
+
+  @UpdateTimestamp private Date updatedAt = new Date();
+
   public boolean assignRole(Roles roles) {
     var userRoles = new UsersRoles(this, roles);
     this.usersRoles.add(userRoles);
     return roles.getUsersRoles().add(userRoles);
   }
 
-  public void deAssignRole(Roles role) {
+  public void unasignRole(Roles role) {
     List<UsersRoles> toBeDeleted =
         usersRoles.stream()
-            .filter(userRole -> userRole.getRoles().equals(role))
+            .filter(
+                userRole ->
+                    userRole.getRoles().equals(role)
+                        && userRole.getUsersAuthentication().equals(this))
             .collect(Collectors.toList());
     usersRoles.removeAll(toBeDeleted);
   }

@@ -24,17 +24,19 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Embeddable
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class UsersRolesId implements Serializable {
 
   private static final long serialVersionUID = 4729661377897825L;
 
-  @Column(name = "users_id", columnDefinition = "BINARY(16)")
+  @Column(name = "id", columnDefinition = "BINARY(16)")
   private UUID usersId;
 
-  @Column(name = "roles_id")
+  @Column(name = "id")
   private Integer rolesId;
 }

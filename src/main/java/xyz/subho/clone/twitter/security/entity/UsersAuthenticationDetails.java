@@ -62,12 +62,12 @@ public class UsersAuthenticationDetails implements UserDetails, Serializable {
   private static final long serialVersionUID = 3577019301886090937L;
 
   @Id
-  @Column(name = "users_id", columnDefinition = "BINARY(16)")
+  @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
   @MapsId
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "users_id", columnDefinition = "BINARY(16)")
+  @JoinColumn(columnDefinition = "BINARY(16)")
   private Users users;
 
   @OneToOne(fetch = FetchType.EAGER, targetEntity = Users.class)

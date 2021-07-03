@@ -35,8 +35,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.NaturalIdCache;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity(name = "Roles")
@@ -44,13 +48,14 @@ import org.hibernate.annotations.UpdateTimestamp;
     name = "roles",
     indexes = {@Index(columnList = "roles_name")})
 @Data
+@NaturalIdCache
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @RequiredArgsConstructor
 public class Roles implements Serializable {
 
   private static final long serialVersionUID = 38920613133424876L;
 
   @Id
-  @Column(name = "roles_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer rolesId;
 

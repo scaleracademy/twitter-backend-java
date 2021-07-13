@@ -64,8 +64,8 @@ public class Hashtags implements Serializable {
   @NaturalId
   private String tag;
 
-  @Column(name = "recent_post_count", columnDefinition = "BIGINT(20) default '1'", nullable = false)
-  private Long recentPostCount = 1L;
+  @Column(name = "recent_post_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
+  private Long recentPostCount = 0L;
 
   @OneToMany(
       mappedBy = "hashtags",
@@ -82,6 +82,10 @@ public class Hashtags implements Serializable {
   /** @param tag */
   public Hashtags(String tag) {
     this.tag = tag;
-    recentPostCount = 1L;
+    recentPostCount = 0L;
+  }
+  
+  public long incrementRecentPostCount() {
+	  return ++recentPostCount;
   }
 }

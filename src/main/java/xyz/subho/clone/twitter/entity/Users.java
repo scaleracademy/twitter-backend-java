@@ -92,6 +92,10 @@ public class Users implements Serializable {
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
+  
+  @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<Mentions> userMentions = new ArrayList<>();
 
   @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
   @PrimaryKeyJoinColumn

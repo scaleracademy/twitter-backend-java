@@ -98,7 +98,7 @@ public class PostServiceImpl implements PostService {
             hashtags -> {
               hashtags.forEach(
                   hashtag -> {
-                    HashtagPosts hashtagPost = new HashtagPosts();
+                    var hashtagPost = new HashtagPosts();
                     hashtagPost.setHashtags(hashtag);
                     hashtagPost.setPosts(post);
                     hashtagPosts.add(hashtagPost);

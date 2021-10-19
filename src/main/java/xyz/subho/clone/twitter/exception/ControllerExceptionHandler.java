@@ -24,22 +24,54 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import xyz.subho.clone.twitter.model.ErrorResponse;
 
 @ControllerAdvice
-public class ControllerExceptionHandler {
+public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> globalExceptionHandler(
-      Exception exception, WebRequest request) {
-
-    var errorResponse =
-        new ErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            new Date(System.currentTimeMillis()),
-            exception.getMessage(),
-            request.getDescription(false));
-
-    return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+      Exception exception, WebRequest webRequest) {
+    return getErrorResponseEntity(exception.getMessage(), HttpStatus.BAD_REQUEST,
+        webRequest.getDescription(false));
   }
+
+  @ExceptionHandler(value = {BadRequestException.class})
+  public ResponseEntity<ErrorResponse> handleBadRequestException(
+      BadRequestException bindRequestException, WebRequest webRequest) {
+
+    return getErrorResponseEntity(bindRequestException.getMessage(), HttpStatus.BAD_REQUEST,
+        webRequest.getDescription(false));
+  }
+
+  @ExceptionHandler(value = {ErrorSavingEntityToDatabaseException.class})
+  public ResponseEntity<ErrorResponse> handleErrorSavingEntityToDatabaseException(
+      ErrorSavingEntityToDatabaseException errorSavingEntityToDatabaseException,
+      WebRequest webRequest) {
+
+    return getErrorResponseEntity(errorSavingEntityToDatabaseException.getMessage(),
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        webRequest.getDescription(false));
+  }
+
+  @ExceptionHandler(value = {ResourceNotFoundException.class})
+  public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
+      ResourceNotFoundException resourceNotFoundException, WebRequest webRequest) {
+
+    return getErrorResponseEntity(resourceNotFoundException.getMessage(),
+        HttpStatus.NOT_FOUND,
+        webRequest.getDescription(false));
+  }
+
+  private ResponseEntity<ErrorResponse> getErrorResponseEntity(String message,
+      HttpStatus httpStatus, String description) {
+    var errorResponse = new ErrorResponse(
+        httpStatus.value(),
+        new Date(System.currentTimeMillis()),
+        message,
+        description);
+    return new ResponseEntity<>(errorResponse, httpStatus);
+  }
+
 }

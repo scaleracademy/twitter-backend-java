@@ -16,30 +16,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.service;
+package xyz.subho.clone.twitter.utility;
 
-import java.util.List;
 import java.util.UUID;
-import xyz.subho.clone.twitter.entity.Users;
-import xyz.subho.clone.twitter.model.UserModel;
 
-public interface UserService {
+public class UUIDUtils {
 
-  public UserModel getUserByUserName(String username);
+  private UUIDUtils() {
+    throw new IllegalStateException("Utility class");
+  }
 
-  public UserModel getUserByUserId(UUID userId);
+  /**
+   * @param String uuid
+   * @return TRUE or FALSE if the given String is a valid UUID
+   */
+  public static boolean isUUID(String uuid) {
 
-  public Users getUserEntityByUserId(UUID userId);
+    try {
+      UUID.fromString(uuid);
+      return true;
+    } catch (Exception exp) {
+      return false;
+    }
+  }
 
-  public UserModel addUser(UserModel user);
-
-  public UserModel editUser(UserModel user);
-
-  public boolean addFollowing(String followerUsername, String username);
-
-  public boolean removeFollowing(String followerUsername, String username);
-
-  public List<UserModel> getFollowers(UUID userId);
-
-  public List<UserModel> getFollowings(UUID userId);
+  /**
+   * @param String uuid
+   * @return UUID uuid or NULL if invalid
+   */
+  public static UUID converStringToUUID(String uuid) {
+    return isUUID(uuid) ? UUID.fromString(uuid) : null;
+  }
 }

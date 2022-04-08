@@ -18,6 +18,8 @@
 
 package xyz.subho.clone.twitter.repository;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import xyz.subho.clone.twitter.entity.Users;
@@ -25,4 +27,6 @@ import xyz.subho.clone.twitter.entity.Users;
 public interface UsersRepository extends JpaRepository<Users, UUID> {
 
   public Users findByUsername(String username);
+
+  public List<Users> findByUsernameIn(Set<String> usernames);
 }

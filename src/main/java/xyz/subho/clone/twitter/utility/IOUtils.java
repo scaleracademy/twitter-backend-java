@@ -18,25 +18,25 @@
 
 package xyz.subho.clone.twitter.utility;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
-import xyz.subho.clone.twitter.entity.Hashtags;
-import xyz.subho.clone.twitter.model.HashtagModel;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-@Component("HashtagMapper")
-public class HashtagMapper implements Mapper<Hashtags, HashtagModel> {
+public class IOUtils {
 
-  @Override
-  public HashtagModel transform(Hashtags hashtag) {
-    var hashtagModel = new HashtagModel();
-    BeanUtils.copyProperties(hashtag, hashtagModel);
-    return hashtagModel;
+  private IOUtils() {
+    throw new IllegalStateException("Utility class");
   }
 
-  @Override
-  public Hashtags transformBack(HashtagModel hashtagModel) {
-    var hashtag = new Hashtags();
-    BeanUtils.copyProperties(hashtagModel, hashtag);
-    return hashtag;
+  public static void closeQuietly(InputStream inputStream) throws IOException {
+    if (inputStream != null) {
+      inputStream.close();
+    }
+  }
+
+  public static void closeQuietly(OutputStream outputStream) throws IOException {
+    if (outputStream != null) {
+      outputStream.close();
+    }
   }
 }

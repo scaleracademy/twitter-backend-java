@@ -18,47 +18,57 @@
 
 package xyz.subho.clone.twitter.entity;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.UUID;
-import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.RequiredArgsConstructor;
 
-@Entity
+@Entity(name = "Likes")
 @Table(name = "likes")
 @Data
-public class Likes {
+@RequiredArgsConstructor
+public class Likes implements Serializable {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(columnDefinition = "BINARY(16)")
-  private UUID id;
+  private static final long serialVersionUID = 10299532548L;
 
-  @ManyToOne(targetEntity = Posts.class)
-  @JoinColumn(
-      name = "posts_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
+  @EmbeddedId private UserPostsId id;
+
+  @ManyToOne
+  @MapsId("postId")
   private Posts posts;
 
-  @ManyToOne(targetEntity = Users.class)
-  @JoinColumn(
-      name = "users_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
+  @ManyToOne
+  @MapsId("userId")
   private Users users;
 
-  @CreationTimestamp private Date createdAt;
+  private Date createdAt;
 
-  @UpdateTimestamp private Date updatedAt;
+  private Date updatedAt;
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = new Date();
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = new Date();
+  }
+
+  /**
+   * @param posts
+   * @param users
+   */
+  public Likes(Posts posts, Users users) {
+    this.id = new UserPostsId(users.getId(), posts.getId());
+    this.posts = posts;
+    this.users = users;
+  }
 }

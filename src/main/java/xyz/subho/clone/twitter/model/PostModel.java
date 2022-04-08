@@ -36,6 +36,6 @@ public class PostModel {
   private UUID originalPostId;
   private UUID replyToId;
   private Date timestamp;
-  private List<String> hashtags = new ArrayList<>();
-  private List<String> mentions = new ArrayList<>();
+  private List<String> hashtags = new ArrayList<>(4);
+  private List<String> mentions = new ArrayList<>(4);
 }

@@ -36,7 +36,7 @@ import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.repository.HashtagPostsRepository;
 import xyz.subho.clone.twitter.repository.HashtagsRepository;
 import xyz.subho.clone.twitter.service.HashtagService;
-import xyz.subho.clone.twitter.utility.Mapper;
+import xyz.subho.clone.twitter.utility.mapper.Mapper;
 
 @Service
 public class HashtagServiceImpl implements HashtagService {

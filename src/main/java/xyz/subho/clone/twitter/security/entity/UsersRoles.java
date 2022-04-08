@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.entity;
+package xyz.subho.clone.twitter.security.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -30,23 +30,23 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-@Entity(name = "HashtagPosts")
-@Table(name = "hashtag_posts")
+@Entity(name = "UsersRoles")
+@Table(name = "users_roles")
 @Data
 @RequiredArgsConstructor
-public class HashtagPosts implements Serializable {
+public class UsersRoles implements Serializable {
 
-  private static final long serialVersionUID = 859441133926L;
+  private static final long serialVersionUID = 6266028818011079306L;
 
-  @EmbeddedId private HashtagPostsId id;
+  @EmbeddedId private UsersRolesId id;
 
-  @ManyToOne(targetEntity = Hashtags.class)
-  @MapsId("hashtagId")
-  private Hashtags hashtags;
+  @ManyToOne
+  @MapsId("usersId")
+  private UsersAuthenticationDetails usersAuthentication;
 
-  @ManyToOne(targetEntity = Posts.class)
-  @MapsId("postId")
-  private Posts posts;
+  @ManyToOne
+  @MapsId("rolesId")
+  private Roles roles;
 
   private Date createdAt;
 
@@ -63,12 +63,12 @@ public class HashtagPosts implements Serializable {
   }
 
   /**
-   * @param hashtags
-   * @param posts
+   * @param usersAuthenticationEntity
+   * @param roles
    */
-  public HashtagPosts(Hashtags hashtags, Posts posts) {
-    this.id = new HashtagPostsId(hashtags.getId(), posts.getId());
-    this.hashtags = hashtags;
-    this.posts = posts;
+  public UsersRoles(UsersAuthenticationDetails usersAuthentication, Roles roles) {
+    this.id = new UsersRolesId(usersAuthentication.getId(), roles.getRolesId());
+    this.usersAuthentication = usersAuthentication;
+    this.roles = roles;
   }
 }

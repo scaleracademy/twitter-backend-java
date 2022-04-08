@@ -16,30 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.service;
+package xyz.subho.clone.twitter.security;
 
-import java.util.List;
-import java.util.UUID;
-import xyz.subho.clone.twitter.entity.Users;
-import xyz.subho.clone.twitter.model.UserModel;
+import org.springframework.security.core.GrantedAuthority;
 
-public interface UserService {
+public class Authority implements GrantedAuthority {
 
-  public UserModel getUserByUserName(String username);
+  private static final long serialVersionUID = 11826889495714896L;
+  private final String userAuthority;
 
-  public UserModel getUserByUserId(UUID userId);
+  public Authority(String userAuthority) {
+    this.userAuthority = userAuthority;
+  }
 
-  public Users getUserEntityByUserId(UUID userId);
-
-  public UserModel addUser(UserModel user);
-
-  public UserModel editUser(UserModel user);
-
-  public boolean addFollowing(String followerUsername, String username);
-
-  public boolean removeFollowing(String followerUsername, String username);
-
-  public List<UserModel> getFollowers(UUID userId);
-
-  public List<UserModel> getFollowings(UUID userId);
+  @Override
+  public String getAuthority() {
+    return userAuthority;
+  }
 }

@@ -16,30 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.service;
+package xyz.subho.clone.twitter.config;
 
-import java.util.List;
-import java.util.UUID;
-import xyz.subho.clone.twitter.entity.Users;
-import xyz.subho.clone.twitter.model.UserModel;
+import java.time.Clock;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-public interface UserService {
+@Configuration
+public class ClockConfig {
 
-  public UserModel getUserByUserName(String username);
-
-  public UserModel getUserByUserId(UUID userId);
-
-  public Users getUserEntityByUserId(UUID userId);
-
-  public UserModel addUser(UserModel user);
-
-  public UserModel editUser(UserModel user);
-
-  public boolean addFollowing(String followerUsername, String username);
-
-  public boolean removeFollowing(String followerUsername, String username);
-
-  public List<UserModel> getFollowers(UUID userId);
-
-  public List<UserModel> getFollowings(UUID userId);
+  @Bean
+  public Clock clock() {
+    return Clock.systemUTC();
+  }
 }

@@ -16,11 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.utility;
+package xyz.subho.clone.twitter.repository;
 
-public interface Mapper<S, T> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import xyz.subho.clone.twitter.security.entity.UsersRoles;
 
-  T transform(S source);
-
-  S transformBack(T source);
-}
+public interface UserRoleRepository extends JpaRepository<UsersRoles, Long> {}

@@ -19,6 +19,7 @@
 package xyz.subho.clone.twitter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,24 +36,29 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import xyz.subho.clone.twitter.security.entity.UsersAuthenticationDetails;
 
-@Entity
+@Entity(name = "Users")
 @Table(
     name = "users",
     indexes = {@Index(columnList = "username")})
 @Data
-public class Users {
+public class Users implements Serializable {
+
+  private static final long serialVersionUID = 5509244829545094653L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @Column(unique = true, nullable = false, length = 30)
+  @Column(unique = true, nullable = false, length = 30, updatable = false)
   private String username;
 
   @Column(nullable = false, length = 50)
@@ -67,7 +73,7 @@ public class Users {
   private String bio;
 
   @Column(name = "follower_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
-  private long followerCount = 0L;
+  private Long followerCount = 0L;
 
   @Column(name = "following_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
   private Long followingCount = 0L;
@@ -75,35 +81,61 @@ public class Users {
   @Column(columnDefinition = "boolean default false", nullable = false)
   private Boolean verified = false;
 
-  @CreationTimestamp private Date createdAt;
+  @ElementCollection private Map<String, Date> follower = new HashMap<>();
 
-  @UpdateTimestamp private Date updatedAt;
+  @ElementCollection private Map<String, Date> following = new HashMap<>();
 
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Likes> userLikes = new ArrayList<>();
 
-  @ElementCollection private Map<UUID, Date> follower = new HashMap<>();
-
-  @ElementCollection private Map<UUID, Date> following = new HashMap<>();
-
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
 
-  public void setFollower(final UUID userId) {
-    follower.put(userId, new Date());
+  @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<Mentions> userMentions = new ArrayList<>();
+
+  @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+  @PrimaryKeyJoinColumn
+  private UsersAuthenticationDetails usersAuthenticationDetails;
+
+  private Date createdAt;
+
+  private Date updatedAt;
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = new Date();
   }
 
-  public void setFollowing(final UUID userId) {
-    following.put(userId, new Date());
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = new Date();
   }
 
-  public void removeFollower(final UUID userId) {
-    follower.remove(userId);
+  public long setFollower(final String username) {
+    follower.put(username, new Date());
+    followerCount = Long.valueOf(follower.size());
+    return followerCount;
   }
 
-  public void removeFollowing(final UUID userId) {
-    following.remove(userId);
+  public long setFollowing(final String username) {
+    following.put(username, new Date());
+    followingCount = Long.valueOf(following.size());
+    return ++followingCount;
+  }
+
+  public long removeFollower(final String username) {
+    follower.remove(username);
+    followerCount = Long.valueOf(follower.size());
+    return followerCount;
+  }
+
+  public long removeFollowing(final String username) {
+    following.remove(username);
+    followingCount = Long.valueOf(following.size());
+    return followingCount;
   }
 }

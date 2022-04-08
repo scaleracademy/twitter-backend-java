@@ -42,7 +42,7 @@ import xyz.subho.clone.twitter.repository.UsersRepository;
 import xyz.subho.clone.twitter.service.HashtagService;
 import xyz.subho.clone.twitter.service.PostService;
 import xyz.subho.clone.twitter.service.UserService;
-import xyz.subho.clone.twitter.utility.Mapper;
+import xyz.subho.clone.twitter.utility.mapper.Mapper;
 
 @Service
 @Slf4j
@@ -98,15 +98,16 @@ public class PostServiceImpl implements PostService {
             hashtags -> {
               hashtags.forEach(
                   hashtag -> {
-                    HashtagPosts hashtagPost = new HashtagPosts();
+                    var hashtagPost = new HashtagPosts();
                     hashtagPost.setHashtags(hashtag);
                     hashtagPost.setPosts(post);
                     hashtagPosts.add(hashtagPost);
                   });
             });
     post.setPostHashtags(hashtagPosts);
+    var savedPosts = postsRepository.save(post);
     hashtagPostRepository.saveAll(hashtagPosts);
-    return postMapper.transform(postsRepository.save(post));
+    return postMapper.transform(savedPosts);
   }
 
   @Override
@@ -125,8 +126,8 @@ public class PostServiceImpl implements PostService {
   public long addLike(UUID postId, UUID userId) {
 
     var post = postMapper.transformBack(getPost(postId));
-    post.incrementLikeCount();
-    var user = userMapper.transformBack(userService.getUserByUserId(userId));
+    // post.incrementLikeCount();
+    var user = userService.getUserEntityByUserId(userId);
 
     var likeMapping = new Likes();
     likeMapping.setPosts(post);
@@ -146,8 +147,8 @@ public class PostServiceImpl implements PostService {
   public long removeLike(UUID postId, UUID userId) {
 
     var post = postMapper.transformBack(getPost(postId));
-    post.decrementLikeCount();
-    var user = userMapper.transformBack(userService.getUserByUserId(userId));
+    // post.decrementLikeCount();
+    var user = userService.getUserEntityByUserId(userId);
 
     try {
       likeRepository.deleteByPostsAndUsers(post, user);

@@ -37,11 +37,11 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import xyz.subho.clone.twitter.security.entity.UsersAuthenticationDetails;
 
 @Entity(name = "Users")
@@ -92,7 +92,7 @@ public class Users implements Serializable {
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
-  
+
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Mentions> userMentions = new ArrayList<>();
@@ -101,9 +101,19 @@ public class Users implements Serializable {
   @PrimaryKeyJoinColumn
   private UsersAuthenticationDetails usersAuthenticationDetails;
 
-  @CreationTimestamp private Date createdAt = new Date();
+  private Date createdAt;
 
-  @UpdateTimestamp private Date updatedAt = new Date();
+  private Date updatedAt;
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = new Date();
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = new Date();
+  }
 
   public long setFollower(final String username) {
     follower.put(username, new Date());

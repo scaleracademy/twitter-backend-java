@@ -19,7 +19,6 @@
 package xyz.subho.clone.twitter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,11 +38,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import lombok.Data;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 
 @Entity(name = "Posts")
@@ -96,32 +94,44 @@ public class Posts implements Serializable {
   @JsonIgnore
   private List<Likes> postLikes = new ArrayList<>();
 
-  @CreationTimestamp private Date createdAt = new Date();
+  private Date createdAt;
 
-  @UpdateTimestamp private Date updatedAt = new Date();
-  
-  public void addHashtags(List<Hashtags> hashtags) {
-    
-	hashtags.forEach(tag -> {
-			tag.incrementRecentPostCount();
-			var mapping = new HashtagPosts(tag, this);
-			this.postHashtags.add(mapping);
-		});
+  private Date updatedAt;
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = new Date();
   }
-  
-  public void addMentions(List<Users> mentions)	{
-	  
-	  mentions.forEach(user -> {
-		  var mapping = new Mentions(this, user);
-		  this.postMentions.add(mapping);
-	  });
+
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = new Date();
+  }
+
+  public void addHashtags(List<Hashtags> hashtags) {
+
+    hashtags.forEach(
+        tag -> {
+          tag.incrementRecentPostCount();
+          var mapping = new HashtagPosts(tag, this);
+          this.postHashtags.add(mapping);
+        });
+  }
+
+  public void addMentions(List<Users> mentions) {
+
+    mentions.forEach(
+        user -> {
+          var mapping = new Mentions(this, user);
+          this.postMentions.add(mapping);
+        });
   }
 
   public long incrementLikeCount(Users likedByUser) {
-	  
+
     var likes = new Likes(this, likedByUser);
     this.postLikes.add(likes);
-    
+
     return this.postLikes.stream()
         .filter(thisPost -> thisPost.getPosts().equals(this))
         .collect(Collectors.toList())
@@ -129,13 +139,13 @@ public class Posts implements Serializable {
   }
 
   public long decrementLikeCount(Users unlikedByUser) {
-	  
+
     List<Likes> toBeDeleted =
         postLikes.stream()
             .filter(like -> like.getUsers().equals(unlikedByUser) && like.getPosts().equals(this))
             .collect(Collectors.toList());
     postLikes.removeAll(toBeDeleted);
-    
+
     return this.postLikes.stream()
         .filter(thisPost -> thisPost.getPosts().equals(this))
         .collect(Collectors.toList())
@@ -147,7 +157,7 @@ public class Posts implements Serializable {
   }
 
   public long decrementRepostCount() {
-	  
+
     if (repostCount < 1L) {
       repostCount = 0L;
     } else {
@@ -155,17 +165,17 @@ public class Posts implements Serializable {
     }
     return repostCount;
   }
-  
+
   public int addImages(List<String> imageUrls) {
-	  
-	  imageUrls.forEach(url -> this.images.put(url, new Date()));
-	  return this.images.size();
+
+    imageUrls.forEach(url -> this.images.put(url, new Date()));
+    return this.images.size();
   }
-  
+
   public List<String> getImagesAsList() {
-	  
-	  List<String> imageUrls = new ArrayList<>(4);
-	  this.images.forEach((url, date) -> imageUrls.add(url));
-	  return imageUrls;
+
+    List<String> imageUrls = new ArrayList<>(4);
+    this.images.forEach((url, date) -> imageUrls.add(url));
+    return imageUrls;
   }
 }

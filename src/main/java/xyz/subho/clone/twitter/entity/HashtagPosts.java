@@ -24,11 +24,11 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity(name = "HashtagPosts")
 @Table(name = "hashtag_posts")
@@ -48,9 +48,19 @@ public class HashtagPosts implements Serializable {
   @MapsId("postId")
   private Posts posts;
 
-  @CreationTimestamp private Date createdAt = new Date();
+  private Date createdAt;
 
-  @UpdateTimestamp private Date updatedAt = new Date();
+  private Date updatedAt;
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = new Date();
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = new Date();
+  }
 
   /**
    * @param hashtags

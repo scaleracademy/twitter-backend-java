@@ -33,15 +33,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.NaturalIdCache;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity(name = "Hashtags")
 @Table(
@@ -75,17 +75,27 @@ public class Hashtags implements Serializable {
   @JsonIgnore
   private List<HashtagPosts> hashtagPosts = new ArrayList<>();
 
-  @CreationTimestamp private Date createdAt = new Date();
+  private Date createdAt;
 
-  @UpdateTimestamp private Date updatedAt = new Date();
+  private Date updatedAt;
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = new Date();
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = new Date();
+  }
 
   /** @param tag */
   public Hashtags(String tag) {
     this.tag = tag;
     recentPostCount = 0L;
   }
-  
+
   public long incrementRecentPostCount() {
-	  return ++recentPostCount;
+    return ++recentPostCount;
   }
 }

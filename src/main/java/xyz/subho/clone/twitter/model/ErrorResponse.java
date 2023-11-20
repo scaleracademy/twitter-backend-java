@@ -40,22 +40,30 @@ public class ErrorResponse {
     this.description = description;
   }
 
-  /** @return the statusCode */
+  /**
+   * @return the statusCode
+   */
   public Integer getStatusCode() {
     return statusCode;
   }
 
-  /** @return the timestamp */
+  /**
+   * @return the timestamp
+   */
   public Date getTimestamp() {
     return timestamp;
   }
 
-  /** @return the message */
+  /**
+   * @return the message
+   */
   public String getMessage() {
     return message;
   }
 
-  /** @return the description */
+  /**
+   * @return the description
+   */
   public String getDescription() {
     return description;
   }

@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,8 +33,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ApplicationErrorController extends BasicErrorController {
 
   /**
-   * @param errorAttributes
-   * @param serverProperties
+   * @param errorAttributes ErrorAttributes
+   * @param serverProperties ServerProperties
    */
   public ApplicationErrorController(
       ErrorAttributes errorAttributes, ServerProperties serverProperties) {
@@ -42,7 +42,7 @@ public class ApplicationErrorController extends BasicErrorController {
   }
 
   /**
-   * @param request
+   * @param request HttpServletRequest
    * @return ResponseEntity for Errors
    */
   @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)

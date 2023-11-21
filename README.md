@@ -18,7 +18,11 @@ Install the project dependencies:
 ```shell
 mvn install
 ```
-
+Load the `.env` file:
+```shell
+cp .env.example .env
+source .env
+```
 
 Update the application.properties file to configure the database connection details:
 ```shell

@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.17</version>
+    <version>3.2.0</version>
     <relativePath />
     <!-- lookup parent from repository -->
   </parent>
@@ -51,7 +51,7 @@
       <id>ohbus</id>
       <email>hello@subho.xyz</email>
       <url>https://subho.xyz</url>
-      <timezone>Asia/Kolkata</timezone>
+      <timezone>Europe/Vienna</timezone>
     </developer>
   </developers>
   

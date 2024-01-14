@@ -58,6 +58,8 @@ commenting and amending the proposed changes.
     original commits in the "feature_x" branch with the new ones. The pull
     request gets automatically updated
 
+- Please make sure your changes are thoroughly tested before submitting a pull request.
+
 ## Getting Started
 
 To start contributing, follow these steps:

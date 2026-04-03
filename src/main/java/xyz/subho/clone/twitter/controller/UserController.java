@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.controller;
 
+import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
@@ -67,13 +68,13 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<UserModel> createUser(@RequestBody UserModel userResponse) {
+  public ResponseEntity<UserModel> createUser(@Valid @RequestBody UserModel userResponse) {
     var user = userService.addUser(userResponse);
     return new ResponseEntity<>(user, HttpStatus.CREATED);
   }
 
   @PatchMapping
-  public UserModel updateUser(@RequestBody UserModel userResponse, Principal principal) {
+  public UserModel updateUser(@Valid @RequestBody UserModel userResponse, Principal principal) {
     return userService.editUser(userResponse);
   }
 

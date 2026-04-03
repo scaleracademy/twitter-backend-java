@@ -20,6 +20,16 @@ jobs:
           distribution: 'microsoft'
           java-version: '21'
           cache: 'maven'
+      - name: Cache Maven Wrapper
+        uses: actions/cache@v4
+        with:
+          path: .mvn/wrapper
+          key: ${{ runner.os }}-maven-wrapper-${{ hashFiles('**/maven-wrapper.properties') }}
+      - name: Cache Spotless Index
+        uses: actions/cache@v4
+        with:
+          path: ~/.spotless
+          key: ${{ runner.os }}-spotless-${{ hashFiles('**/pom.xml') }}
       - name: Spotless Check
         run: ./mvnw spotless:check
 
@@ -33,6 +43,11 @@ jobs:
           distribution: 'microsoft'
           java-version: '21'
           cache: 'maven'
+      - name: Cache Maven Wrapper
+        uses: actions/cache@v4
+        with:
+          path: .mvn/wrapper
+          key: ${{ runner.os }}-maven-wrapper-${{ hashFiles('**/maven-wrapper.properties') }}
       - name: Build JAR
         run: ./mvnw -B clean package -DskipTests
       - name: Upload JAR
@@ -53,6 +68,11 @@ jobs:
           distribution: 'microsoft'
           java-version: '21'
           cache: 'maven'
+      - name: Cache Maven Wrapper
+        uses: actions/cache@v4
+        with:
+          path: .mvn/wrapper
+          key: ${{ runner.os }}-maven-wrapper-${{ hashFiles('**/maven-wrapper.properties') }}
       - name: Verify
         run: ./mvnw -B test
 
@@ -69,6 +89,11 @@ jobs:
           distribution: 'microsoft'
           java-version: '21'
           cache: 'maven'
+      - name: Cache Maven Wrapper
+        uses: actions/cache@v4
+        with:
+          path: .mvn/wrapper
+          key: ${{ runner.os }}-maven-wrapper-${{ hashFiles('**/maven-wrapper.properties') }}
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:

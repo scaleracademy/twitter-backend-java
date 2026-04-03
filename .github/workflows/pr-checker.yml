@@ -20,6 +20,16 @@ jobs:
           distribution: 'microsoft'
           java-version: '21'
           cache: 'maven'
+      - name: Cache Maven Wrapper
+        uses: actions/cache@v4
+        with:
+          path: .mvn/wrapper
+          key: ${{ runner.os }}-maven-wrapper-${{ hashFiles('**/maven-wrapper.properties') }}
+      - name: Cache Spotless Index
+        uses: actions/cache@v4
+        with:
+          path: ~/.spotless
+          key: ${{ runner.os }}-spotless-${{ hashFiles('**/pom.xml') }}
       - name: Spotless Check
         run: ./mvnw spotless:check
 
@@ -33,6 +43,11 @@ jobs:
           distribution: 'microsoft'
           java-version: '21'
           cache: 'maven'
+      - name: Cache Maven Wrapper
+        uses: actions/cache@v4
+        with:
+          path: .mvn/wrapper
+          key: ${{ runner.os }}-maven-wrapper-${{ hashFiles('**/maven-wrapper.properties') }}
       - name: Maven Verify
         run: ./mvnw -B clean verify
 

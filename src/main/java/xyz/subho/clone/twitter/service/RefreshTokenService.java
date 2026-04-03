@@ -16,17 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.constant;
+package xyz.subho.clone.twitter.service;
 
-/** AuthV1Constants - API endpoint constants for Authentication V1 Controller. */
-public class AuthV1Constants {
+import java.util.Optional;
+import java.util.UUID;
+import org.jspecify.annotations.NonNull;
+import xyz.subho.clone.twitter.entity.RefreshToken;
 
-  public static final String BASE_PATH = ApiVersion.V1;
-  public static final String AUTHENTICATE = "/authenticate";
-  public static final String REFRESH = "/refresh";
-  public static final String LOGOUT = "/logout";
+public interface RefreshTokenService {
 
-  private AuthV1Constants() {
-    // Prevent instantiation
-  }
+  public RefreshToken createRefreshToken(@NonNull UUID userId);
+
+  public Optional<RefreshToken> findByToken(@NonNull String token);
+
+  public RefreshToken verifyExpiration(@NonNull RefreshToken token);
+
+  public int deleteByUserId(@NonNull UUID userId);
 }

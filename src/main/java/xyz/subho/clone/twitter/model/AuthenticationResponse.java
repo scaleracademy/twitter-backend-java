@@ -18,4 +18,4 @@
 
 package xyz.subho.clone.twitter.model;
 
-public record AuthenticationResponse(String jwt) {}
+public record AuthenticationResponse(String jwt, String refreshToken) {}

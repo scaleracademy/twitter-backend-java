@@ -16,17 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.constant;
+package xyz.subho.clone.twitter.model;
 
-/** AuthV1Constants - API endpoint constants for Authentication V1 Controller. */
-public class AuthV1Constants {
+import jakarta.validation.constraints.NotBlank;
 
-  public static final String BASE_PATH = ApiVersion.V1;
-  public static final String AUTHENTICATE = "/authenticate";
-  public static final String REFRESH = "/refresh";
-  public static final String LOGOUT = "/logout";
-
-  private AuthV1Constants() {
-    // Prevent instantiation
-  }
-}
+public record TokenRefreshRequest(@NotBlank String refreshToken) {}

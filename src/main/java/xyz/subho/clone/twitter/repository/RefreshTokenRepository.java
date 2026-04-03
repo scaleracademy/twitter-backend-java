@@ -16,17 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.constant;
+package xyz.subho.clone.twitter.repository;
 
-/** AuthV1Constants - API endpoint constants for Authentication V1 Controller. */
-public class AuthV1Constants {
+import java.util.Optional;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import xyz.subho.clone.twitter.entity.RefreshToken;
+import xyz.subho.clone.twitter.entity.Users;
 
-  public static final String BASE_PATH = ApiVersion.V1;
-  public static final String AUTHENTICATE = "/authenticate";
-  public static final String REFRESH = "/refresh";
-  public static final String LOGOUT = "/logout";
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID> {
 
-  private AuthV1Constants() {
-    // Prevent instantiation
-  }
+  Optional<RefreshToken> findByToken(String token);
+
+  @Modifying
+  int deleteByUsers(Users user);
 }

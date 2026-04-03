@@ -216,6 +216,15 @@ public class Users extends Auditable {
 
   @Override
   public String toString() {
-    return "Users{" + "id=" + id + ", username='" + username + '\'' + ", name='" + name + '\'' + '}';
+    return "Users{"
+        + "id="
+        + id
+        + ", username='"
+        + username
+        + '\''
+        + ", name='"
+        + name
+        + '\''
+        + '}';
   }
 }

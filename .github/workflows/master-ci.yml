@@ -115,6 +115,9 @@ jobs:
     name: Publish Images
     needs: [test, security]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -148,9 +151,9 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            subhrodip/twitter-backend:${{ steps.project.outputs.version }}
-            subhrodip/twitter-backend:latest
-            ghcr.io/${{ github.repository_owner }}/twitter-backend:${{ steps.project.outputs.version }}
-            ghcr.io/${{ github.repository_owner }}/twitter-backend:latest
+            subhrodip/twitter-backend-java:${{ steps.project.outputs.version }}
+            subhrodip/twitter-backend-java:latest
+            ghcr.io/${{ github.repository }}:${{ steps.project.outputs.version }}
+            ghcr.io/${{ github.repository }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max

@@ -65,6 +65,9 @@ jobs:
     name: Docker Smoke Test
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -83,6 +86,6 @@ jobs:
           context: .
           push: false
           platforms: linux/amd64,linux/arm64
-          tags: pr-smoke:latest
+          tags: ghcr.io/${{ github.repository }}:pr-smoke
           cache-from: type=gha
           cache-to: type=gha,mode=max

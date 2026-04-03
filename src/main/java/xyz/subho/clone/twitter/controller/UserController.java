@@ -18,11 +18,13 @@
 
 package xyz.subho.clone.twitter.controller;
 
+import jakarta.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,36 +69,38 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<UserModel> createUser(@RequestBody UserModel userResponse) {
+  public ResponseEntity<UserModel> createUser(@Valid @RequestBody UserModel userResponse) {
     var user = userService.addUser(userResponse);
     return new ResponseEntity<>(user, HttpStatus.CREATED);
   }
 
   @PatchMapping
-  public UserModel updateUser(@RequestBody UserModel userResponse, Principal principal) {
+  public UserModel updateUser(@Valid @RequestBody UserModel userResponse, Principal principal) {
     return userService.editUser(userResponse);
   }
 
   @PutMapping("/{userId}/follow")
   public ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId, Principal principal) {
-    userService.addFollower(userId, UUID.randomUUID()); // TODO: Extract from Principal
+    var follower = userService.getUserByUserName(principal.getName());
+    userService.addFollower(follower.getId(), userId);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @DeleteMapping("/{userId}/follow")
   public ResponseEntity<HttpStatus> removeFollower(
       @PathVariable("userId") UUID userId, Principal principal) {
-    userService.removeFollower(userId, UUID.randomUUID()); // TODO: Extract from Principal
+    var follower = userService.getUserByUserName(principal.getName());
+    userService.removeFollower(follower.getId(), userId);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @GetMapping("/{userId}/followers")
-  public List<UserModel> getFollowers(@PathVariable("userId") UUID userId) {
-    return userService.getFollowers(userId);
+  public Page<UserModel> getFollowers(@PathVariable("userId") UUID userId, Pageable pageable) {
+    return userService.getFollowers(userId, pageable);
   }
 
   @GetMapping("/{userId}/followings")
-  public List<UserModel> getFollowings(@PathVariable("userId") UUID userId) {
-    return userService.getFollowings(userId);
+  public Page<UserModel> getFollowings(@PathVariable("userId") UUID userId, Pageable pageable) {
+    return userService.getFollowings(userId, pageable);
   }
 }

@@ -25,6 +25,8 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.subho.clone.twitter.entity.HashtagPosts;
@@ -69,13 +71,9 @@ public class PostServiceImpl implements PostService {
   private Mapper<Users, UserModel> userMapper;
 
   @Override
-  public List<PostModel> getAllPosts() {
-    var posts = postsRepository.findAll();
-    List<PostModel> postModels = new ArrayList<>();
-    Optional.ofNullable(posts)
-        .ifPresent(
-            post -> post.forEach(eachPost -> postModels.add(postMapper.transform(eachPost))));
-    return postModels;
+  public Page<PostModel> getAllPosts(Pageable pageable) {
+    var postsPage = postsRepository.findAll(pageable);
+    return postsPage.map(postMapper::transform);
   }
 
   @Override

@@ -18,13 +18,14 @@
 
 package xyz.subho.clone.twitter.service;
 
-import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import xyz.subho.clone.twitter.model.PostModel;
 
 public interface PostService {
 
-  public List<PostModel> getAllPosts();
+  public Page<PostModel> getAllPosts(Pageable pageable);
 
   public PostModel getPost(UUID postId);
 

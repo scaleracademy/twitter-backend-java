@@ -18,28 +18,31 @@
 
 package xyz.subho.clone.twitter.service;
 
-import java.util.List;
 import java.util.UUID;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.UserModel;
 
 public interface UserService {
 
-  public UserModel getUserByUserName(String username);
+  public @Nullable UserModel getUserByUserName(@NonNull String username);
 
-  public UserModel getUserByUserId(UUID userId);
+  public @Nullable UserModel getUserByUserId(@NonNull UUID userId);
 
-  public Users getUserEntityByUserId(UUID userId);
+  public @Nullable Users getUserEntityByUserId(@NonNull UUID userId);
 
-  public UserModel addUser(UserModel user);
+  public @NonNull UserModel addUser(@NonNull UserModel user);
 
-  public UserModel editUser(UserModel user);
+  public @NonNull UserModel editUser(@NonNull UserModel user);
 
-  public boolean addFollower(UUID followerId, UUID userId);
+  public boolean addFollower(@NonNull UUID followerId, @NonNull UUID userId);
 
-  public boolean removeFollower(UUID followerId, UUID userId);
+  public boolean removeFollower(@NonNull UUID followerId, @NonNull UUID userId);
 
-  public List<UserModel> getFollowers(UUID userId);
+  public @NonNull Page<UserModel> getFollowers(@NonNull UUID userId, @NonNull Pageable pageable);
 
-  public List<UserModel> getFollowings(UUID userId);
+  public @NonNull Page<UserModel> getFollowings(@NonNull UUID userId, @NonNull Pageable pageable);
 }

@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.service.PostService;
+import xyz.subho.clone.twitter.service.UserService;
 
 @RestController
 @RequestMapping("/posts")
@@ -43,6 +44,8 @@ import xyz.subho.clone.twitter.service.PostService;
 public class PostController {
 
   @Autowired private PostService postService;
+
+  @Autowired private UserService userService;
 
   @GetMapping
   public ResponseEntity<Page<PostModel>> getAllPosts(Pageable pageable) {

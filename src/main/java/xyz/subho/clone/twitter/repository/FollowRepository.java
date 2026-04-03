@@ -16,24 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.utility;
+package xyz.subho.clone.twitter.repository;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import xyz.subho.clone.twitter.entity.Follow;
 import xyz.subho.clone.twitter.entity.Users;
-import xyz.subho.clone.twitter.model.UserModel;
 
-@Mapper(componentModel = "spring")
-public interface UserMapper {
+public interface FollowRepository extends JpaRepository<Follow, UUID> {
 
-  @Mapping(target = "password", ignore = true)
-  UserModel toModel(Users user);
+  Page<Follow> findByFollowing(Users following, Pageable pageable);
 
-  @Mapping(target = "userLikes", ignore = true)
-  @Mapping(target = "userPosts", ignore = true)
-  @Mapping(target = "followers", ignore = true)
-  @Mapping(target = "following", ignore = true)
-  @Mapping(target = "createdAt", ignore = true)
-  @Mapping(target = "updatedAt", ignore = true)
-  Users toEntity(UserModel userModel);
+  Page<Follow> findByFollower(Users follower, Pageable pageable);
+
+  void deleteByFollowerAndFollowing(Users follower, Users following);
+
+  boolean existsByFollowerAndFollowing(Users follower, Users following);
 }

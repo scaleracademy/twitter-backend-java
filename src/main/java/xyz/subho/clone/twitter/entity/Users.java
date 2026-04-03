@@ -21,7 +21,6 @@ package xyz.subho.clone.twitter.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,10 +30,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -79,31 +75,19 @@ public class Users extends Auditable {
   @JsonIgnore
   private List<Likes> userLikes = new ArrayList<>();
 
-  @ElementCollection private Map<UUID, Date> follower = new HashMap<>();
+  @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<Follow> followers = new ArrayList<>();
 
-  @ElementCollection private Map<UUID, Date> following = new HashMap<>();
+  @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<Follow> following = new ArrayList<>();
 
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
 
   public Users() {}
-
-  public void setFollower(final UUID userId) {
-    follower.put(userId, new Date());
-  }
-
-  public void setFollowing(final UUID userId) {
-    following.put(userId, new Date());
-  }
-
-  public void removeFollower(final UUID userId) {
-    follower.remove(userId);
-  }
-
-  public void removeFollowing(final UUID userId) {
-    following.remove(userId);
-  }
 
   public UUID getId() {
     return id;
@@ -193,19 +177,19 @@ public class Users extends Auditable {
     this.userLikes = userLikes;
   }
 
-  public Map<UUID, Date> getFollower() {
-    return follower;
+  public List<Follow> getFollowers() {
+    return followers;
   }
 
-  public void setFollower(Map<UUID, Date> follower) {
-    this.follower = follower;
+  public void setFollowers(List<Follow> followers) {
+    this.followers = followers;
   }
 
-  public Map<UUID, Date> getFollowing() {
+  public List<Follow> getFollowing() {
     return following;
   }
 
-  public void setFollowing(Map<UUID, Date> following) {
+  public void setFollowing(List<Follow> following) {
     this.following = following;
   }
 
@@ -232,15 +216,6 @@ public class Users extends Auditable {
 
   @Override
   public String toString() {
-    return "Users{"
-        + "id="
-        + id
-        + ", username='"
-        + username
-        + '\''
-        + ", name='"
-        + name
-        + '\''
-        + '}';
+    return "Users{" + "id=" + id + ", username='" + username + '\'' + ", name='" + name + '\'' + '}';
   }
 }

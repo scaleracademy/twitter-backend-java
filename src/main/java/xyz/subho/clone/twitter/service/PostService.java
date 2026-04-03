@@ -18,9 +18,9 @@
 
 package xyz.subho.clone.twitter.service;
 
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import java.util.UUID;
 import xyz.subho.clone.twitter.model.PostModel;
 
 public interface PostService {

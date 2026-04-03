@@ -18,13 +18,13 @@
 
 package xyz.subho.clone.twitter.service;
 
+import java.util.UUID;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import java.util.UUID;
 import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.UserModel;
-import org.jspecify.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 public interface UserService {
 

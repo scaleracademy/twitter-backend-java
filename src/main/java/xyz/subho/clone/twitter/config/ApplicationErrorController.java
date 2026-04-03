@@ -36,8 +36,7 @@ public class ApplicationErrorController extends BasicErrorController {
    * @param errorAttributes ErrorAttributes
    * @param webProperties WebProperties
    */
-  public ApplicationErrorController(
-      ErrorAttributes errorAttributes, WebProperties webProperties) {
+  public ApplicationErrorController(ErrorAttributes errorAttributes, WebProperties webProperties) {
     super(errorAttributes, webProperties.getError());
   }
 

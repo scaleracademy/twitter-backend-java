@@ -1,4 +1,4 @@
-# Contributing to Moo: Twitter Clone Backend
+# Contributing to Moo
 
 First off, thank you for considering contributing to Moo! It's people like you
 that make Moo such a great tool for the community.
@@ -9,13 +9,13 @@ codebase.
 
 ---
 
-## 📜 Code of Conduct
+## Code of Conduct
 
 By participating in this project, you are expected to uphold our
 [Code of Conduct](CODE_OF_CONDUCT.md). Please report unacceptable behavior to
 the project maintainers.
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Fork and Clone
 
@@ -34,11 +34,11 @@ the project maintainers.
 - **Database:** Local MySQL or H2 (configured via profiles).
 - **IDE:** IntelliJ IDEA is recommended (Google Java Format plugin encouraged).
 
-## 🛠️ Development Standards
+## Development Standards
 
 To keep the codebase clean and stable, we enforce the following rules:
 
-### 1. Code Style & Formatting
+### 1. Code Style and Formatting
 
 - We use **Spotless** with **Google Java Format**.
 - **Always** format your code before committing:
@@ -76,7 +76,7 @@ To keep the codebase clean and stable, we enforce the following rules:
 - Use the `Principal` object in Controllers to identify the authenticated user.
 - Never use `UUID.randomUUID()` or hardcoded IDs for "current user" logic.
 
-## 🌿 Git Flow & Branching
+## Git Flow and Branching
 
 1. **Branch Naming:**
 
@@ -94,7 +94,7 @@ To keep the codebase clean and stable, we enforce the following rules:
     - Always rebase your feature branch against the latest `master` before
       submitting a PR.
 
-## 🧪 Testing Requirements
+## Testing Requirements
 
 - **Unit Tests:** Mandatory for all new logic in the `service` layer.
 - **Integration Tests:** Required for new API endpoints.
@@ -106,7 +106,7 @@ To keep the codebase clean and stable, we enforce the following rules:
     ./mvnw test
     ```
 
-## 📝 Pull Request Process
+## Pull Request Process
 
 1. **Update Documentation:** If you add or change an API, ensure the
    Swagger/OpenAPI metadata is updated.
@@ -119,7 +119,7 @@ To keep the codebase clean and stable, we enforce the following rules:
 4. **Reviewers:** Assign at least one maintainer for review. Be responsive to
    feedback!
 
-## 📜 License
+## License
 
 By contributing, you agree that your contributions will be licensed under the
 **GNU Affero General Public License v3.0**.

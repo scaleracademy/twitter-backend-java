@@ -4,10 +4,10 @@
 [![PR Checker](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/pr-checker.yml/badge.svg)](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/pr-checker.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-An high-performance, high-performance Twitter clone backend built with the
-latest industry standards.
+An robust, high-performance Twitter clone backend built with the latest
+industry standards.
 
-## 🚀 Modern Tech Stack
+## Modern Tech Stack
 
 - **Java 21** (Microsoft Build of OpenJDK)
 - **Spring Boot 4.0** (Spring Framework 7.0)
@@ -18,7 +18,7 @@ latest industry standards.
 - **OpenTelemetry** for native observability.
 - **Springdoc OpenAPI 3** for Swagger documentation.
 
-## 🛠️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -56,7 +56,7 @@ latest industry standards.
 
 The API will be available at `http://localhost:8080`.
 
-## 📖 API Documentation
+## API Documentation
 
 Access the Interactive Swagger UI at:
 👉 `http://localhost:8080/swagger-ui/index.html`
@@ -67,7 +67,7 @@ Access the Interactive Swagger UI at:
 - **GET `/users`**: User management and social graph.
 - **GET `/posts`**: Scalable paginated feed access.
 
-## 🏗️ Architecture & Best Practices
+## Architecture & Best Practices
 
 - **Scalable Pagination**: All list endpoints use `Pageable` to prevent memory
   exhaustion.
@@ -80,7 +80,7 @@ Access the Interactive Swagger UI at:
 - **Null Safety**: Integrated **JSpecify** annotations across the service
   layer.
 
-## 🤖 CI/CD Pipeline
+## CI/CD Pipeline
 
 Our pipeline is optimized for robust speed and reliability:
 
@@ -89,7 +89,7 @@ Our pipeline is optimized for robust speed and reliability:
 - **Master CI**: Performs artifact archival, CodeQL security scanning, and
   multi-arch image distribution to GHCR and DockerHub.
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md)
 for details on:
@@ -98,6 +98,6 @@ for details on:
 - Development environment setup
 - Pull request process
 
-## 📜 License
+## License
 
 This project is licensed under the **GNU Affero General Public License v3.0**.

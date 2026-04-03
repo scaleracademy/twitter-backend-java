@@ -24,6 +24,8 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.subho.clone.twitter.entity.Users;
@@ -89,26 +91,16 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserModel> getFollowers(UUID userId) {
-    List<UserModel> followers = new ArrayList<>();
+  public Page<UserModel> getFollowers(UUID userId, Pageable pageable) {
     Users user = usersRepository.getById(userId);
-    List<Users> users = usersRepository.findAllById(user.getFollower().keySet());
-    Optional.ofNullable(users)
-        .ifPresent(
-            usersList ->
-                usersList.forEach(eachUser -> followers.add(userMapper.transform(eachUser))));
-    return followers;
+    var usersPage = usersRepository.findByIdIn(user.getFollower().keySet(), pageable);
+    return usersPage.map(userMapper::transform);
   }
 
   @Override
-  public List<UserModel> getFollowings(UUID userId) {
-    List<UserModel> followings = new ArrayList<>();
+  public Page<UserModel> getFollowings(UUID userId, Pageable pageable) {
     Users user = usersRepository.getById(userId);
-    List<Users> users = usersRepository.findAllById(user.getFollowing().keySet());
-    Optional.ofNullable(users)
-        .ifPresent(
-            usersList ->
-                usersList.forEach(eachUser -> followings.add(userMapper.transform(eachUser))));
-    return followings;
+    var usersPage = usersRepository.findByIdIn(user.getFollowing().keySet(), pageable);
+    return usersPage.map(userMapper::transform);
   }
 }

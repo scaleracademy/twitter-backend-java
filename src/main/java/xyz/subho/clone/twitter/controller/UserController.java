@@ -20,10 +20,11 @@ package xyz.subho.clone.twitter.controller;
 
 import jakarta.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -92,12 +93,12 @@ public class UserController {
   }
 
   @GetMapping("/{userId}/followers")
-  public List<UserModel> getFollowers(@PathVariable("userId") UUID userId) {
-    return userService.getFollowers(userId);
+  public Page<UserModel> getFollowers(@PathVariable("userId") UUID userId, Pageable pageable) {
+    return userService.getFollowers(userId, pageable);
   }
 
   @GetMapping("/{userId}/followings")
-  public List<UserModel> getFollowings(@PathVariable("userId") UUID userId) {
-    return userService.getFollowings(userId);
+  public Page<UserModel> getFollowings(@PathVariable("userId") UUID userId, Pageable pageable) {
+    return userService.getFollowings(userId, pageable);
   }
 }

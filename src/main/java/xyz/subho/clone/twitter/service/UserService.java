@@ -18,7 +18,8 @@
 
 package xyz.subho.clone.twitter.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.UserModel;
@@ -39,7 +40,7 @@ public interface UserService {
 
   public boolean removeFollower(UUID followerId, UUID userId);
 
-  public List<UserModel> getFollowers(UUID userId);
+  public Page<UserModel> getFollowers(UUID userId, Pageable pageable);
 
-  public List<UserModel> getFollowings(UUID userId);
+  public Page<UserModel> getFollowings(UUID userId, Pageable pageable);
 }

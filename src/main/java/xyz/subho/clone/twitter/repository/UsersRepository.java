@@ -18,11 +18,16 @@
 
 package xyz.subho.clone.twitter.repository;
 
+import java.util.Collection;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import xyz.subho.clone.twitter.entity.Users;
 
 public interface UsersRepository extends JpaRepository<Users, UUID> {
 
   public Users findByUsername(String username);
+
+  public Page<Users> findByIdIn(Collection<UUID> ids, Pageable pageable);
 }

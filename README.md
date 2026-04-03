@@ -4,7 +4,7 @@
 [![PR Checker](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/pr-checker.yml/badge.svg)](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/pr-checker.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-An enterprise-grade, high-performance Twitter clone backend built with the
+An high-performance, high-performance Twitter clone backend built with the
 latest industry standards.
 
 ## 🚀 Modern Tech Stack
@@ -82,7 +82,7 @@ Access the Interactive Swagger UI at:
 
 ## 🤖 CI/CD Pipeline
 
-Our pipeline is optimized for enterprise speed and reliability:
+Our pipeline is optimized for robust speed and reliability:
 
 - **PR Checker**: Runs cross-platform linting (Spotless) and a Docker smoke
   build on every PR.

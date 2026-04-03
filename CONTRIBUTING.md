@@ -2,7 +2,7 @@ First off, thank you for considering contributing to Moo! It's people like you
 that make Moo such a great tool for the community.
 
 This document provides guidelines and standards for contributing to this
-project. Following these helps us maintain a high-quality, enterprise-grade
+project. Following these helps us maintain a high-quality, high-performance
 codebase.
 
 ---
@@ -59,7 +59,7 @@ To keep the codebase clean and stable, we enforce the following rules:
 - Use `@NonNull` for mandatory values.
 - Default to `@NonNull` unless there is a valid reason for nullability.
 
-### 4. Enterprise Architecture
+### 4. Robust Architecture
 
 - **Layering:** strictly follow `Controller` -> `Service` -> `Repository`.
 - **Models (DTOs):** Never expose JPA Entities directly in Controllers. Use

@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -71,13 +73,13 @@ public class PostServiceImpl implements PostService {
   private Mapper<Users, UserModel> userMapper;
 
   @Override
-  public Page<PostModel> getAllPosts(Pageable pageable) {
+  public @NonNull Page<PostModel> getAllPosts(@NonNull Pageable pageable) {
     var postsPage = postsRepository.findAll(pageable);
     return postsPage.map(postMapper::transform);
   }
 
   @Override
-  public PostModel getPost(UUID postId) {
+  public @Nullable PostModel getPost(@NonNull UUID postId) {
 
     var post = postsRepository.findById(postId);
     if (post.isPresent()) return postMapper.transform(post.get());
@@ -86,7 +88,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public PostModel addPost(PostModel postModel) {
+  public @NonNull PostModel addPost(@NonNull PostModel postModel) {
 
     List<HashtagPosts> hashtagPosts = new ArrayList<>();
     var post = postMapper.transformBack(postModel);
@@ -109,7 +111,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public boolean deletePost(UUID postId, UUID userId) {
+  public boolean deletePost(@NonNull UUID postId, @NonNull UUID userId) {
 
     if (Optional.ofNullable((getPost(postId))).isPresent()) {
       postsRepository.deleteById(postId);
@@ -120,11 +122,15 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public long addLike(UUID postId, UUID userId) {
+  public long addLike(@NonNull UUID postId, @NonNull UUID userId) {
 
-    var post = postMapper.transformBack(getPost(postId));
+    var postModel = getPost(postId);
+    if (postModel == null) throw new ResourceNotFoundException("Post not found");
+    var post = postMapper.transformBack(postModel);
     post.incrementLikeCount();
-    var user = userMapper.transformBack(userService.getUserByUserId(userId));
+    var userModel = userService.getUserByUserId(userId);
+    if (userModel == null) throw new ResourceNotFoundException("User not found");
+    var user = userMapper.transformBack(userModel);
 
     var likeMapping = new Likes();
     likeMapping.setPosts(post);
@@ -141,11 +147,15 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public long removeLike(UUID postId, UUID userId) {
+  public long removeLike(@NonNull UUID postId, @NonNull UUID userId) {
 
-    var post = postMapper.transformBack(getPost(postId));
+    var postModel = getPost(postId);
+    if (postModel == null) throw new ResourceNotFoundException("Post not found");
+    var post = postMapper.transformBack(postModel);
     post.decrementLikeCount();
-    var user = userMapper.transformBack(userService.getUserByUserId(userId));
+    var userModel = userService.getUserByUserId(userId);
+    if (userModel == null) throw new ResourceNotFoundException("User not found");
+    var user = userMapper.transformBack(userModel);
 
     try {
       likeRepository.deleteByPostsAndUsers(post, user);

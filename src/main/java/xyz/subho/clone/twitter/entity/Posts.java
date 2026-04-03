@@ -38,13 +38,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 
 @Entity
 @Table(name = "posts")
-public class Posts {
+public class Posts extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -76,10 +74,6 @@ public class Posts {
 
   @Column(name = "reply_to_id")
   private UUID replyToId;
-
-  @CreationTimestamp private Date timestamp;
-
-  @UpdateTimestamp private Date updatedAt;
 
   @ElementCollection private Map<String, Date> hashtags = new HashMap<>();
 
@@ -173,22 +167,6 @@ public class Posts {
 
   public void setReplyToId(UUID replyToId) {
     this.replyToId = replyToId;
-  }
-
-  public Date getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(Date timestamp) {
-    this.timestamp = timestamp;
-  }
-
-  public Date getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(Date updatedAt) {
-    this.updatedAt = updatedAt;
   }
 
   public Map<String, Date> getHashtags() {

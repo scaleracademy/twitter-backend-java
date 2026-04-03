@@ -26,15 +26,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "hashtag_posts")
-public class HashtagPosts {
+public class HashtagPosts extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -56,10 +53,6 @@ public class HashtagPosts {
       updatable = false,
       nullable = false)
   private Posts posts;
-
-  @CreationTimestamp private Date createdAt;
-
-  @UpdateTimestamp private Date updatedAt;
 
   public HashtagPosts() {}
 
@@ -85,22 +78,6 @@ public class HashtagPosts {
 
   public void setPosts(Posts posts) {
     this.posts = posts;
-  }
-
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public Date getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(Date updatedAt) {
-    this.updatedAt = updatedAt;
   }
 
   @Override

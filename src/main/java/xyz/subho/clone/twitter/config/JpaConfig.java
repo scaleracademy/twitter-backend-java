@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.utility;
+package xyz.subho.clone.twitter.config;
 
-public interface Mapper<S, T> {
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-  T transform(S source);
-
-  S transformBack(T source);
-}
+@Configuration
+@EnableJpaAuditing
+public class JpaConfig {}

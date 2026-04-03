@@ -26,19 +26,15 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.subho.clone.twitter.entity.HashtagPosts;
 import xyz.subho.clone.twitter.entity.Likes;
-import xyz.subho.clone.twitter.entity.Posts;
-import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.exception.ErrorSavingEntityToDatabaseException;
 import xyz.subho.clone.twitter.exception.ResourceNotFoundException;
 import xyz.subho.clone.twitter.model.PostModel;
-import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.repository.HashtagPostsRepository;
 import xyz.subho.clone.twitter.repository.LikesRepository;
 import xyz.subho.clone.twitter.repository.PostsRepository;
@@ -46,7 +42,8 @@ import xyz.subho.clone.twitter.repository.UsersRepository;
 import xyz.subho.clone.twitter.service.HashtagService;
 import xyz.subho.clone.twitter.service.PostService;
 import xyz.subho.clone.twitter.service.UserService;
-import xyz.subho.clone.twitter.utility.Mapper;
+import xyz.subho.clone.twitter.utility.PostMapper;
+import xyz.subho.clone.twitter.utility.UserMapper;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -59,8 +56,8 @@ public class PostServiceImpl implements PostService {
   private final HashtagService hashtagService;
   private final LikesRepository likeRepository;
   private final UsersRepository usersRepository;
-  private final Mapper<Posts, PostModel> postMapper;
-  private final Mapper<Users, UserModel> userMapper;
+  private final PostMapper postMapper;
+  private final UserMapper userMapper;
 
   public PostServiceImpl(
       PostsRepository postsRepository,
@@ -69,8 +66,8 @@ public class PostServiceImpl implements PostService {
       HashtagService hashtagService,
       LikesRepository likeRepository,
       UsersRepository usersRepository,
-      @Qualifier("PostMapper") Mapper<Posts, PostModel> postMapper,
-      @Qualifier("UserMapper") Mapper<Users, UserModel> userMapper) {
+      PostMapper postMapper,
+      UserMapper userMapper) {
     this.postsRepository = postsRepository;
     this.hashtagPostRepository = hashtagPostRepository;
     this.userService = userService;
@@ -84,14 +81,14 @@ public class PostServiceImpl implements PostService {
   @Override
   public @NonNull Page<PostModel> getAllPosts(@NonNull Pageable pageable) {
     var postsPage = postsRepository.findAll(pageable);
-    return postsPage.map(postMapper::transform);
+    return postsPage.map(postMapper::toModel);
   }
 
   @Override
   public @Nullable PostModel getPost(@NonNull UUID postId) {
 
     var post = postsRepository.findById(postId);
-    if (post.isPresent()) return postMapper.transform(post.get());
+    if (post.isPresent()) return postMapper.toModel(post.get());
     throw new ResourceNotFoundException("Post ID is Invalid");
   }
 
@@ -100,7 +97,7 @@ public class PostServiceImpl implements PostService {
   public @NonNull PostModel addPost(@NonNull PostModel postModel) {
 
     List<HashtagPosts> hashtagPosts = new ArrayList<>();
-    var post = postMapper.transformBack(postModel);
+    var post = postMapper.toEntity(postModel);
     post.setUsers(usersRepository.getById(postModel.userId()));
     Optional.ofNullable(hashtagService.getHashtagsByTags(postModel.hashtags()))
         .ifPresent(
@@ -115,7 +112,7 @@ public class PostServiceImpl implements PostService {
             });
     post.setPostHashtags(hashtagPosts);
     hashtagPostRepository.saveAll(hashtagPosts);
-    return postMapper.transform(postsRepository.save(post));
+    return postMapper.toModel(postsRepository.save(post));
   }
 
   @Override
@@ -135,11 +132,11 @@ public class PostServiceImpl implements PostService {
 
     var postModel = getPost(postId);
     if (postModel == null) throw new ResourceNotFoundException("Post not found");
-    var post = postMapper.transformBack(postModel);
+    var post = postMapper.toEntity(postModel);
     post.incrementLikeCount();
     var userModel = userService.getUserByUserId(userId);
     if (userModel == null) throw new ResourceNotFoundException("User not found");
-    var user = userMapper.transformBack(userModel);
+    var user = userMapper.toEntity(userModel);
 
     var likeMapping = new Likes();
     likeMapping.setPosts(post);
@@ -160,11 +157,11 @@ public class PostServiceImpl implements PostService {
 
     var postModel = getPost(postId);
     if (postModel == null) throw new ResourceNotFoundException("Post not found");
-    var post = postMapper.transformBack(postModel);
+    var post = postMapper.toEntity(postModel);
     post.decrementLikeCount();
     var userModel = userService.getUserByUserId(userId);
     if (userModel == null) throw new ResourceNotFoundException("User not found");
-    var user = userMapper.transformBack(userModel);
+    var user = userMapper.toEntity(userModel);
 
     try {
       likeRepository.deleteByPostsAndUsers(post, user);
@@ -179,6 +176,6 @@ public class PostServiceImpl implements PostService {
   @Override
   public @NonNull Page<PostModel> getReplies(@NonNull UUID postId, @NonNull Pageable pageable) {
     var repliesPage = postsRepository.findByReplyToId(postId, pageable);
-    return repliesPage.map(postMapper::transform);
+    return repliesPage.map(postMapper::toModel);
   }
 }

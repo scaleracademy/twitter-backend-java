@@ -26,34 +26,33 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import xyz.subho.clone.twitter.entity.Hashtags;
-import xyz.subho.clone.twitter.entity.Posts;
 import xyz.subho.clone.twitter.model.HashtagModel;
 import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.repository.HashtagPostsRepository;
 import xyz.subho.clone.twitter.repository.HashtagsRepository;
 import xyz.subho.clone.twitter.service.HashtagService;
-import xyz.subho.clone.twitter.utility.Mapper;
+import xyz.subho.clone.twitter.utility.HashtagMapper;
+import xyz.subho.clone.twitter.utility.PostMapper;
 
 @Service
 public class HashtagServiceImpl implements HashtagService {
 
   private final HashtagsRepository hashtagsRepository;
   private final HashtagPostsRepository hashtagPostsRepository;
-  private final Mapper<Hashtags, HashtagModel> hashtagMapper;
-  private final Mapper<Posts, PostModel> postMapper;
+  private final HashtagMapper hashtagMapper;
+  private final PostMapper postMapper;
 
   public HashtagServiceImpl(
       HashtagsRepository hashtagsRepository,
       HashtagPostsRepository hashtagPostsRepository,
-      @Qualifier("HashtagMapper") Mapper<Hashtags, HashtagModel> hashtagMapper,
-      @Qualifier("PostMapper") Mapper<Posts, PostModel> postMapper) {
+      HashtagMapper hashtagMapper,
+      PostMapper postMapper) {
     this.hashtagsRepository = hashtagsRepository;
     this.hashtagPostsRepository = hashtagPostsRepository;
     this.hashtagMapper = hashtagMapper;
@@ -63,7 +62,7 @@ public class HashtagServiceImpl implements HashtagService {
   @Override
   public @NonNull Page<HashtagModel> getHashtags(@NonNull Pageable pageable) {
     var hashtagsPage = hashtagsRepository.findAll(pageable);
-    return hashtagsPage.map(hashtagMapper::transform);
+    return hashtagsPage.map(hashtagMapper::toModel);
   }
 
   @Override
@@ -73,7 +72,7 @@ public class HashtagServiceImpl implements HashtagService {
       return Page.empty();
     }
     var hashtagPostsPage = hashtagPostsRepository.findByHashtags(hashtag, pageable);
-    return hashtagPostsPage.map(hp -> postMapper.transform(hp.getPosts()));
+    return hashtagPostsPage.map(hp -> postMapper.toModel(hp.getPosts()));
   }
 
   @Override

@@ -21,7 +21,6 @@ package xyz.subho.clone.twitter.service.impl;
 import java.util.UUID;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,19 +30,17 @@ import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.repository.UsersRepository;
 import xyz.subho.clone.twitter.service.UserService;
-import xyz.subho.clone.twitter.utility.Mapper;
+import xyz.subho.clone.twitter.utility.UserMapper;
 
 @Service
 public class UserServiceImpl implements UserService {
 
   private final UsersRepository usersRepository;
   private final PasswordEncoder passwordEncoder;
-  private final Mapper<Users, UserModel> userMapper;
+  private final UserMapper userMapper;
 
   public UserServiceImpl(
-      UsersRepository usersRepository,
-      PasswordEncoder passwordEncoder,
-      @Qualifier("UserMapper") Mapper<Users, UserModel> userMapper) {
+      UsersRepository usersRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
     this.usersRepository = usersRepository;
     this.passwordEncoder = passwordEncoder;
     this.userMapper = userMapper;
@@ -51,13 +48,13 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public @Nullable UserModel getUserByUserName(@NonNull String username) {
-    return userMapper.transform(usersRepository.findByUsername(username));
+    return userMapper.toModel(usersRepository.findByUsername(username));
   }
 
   @Override
   public @Nullable UserModel getUserByUserId(@NonNull UUID userId) {
     var user = usersRepository.getById(userId);
-    return userMapper.transform(user);
+    return userMapper.toModel(user);
   }
 
   @Override
@@ -68,16 +65,16 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public @NonNull UserModel addUser(@NonNull UserModel userModel) {
-    var user = userMapper.transformBack(userModel);
+    var user = userMapper.toEntity(userModel);
     user.setPassword(passwordEncoder.encode(userModel.password()));
-    return userMapper.transform(usersRepository.save(user));
+    return userMapper.toModel(usersRepository.save(user));
   }
 
   @Override
   @Transactional
   public @NonNull UserModel editUser(@NonNull UserModel userModel) {
-    Users users = userMapper.transformBack(userModel);
-    return userMapper.transform(usersRepository.save(users));
+    Users users = userMapper.toEntity(userModel);
+    return userMapper.toModel(usersRepository.save(users));
   }
 
   @Override
@@ -102,13 +99,13 @@ public class UserServiceImpl implements UserService {
   public @NonNull Page<UserModel> getFollowers(@NonNull UUID userId, @NonNull Pageable pageable) {
     Users user = usersRepository.getById(userId);
     var usersPage = usersRepository.findByIdIn(user.getFollower().keySet(), pageable);
-    return usersPage.map(userMapper::transform);
+    return usersPage.map(userMapper::toModel);
   }
 
   @Override
   public @NonNull Page<UserModel> getFollowings(@NonNull UUID userId, @NonNull Pageable pageable) {
     Users user = usersRepository.getById(userId);
     var usersPage = usersRepository.findByIdIn(user.getFollowing().keySet(), pageable);
-    return usersPage.map(userMapper::transform);
+    return usersPage.map(userMapper::toModel);
   }
 }

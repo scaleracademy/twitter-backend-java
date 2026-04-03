@@ -30,18 +30,15 @@ import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(
     name = "hashtags",
     indexes = {@Index(columnList = "tag")})
-public class Hashtags {
+public class Hashtags extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -57,10 +54,6 @@ public class Hashtags {
   @OneToMany(mappedBy = "hashtags", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<HashtagPosts> hashtagPosts = new ArrayList<>();
-
-  @CreationTimestamp private Date createdAt;
-
-  @UpdateTimestamp private Date updatedAt;
 
   public Hashtags() {}
 
@@ -94,22 +87,6 @@ public class Hashtags {
 
   public void setHashtagPosts(List<HashtagPosts> hashtagPosts) {
     this.hashtagPosts = hashtagPosts;
-  }
-
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public Date getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(Date updatedAt) {
-    this.updatedAt = updatedAt;
   }
 
   @Override

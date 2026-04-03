@@ -37,14 +37,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(
     name = "users",
     indexes = {@Index(columnList = "username")})
-public class Users {
+public class Users extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -76,10 +74,6 @@ public class Users {
 
   @Column(columnDefinition = "boolean default false", nullable = false)
   private Boolean verified = false;
-
-  @CreationTimestamp private Date createdAt;
-
-  @UpdateTimestamp private Date updatedAt;
 
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
@@ -189,22 +183,6 @@ public class Users {
 
   public void setVerified(Boolean verified) {
     this.verified = verified;
-  }
-
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public Date getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(Date updatedAt) {
-    this.updatedAt = updatedAt;
   }
 
   public List<Likes> getUserLikes() {

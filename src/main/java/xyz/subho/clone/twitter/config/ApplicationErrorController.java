@@ -20,9 +20,9 @@ package xyz.subho.clone.twitter.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
-import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.boot.autoconfigure.web.WebProperties;
+import org.springframework.boot.webmvc.autoconfigure.error.BasicErrorController;
+import org.springframework.boot.webmvc.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +34,11 @@ public class ApplicationErrorController extends BasicErrorController {
 
   /**
    * @param errorAttributes ErrorAttributes
-   * @param serverProperties ServerProperties
+   * @param webProperties WebProperties
    */
   public ApplicationErrorController(
-      ErrorAttributes errorAttributes, ServerProperties serverProperties) {
-    super(errorAttributes, serverProperties.getError());
+      ErrorAttributes errorAttributes, WebProperties webProperties) {
+    super(errorAttributes, webProperties.getError());
   }
 
   /**

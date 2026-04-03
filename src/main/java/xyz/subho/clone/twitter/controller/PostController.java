@@ -19,10 +19,11 @@
 package xyz.subho.clone.twitter.controller;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,8 +45,8 @@ public class PostController {
   @Autowired private PostService postService;
 
   @GetMapping
-  public ResponseEntity<List<PostModel>> getAllPosts() {
-    List<PostModel> posts = postService.getAllPosts();
+  public ResponseEntity<Page<PostModel>> getAllPosts(Pageable pageable) {
+    Page<PostModel> posts = postService.getAllPosts(pageable);
     return new ResponseEntity<>(posts, HttpStatus.OK);
   }
 

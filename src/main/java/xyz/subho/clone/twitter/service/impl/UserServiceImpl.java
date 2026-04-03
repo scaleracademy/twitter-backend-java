@@ -19,7 +19,6 @@
 package xyz.subho.clone.twitter.service.impl;
 
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,15 +34,20 @@ import xyz.subho.clone.twitter.service.UserService;
 import xyz.subho.clone.twitter.utility.Mapper;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
   private final UsersRepository usersRepository;
-
   private final PasswordEncoder passwordEncoder;
-
-  @Qualifier("UserMapper")
   private final Mapper<Users, UserModel> userMapper;
+
+  public UserServiceImpl(
+      UsersRepository usersRepository,
+      PasswordEncoder passwordEncoder,
+      @Qualifier("UserMapper") Mapper<Users, UserModel> userMapper) {
+    this.usersRepository = usersRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.userMapper = userMapper;
+  }
 
   @Override
   public @Nullable UserModel getUserByUserName(@NonNull String username) {
@@ -65,7 +69,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public @NonNull UserModel addUser(@NonNull UserModel userModel) {
     var user = userMapper.transformBack(userModel);
-    user.setPassword(passwordEncoder.encode(userModel.getPassword()));
+    user.setPassword(passwordEncoder.encode(userModel.password()));
     return userMapper.transform(usersRepository.save(user));
   }
 

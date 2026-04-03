@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,18 +42,23 @@ import xyz.subho.clone.twitter.service.HashtagService;
 import xyz.subho.clone.twitter.utility.Mapper;
 
 @Service
-@RequiredArgsConstructor
 public class HashtagServiceImpl implements HashtagService {
 
   private final HashtagsRepository hashtagsRepository;
-
   private final HashtagPostsRepository hashtagPostsRepository;
-
-  @Qualifier("HashtagMapper")
   private final Mapper<Hashtags, HashtagModel> hashtagMapper;
-
-  @Qualifier("PostMapper")
   private final Mapper<Posts, PostModel> postMapper;
+
+  public HashtagServiceImpl(
+      HashtagsRepository hashtagsRepository,
+      HashtagPostsRepository hashtagPostsRepository,
+      @Qualifier("HashtagMapper") Mapper<Hashtags, HashtagModel> hashtagMapper,
+      @Qualifier("PostMapper") Mapper<Posts, PostModel> postMapper) {
+    this.hashtagsRepository = hashtagsRepository;
+    this.hashtagPostsRepository = hashtagPostsRepository;
+    this.hashtagMapper = hashtagMapper;
+    this.postMapper = postMapper;
+  }
 
   @Override
   public @NonNull Page<HashtagModel> getHashtags(@NonNull Pageable pageable) {
@@ -109,7 +113,7 @@ public class HashtagServiceImpl implements HashtagService {
 
   private Set<String> fetchExistingTags(List<Hashtags> hashTags) {
     if (!CollectionUtils.isEmpty(hashTags)) {
-      return hashTags.stream().map(hTag -> hTag.getTag()).collect(Collectors.toSet());
+      return hashTags.stream().map(Hashtags::getTag).collect(Collectors.toSet());
     }
     return new HashSet<>();
   }

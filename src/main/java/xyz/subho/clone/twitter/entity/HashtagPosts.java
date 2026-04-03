@@ -27,14 +27,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "hashtag_posts")
-@Data
 public class HashtagPosts {
 
   @Id
@@ -42,7 +41,7 @@ public class HashtagPosts {
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @ManyToOne(targetEntity = Hashtags.class)
+  @ManyToOne
   @JoinColumn(
       name = "hashtags_id",
       columnDefinition = "BINARY(16)",
@@ -50,7 +49,7 @@ public class HashtagPosts {
       nullable = false)
   private Hashtags hashtags;
 
-  @ManyToOne(targetEntity = Posts.class)
+  @ManyToOne
   @JoinColumn(
       name = "posts_id",
       columnDefinition = "BINARY(16)",
@@ -61,4 +60,64 @@ public class HashtagPosts {
   @CreationTimestamp private Date createdAt;
 
   @UpdateTimestamp private Date updatedAt;
+
+  public HashtagPosts() {}
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public Hashtags getHashtags() {
+    return hashtags;
+  }
+
+  public void setHashtags(Hashtags hashtags) {
+    this.hashtags = hashtags;
+  }
+
+  public Posts getPosts() {
+    return posts;
+  }
+
+  public void setPosts(Posts posts) {
+    this.posts = posts;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Date getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Date updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    HashtagPosts that = (HashtagPosts) o;
+    return Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
+
+  @Override
+  public String toString() {
+    return "HashtagPosts{" + "id=" + id + '}';
+  }
 }

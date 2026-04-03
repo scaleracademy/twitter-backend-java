@@ -27,14 +27,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "likes")
-@Data
 public class Likes {
 
   @Id
@@ -42,15 +41,7 @@ public class Likes {
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @ManyToOne(targetEntity = Posts.class)
-  @JoinColumn(
-      name = "posts_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
-  private Posts posts;
-
-  @ManyToOne(targetEntity = Users.class)
+  @ManyToOne
   @JoinColumn(
       name = "users_id",
       columnDefinition = "BINARY(16)",
@@ -58,7 +49,75 @@ public class Likes {
       nullable = false)
   private Users users;
 
+  @ManyToOne
+  @JoinColumn(
+      name = "posts_id",
+      columnDefinition = "BINARY(16)",
+      updatable = false,
+      nullable = false)
+  private Posts posts;
+
   @CreationTimestamp private Date createdAt;
 
   @UpdateTimestamp private Date updatedAt;
+
+  public Likes() {}
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public Users getUsers() {
+    return users;
+  }
+
+  public void setUsers(Users users) {
+    this.users = users;
+  }
+
+  public Posts getPosts() {
+    return posts;
+  }
+
+  public void setPosts(Posts posts) {
+    this.posts = posts;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Date getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Date updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Likes likes = (Likes) o;
+    return Objects.equals(id, likes.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
+
+  @Override
+  public String toString() {
+    return "Likes{" + "id=" + id + '}';
+  }
 }

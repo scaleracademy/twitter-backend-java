@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import xyz.subho.clone.twitter.entity.Posts;
 import xyz.subho.clone.twitter.model.PostModel;
@@ -32,26 +31,35 @@ public class PostMapper implements Mapper<Posts, PostModel> {
 
   @Override
   public PostModel transform(Posts post) {
-    PostModel postModel = new PostModel();
-    BeanUtils.copyProperties(post, postModel, "hashtags", "mentions");
-    postModel.setHashtags(new ArrayList<>(post.getHashtags().keySet()));
-    postModel.setMentions(new ArrayList<>(post.getMentions().keySet()));
-    postModel.setUserId(post.getUsers().getId());
-    return postModel;
+    return new PostModel(
+        post.getId(),
+        post.getText(),
+        post.getUsers().getId(),
+        new ArrayList<>(post.getImages().keySet()),
+        post.getLikeCount(),
+        post.getRepostCount(),
+        post.getOriginalPostId(),
+        post.getReplyToId(),
+        post.getTimestamp(),
+        new ArrayList<>(post.getHashtags().keySet()),
+        new ArrayList<>(post.getMentions().keySet()));
   }
 
   @Override
   public Posts transformBack(PostModel postModel) {
     Posts post = new Posts();
-    BeanUtils.copyProperties(postModel, post, "hashtags", "mentions", "likeCount", "repostCount");
+    post.setId(postModel.id());
+    post.setText(postModel.text());
     Map<String, Date> hashtags = new HashMap<>();
     Map<String, Date> mentions = new HashMap<>();
-    postModel.getHashtags().forEach(tag -> hashtags.put(tag, new Date()));
-    postModel.getMentions().forEach(mention -> mentions.put(mention, new Date()));
+    postModel.hashtags().forEach(tag -> hashtags.put(tag, new Date()));
+    postModel.mentions().forEach(mention -> mentions.put(mention, new Date()));
     post.setHashtags(hashtags);
     post.setMentions(mentions);
-    post.setLikeCount(null != postModel.getLikeCount() ? postModel.getLikeCount() : 0L);
-    post.setRepostCount(null != postModel.getRepostCount() ? postModel.getRepostCount() : 0L);
+    post.setLikeCount(null != postModel.likeCount() ? postModel.likeCount() : 0L);
+    post.setRepostCount(null != postModel.repostCount() ? postModel.repostCount() : 0L);
+    post.setOriginalPostId(postModel.originalPostId());
+    post.setReplyToId(postModel.replyToId());
     return post;
   }
 }

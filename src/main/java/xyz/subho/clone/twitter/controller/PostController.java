@@ -21,8 +21,8 @@ package xyz.subho.clone.twitter.controller;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -42,13 +42,17 @@ import xyz.subho.clone.twitter.service.UserService;
 
 @RestController
 @RequestMapping(PostV1Constants.BASE_PATH)
-@Slf4j
-@RequiredArgsConstructor
 public class PostController {
 
-  private final PostService postService;
+  private static final Logger log = LoggerFactory.getLogger(PostController.class);
 
+  private final PostService postService;
   private final UserService userService;
+
+  public PostController(PostService postService, UserService userService) {
+    this.postService = postService;
+    this.userService = userService;
+  }
 
   @GetMapping
   public ResponseEntity<Page<PostModel>> getAllPosts(Pageable pageable) {
@@ -66,8 +70,26 @@ public class PostController {
   public ResponseEntity<PostModel> addPost(
       @Valid @RequestBody PostModel postModel, Principal principal) {
     var user = userService.getUserByUserName(principal.getName());
-    postModel.setUserId(user.getId());
-    PostModel post = postService.addPost(postModel);
+    if (user == null) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+    // Create new record instance with the authenticated userId
+    PostModel enrichedPost =
+        new PostModel(
+            postModel.id(),
+            postModel.text(),
+            user.id(),
+            postModel.images(),
+            postModel.likeCount(),
+            postModel.repostCount(),
+            postModel.originalPostId(),
+            postModel.replyToId(),
+            postModel.timestamp(),
+            postModel.hashtags(),
+            postModel.mentions());
+
+    PostModel post = postService.addPost(enrichedPost);
     return new ResponseEntity<>(post, HttpStatus.OK);
   }
 
@@ -76,7 +98,9 @@ public class PostController {
       @PathVariable("postId") UUID postId, Principal principal) {
 
     var user = userService.getUserByUserName(principal.getName());
-    postService.deletePost(postId, user.getId());
+    if (user != null) {
+      postService.deletePost(postId, user.id());
+    }
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
@@ -84,7 +108,10 @@ public class PostController {
   public ResponseEntity<Long> likePost(@PathVariable("postId") UUID postId, Principal principal) {
 
     var user = userService.getUserByUserName(principal.getName());
-    return new ResponseEntity<>(postService.addLike(postId, user.getId()), HttpStatus.CREATED);
+    if (user == null) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+    return new ResponseEntity<>(postService.addLike(postId, user.id()), HttpStatus.CREATED);
   }
 
   @DeleteMapping(PostV1Constants.LIKE)
@@ -92,7 +119,10 @@ public class PostController {
       @PathVariable("postId") UUID postId, Principal principal) {
 
     var user = userService.getUserByUserName(principal.getName());
-    return new ResponseEntity<>(postService.removeLike(postId, user.getId()), HttpStatus.OK);
+    if (user == null) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+    return new ResponseEntity<>(postService.removeLike(postId, user.id()), HttpStatus.OK);
   }
 
   @GetMapping(PostV1Constants.REPLIES)

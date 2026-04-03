@@ -18,7 +18,6 @@
 
 package xyz.subho.clone.twitter.utility;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.UserModel;
@@ -28,19 +27,32 @@ public class UserMapper implements Mapper<Users, UserModel> {
 
   @Override
   public UserModel transform(Users user) {
-    var userModel = new UserModel();
-    BeanUtils.copyProperties(user, userModel, "password");
-    return userModel;
+    return new UserModel(
+        user.getId(),
+        user.getUsername(),
+        user.getName(),
+        null, // password should not be exposed
+        user.getEmail(),
+        user.getAvatar(),
+        user.getBio(),
+        user.getFollowerCount(),
+        user.getFollowingCount(),
+        user.getVerified());
   }
 
   @Override
   public Users transformBack(UserModel userModel) {
     var user = new Users();
-    BeanUtils.copyProperties(userModel, user, "followerCount", "followingCount", "verified");
-    user.setFollowerCount(userModel.getFollowerCount() != null ? userModel.getFollowerCount() : 0L);
-    user.setFollowingCount(
-        userModel.getFollowingCount() != null ? userModel.getFollowingCount() : 0L);
-    user.setVerified(userModel.getVerified() != null ? userModel.getVerified() : false);
+    user.setId(userModel.id());
+    user.setUsername(userModel.username());
+    user.setName(userModel.name());
+    user.setEmail(userModel.email());
+    user.setPassword(userModel.password());
+    user.setAvatar(userModel.avatar());
+    user.setBio(userModel.bio());
+    user.setFollowerCount(userModel.followerCount() != null ? userModel.followerCount() : 0L);
+    user.setFollowingCount(userModel.followingCount() != null ? userModel.followingCount() : 0L);
+    user.setVerified(userModel.verified() != null ? userModel.verified() : false);
     return user;
   }
 }

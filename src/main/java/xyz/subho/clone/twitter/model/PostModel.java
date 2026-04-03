@@ -24,25 +24,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import lombok.Data;
 import org.jspecify.annotations.Nullable;
 
-@Data
-public class PostModel {
+public record PostModel(
+    @Nullable UUID id,
+    @NotBlank(message = "Post text cannot be empty")
+        @Size(max = 240, message = "Post text cannot exceed 240 characters")
+        String text,
+    @Nullable UUID userId,
+    List<String> images,
+    @Nullable Long likeCount,
+    @Nullable Long repostCount,
+    @Nullable UUID originalPostId,
+    @Nullable UUID replyToId,
+    @Nullable Date timestamp,
+    List<String> hashtags,
+    List<String> mentions) {
 
-  private @Nullable UUID id;
-
-  @NotBlank(message = "Post text cannot be empty")
-  @Size(max = 240, message = "Post text cannot exceed 240 characters")
-  private String text;
-
-  private @Nullable UUID userId;
-  private List<String> images = new ArrayList<>(4);
-  private @Nullable Long likeCount;
-  private @Nullable Long repostCount;
-  private @Nullable UUID originalPostId;
-  private @Nullable UUID replyToId;
-  private @Nullable Date timestamp;
-  private List<String> hashtags = new ArrayList<>();
-  private List<String> mentions = new ArrayList<>();
+  public PostModel {
+    if (images == null) images = new ArrayList<>(4);
+    if (hashtags == null) hashtags = new ArrayList<>();
+    if (mentions == null) mentions = new ArrayList<>();
+  }
 }

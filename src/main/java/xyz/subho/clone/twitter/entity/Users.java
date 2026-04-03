@@ -35,8 +35,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -44,7 +44,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(
     name = "users",
     indexes = {@Index(columnList = "username")})
-@Data
 public class Users {
 
   @Id
@@ -94,6 +93,8 @@ public class Users {
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
 
+  public Users() {}
+
   public void setFollower(final UUID userId) {
     follower.put(userId, new Date());
   }
@@ -108,5 +109,160 @@ public class Users {
 
   public void removeFollowing(final UUID userId) {
     following.remove(userId);
+  }
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getAvatar() {
+    return avatar;
+  }
+
+  public void setAvatar(String avatar) {
+    this.avatar = avatar;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getBio() {
+    return bio;
+  }
+
+  public void setBio(String bio) {
+    this.bio = bio;
+  }
+
+  public long getFollowerCount() {
+    return followerCount;
+  }
+
+  public void setFollowerCount(long followerCount) {
+    this.followerCount = followerCount;
+  }
+
+  public Long getFollowingCount() {
+    return followingCount;
+  }
+
+  public void setFollowingCount(Long followingCount) {
+    this.followingCount = followingCount;
+  }
+
+  public Boolean getVerified() {
+    return verified;
+  }
+
+  public void setVerified(Boolean verified) {
+    this.verified = verified;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Date getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Date updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  public List<Likes> getUserLikes() {
+    return userLikes;
+  }
+
+  public void setUserLikes(List<Likes> userLikes) {
+    this.userLikes = userLikes;
+  }
+
+  public Map<UUID, Date> getFollower() {
+    return follower;
+  }
+
+  public void setFollower(Map<UUID, Date> follower) {
+    this.follower = follower;
+  }
+
+  public Map<UUID, Date> getFollowing() {
+    return following;
+  }
+
+  public void setFollowing(Map<UUID, Date> following) {
+    this.following = following;
+  }
+
+  public List<Posts> getUserPosts() {
+    return userPosts;
+  }
+
+  public void setUserPosts(List<Posts> userPosts) {
+    this.userPosts = userPosts;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Users users = (Users) o;
+    return Objects.equals(id, users.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
+
+  @Override
+  public String toString() {
+    return "Users{"
+        + "id="
+        + id
+        + ", username='"
+        + username
+        + '\''
+        + ", name='"
+        + name
+        + '\''
+        + '}';
   }
 }

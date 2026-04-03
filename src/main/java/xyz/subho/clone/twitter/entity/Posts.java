@@ -36,15 +36,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 
 @Entity
 @Table(name = "posts")
-@Data
 public class Posts {
 
   @Id
@@ -94,6 +93,8 @@ public class Posts {
   @JsonIgnore
   private List<Likes> postLikes = new ArrayList<>();
 
+  public Posts() {}
+
   public long incrementLikeCount() {
     return ++likeCount;
   }
@@ -108,5 +109,135 @@ public class Posts {
 
   public long decrementRepostCount() {
     return (repostCount < 1) ? 0 : --repostCount;
+  }
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public Users getUsers() {
+    return users;
+  }
+
+  public void setUsers(Users users) {
+    this.users = users;
+  }
+
+  public Map<String, Date> getImages() {
+    return images;
+  }
+
+  public void setImages(Map<String, Date> images) {
+    this.images = images;
+  }
+
+  public Long getLikeCount() {
+    return likeCount;
+  }
+
+  public void setLikeCount(Long likeCount) {
+    this.likeCount = likeCount;
+  }
+
+  public Long getRepostCount() {
+    return repostCount;
+  }
+
+  public void setRepostCount(Long repostCount) {
+    this.repostCount = repostCount;
+  }
+
+  public UUID getOriginalPostId() {
+    return originalPostId;
+  }
+
+  public void setOriginalPostId(UUID originalPostId) {
+    this.originalPostId = originalPostId;
+  }
+
+  public UUID getReplyToId() {
+    return replyToId;
+  }
+
+  public void setReplyToId(UUID replyToId) {
+    this.replyToId = replyToId;
+  }
+
+  public Date getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  public Date getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Date updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  public Map<String, Date> getHashtags() {
+    return hashtags;
+  }
+
+  public void setHashtags(Map<String, Date> hashtags) {
+    this.hashtags = hashtags;
+  }
+
+  public Map<String, Date> getMentions() {
+    return mentions;
+  }
+
+  public void setMentions(Map<String, Date> mentions) {
+    this.mentions = mentions;
+  }
+
+  public List<HashtagPosts> getPostHashtags() {
+    return postHashtags;
+  }
+
+  public void setPostHashtags(List<HashtagPosts> postHashtags) {
+    this.postHashtags = postHashtags;
+  }
+
+  public List<Likes> getPostLikes() {
+    return postLikes;
+  }
+
+  public void setPostLikes(List<Likes> postLikes) {
+    this.postLikes = postLikes;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Posts posts = (Posts) o;
+    return Objects.equals(id, posts.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
+
+  @Override
+  public String toString() {
+    return "Posts{" + "id=" + id + ", text='" + text + '\'' + '}';
   }
 }

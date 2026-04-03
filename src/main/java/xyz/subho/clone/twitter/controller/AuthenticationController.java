@@ -18,7 +18,6 @@
 
 package xyz.subho.clone.twitter.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,14 +35,20 @@ import xyz.subho.clone.twitter.security.UserDetailsServiceImpl;
 
 @RestController
 @RequestMapping(AuthV1Constants.BASE_PATH)
-@RequiredArgsConstructor
 public class AuthenticationController {
 
   private final AuthenticationManager authenticationManager;
-
   private final JwtUtil jwtTokenUtil;
-
   private final UserDetailsServiceImpl userDetailsService;
+
+  public AuthenticationController(
+      AuthenticationManager authenticationManager,
+      JwtUtil jwtTokenUtil,
+      UserDetailsServiceImpl userDetailsService) {
+    this.authenticationManager = authenticationManager;
+    this.jwtTokenUtil = jwtTokenUtil;
+    this.userDetailsService = userDetailsService;
+  }
 
   @PostMapping(AuthV1Constants.AUTHENTICATE)
   public ResponseEntity<?> createAuthenticationToken(
@@ -52,13 +57,12 @@ public class AuthenticationController {
     try {
       authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(
-              authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+              authenticationRequest.username(), authenticationRequest.password()));
     } catch (BadCredentialsException e) {
       throw new BadRequestException("Incorrect username or password", e);
     }
 
-    final var userDetails =
-        userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+    final var userDetails = userDetailsService.loadUserByUsername(authenticationRequest.username());
 
     final String jwt = jwtTokenUtil.generateToken(userDetails);
 

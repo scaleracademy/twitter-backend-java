@@ -18,7 +18,6 @@
 
 package xyz.subho.clone.twitter.utility;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import xyz.subho.clone.twitter.entity.Hashtags;
 import xyz.subho.clone.twitter.model.HashtagModel;
@@ -28,15 +27,16 @@ public class HashtagMapper implements Mapper<Hashtags, HashtagModel> {
 
   @Override
   public HashtagModel transform(Hashtags hashtag) {
-    var hashtagModel = new HashtagModel();
-    BeanUtils.copyProperties(hashtag, hashtagModel);
-    return hashtagModel;
+    return new HashtagModel(hashtag.getId(), hashtag.getTag(), hashtag.getRecentPostCount());
   }
 
   @Override
   public Hashtags transformBack(HashtagModel hashtagModel) {
     var hashtag = new Hashtags();
-    BeanUtils.copyProperties(hashtagModel, hashtag);
+    hashtag.setId(hashtagModel.id());
+    hashtag.setTag(hashtagModel.tag());
+    hashtag.setRecentPostCount(
+        hashtagModel.recentPostCount() != null ? hashtagModel.recentPostCount() : 0L);
     return hashtag;
   }
 }

@@ -21,8 +21,8 @@ package xyz.subho.clone.twitter.controller;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -43,13 +43,17 @@ import xyz.subho.clone.twitter.utility.Utility;
 
 @RestController
 @RequestMapping(UserV1Constants.BASE_PATH)
-@Slf4j
-@RequiredArgsConstructor
 public class UserController {
 
-  private final UserService userService;
+  private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
+  private final UserService userService;
   private final Utility utility;
+
+  public UserController(UserService userService, Utility utility) {
+    this.userService = userService;
+    this.utility = utility;
+  }
 
   @GetMapping(UserV1Constants.USER_ID_OR_NAME)
   public ResponseEntity<UserModel> getUserByUserIdOrUserName(
@@ -84,7 +88,9 @@ public class UserController {
   @PutMapping(UserV1Constants.FOLLOW)
   public ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId, Principal principal) {
     var follower = userService.getUserByUserName(principal.getName());
-    userService.addFollower(follower.getId(), userId);
+    if (follower != null) {
+      userService.addFollower(follower.id(), userId);
+    }
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
@@ -92,7 +98,9 @@ public class UserController {
   public ResponseEntity<HttpStatus> removeFollower(
       @PathVariable("userId") UUID userId, Principal principal) {
     var follower = userService.getUserByUserName(principal.getName());
-    userService.removeFollower(follower.getId(), userId);
+    if (follower != null) {
+      userService.removeFollower(follower.id(), userId);
+    }
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 

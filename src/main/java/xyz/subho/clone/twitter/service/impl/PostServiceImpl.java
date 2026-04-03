@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,27 +49,37 @@ import xyz.subho.clone.twitter.service.UserService;
 import xyz.subho.clone.twitter.utility.Mapper;
 
 @Service
-@Slf4j
-@RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
+  private static final Logger log = LoggerFactory.getLogger(PostServiceImpl.class);
+
   private final PostsRepository postsRepository;
-
   private final HashtagPostsRepository hashtagPostRepository;
-
   private final UserService userService;
-
   private final HashtagService hashtagService;
-
   private final LikesRepository likeRepository;
-
   private final UsersRepository usersRepository;
-
-  @Qualifier("PostMapper")
   private final Mapper<Posts, PostModel> postMapper;
-
-  @Qualifier("UserMapper")
   private final Mapper<Users, UserModel> userMapper;
+
+  public PostServiceImpl(
+      PostsRepository postsRepository,
+      HashtagPostsRepository hashtagPostRepository,
+      UserService userService,
+      HashtagService hashtagService,
+      LikesRepository likeRepository,
+      UsersRepository usersRepository,
+      @Qualifier("PostMapper") Mapper<Posts, PostModel> postMapper,
+      @Qualifier("UserMapper") Mapper<Users, UserModel> userMapper) {
+    this.postsRepository = postsRepository;
+    this.hashtagPostRepository = hashtagPostRepository;
+    this.userService = userService;
+    this.hashtagService = hashtagService;
+    this.likeRepository = likeRepository;
+    this.usersRepository = usersRepository;
+    this.postMapper = postMapper;
+    this.userMapper = userMapper;
+  }
 
   @Override
   public @NonNull Page<PostModel> getAllPosts(@NonNull Pageable pageable) {
@@ -91,8 +101,8 @@ public class PostServiceImpl implements PostService {
 
     List<HashtagPosts> hashtagPosts = new ArrayList<>();
     var post = postMapper.transformBack(postModel);
-    post.setUsers(usersRepository.getById(postModel.getUserId()));
-    Optional.ofNullable(hashtagService.getHashtagsByTags(postModel.getHashtags()))
+    post.setUsers(usersRepository.getById(postModel.userId()));
+    Optional.ofNullable(hashtagService.getHashtagsByTags(postModel.hashtags()))
         .ifPresent(
             hashtags -> {
               hashtags.forEach(

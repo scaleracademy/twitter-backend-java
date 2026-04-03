@@ -166,4 +166,10 @@ public class PostServiceImpl implements PostService {
       throw new ErrorSavingEntityToDatabaseException("Cannot Save to Database");
     }
   }
+
+  @Override
+  public @NonNull Page<PostModel> getReplies(@NonNull UUID postId, @NonNull Pageable pageable) {
+    var repliesPage = postsRepository.findByReplyToId(postId, pageable);
+    return repliesPage.map(postMapper::transform);
+  }
 }

@@ -19,10 +19,13 @@
 package xyz.subho.clone.twitter.service.impl;
 
 import java.util.UUID;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.subho.clone.twitter.entity.Users;
@@ -36,43 +39,46 @@ public class UserServiceImpl implements UserService {
 
   @Autowired private UsersRepository usersRepository;
 
+  @Autowired private PasswordEncoder passwordEncoder;
+
   @Autowired
   @Qualifier("UserMapper")
   private Mapper<Users, UserModel> userMapper;
 
   @Override
-  public UserModel getUserByUserName(String username) {
+  public @Nullable UserModel getUserByUserName(@NonNull String username) {
     return userMapper.transform(usersRepository.findByUsername(username));
   }
 
   @Override
-  public UserModel getUserByUserId(UUID userId) {
+  public @Nullable UserModel getUserByUserId(@NonNull UUID userId) {
     var user = usersRepository.getById(userId);
     return userMapper.transform(user);
   }
 
   @Override
-  public Users getUserEntityByUserId(UUID userId) {
+  public @Nullable Users getUserEntityByUserId(@NonNull UUID userId) {
     return usersRepository.getById(userId);
   }
 
   @Override
   @Transactional
-  public UserModel addUser(UserModel user) {
-    Users users = userMapper.transformBack(user);
+  public @NonNull UserModel addUser(@NonNull UserModel userModel) {
+    var user = userMapper.transformBack(userModel);
+    user.setPassword(passwordEncoder.encode(userModel.getPassword()));
+    return userMapper.transform(usersRepository.save(user));
+  }
+
+  @Override
+  @Transactional
+  public @NonNull UserModel editUser(@NonNull UserModel userModel) {
+    Users users = userMapper.transformBack(userModel);
     return userMapper.transform(usersRepository.save(users));
   }
 
   @Override
   @Transactional
-  public UserModel editUser(UserModel user) {
-    Users users = userMapper.transformBack(user);
-    return userMapper.transform(usersRepository.save(users));
-  }
-
-  @Override
-  @Transactional
-  public boolean addFollower(UUID followerId, UUID userId) {
+  public boolean addFollower(@NonNull UUID followerId, @NonNull UUID userId) {
     Users user = usersRepository.getById(userId);
     user.setFollower(followerId);
     usersRepository.save(user);
@@ -80,7 +86,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public boolean removeFollower(UUID followerId, UUID userId) {
+  @Transactional
+  public boolean removeFollower(@NonNull UUID followerId, @NonNull UUID userId) {
     Users user = usersRepository.getById(userId);
     user.removeFollower(followerId);
     usersRepository.save(user);
@@ -88,14 +95,14 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Page<UserModel> getFollowers(UUID userId, Pageable pageable) {
+  public @NonNull Page<UserModel> getFollowers(@NonNull UUID userId, @NonNull Pageable pageable) {
     Users user = usersRepository.getById(userId);
     var usersPage = usersRepository.findByIdIn(user.getFollower().keySet(), pageable);
     return usersPage.map(userMapper::transform);
   }
 
   @Override
-  public Page<UserModel> getFollowings(UUID userId, Pageable pageable) {
+  public @NonNull Page<UserModel> getFollowings(@NonNull UUID userId, @NonNull Pageable pageable) {
     Users user = usersRepository.getById(userId);
     var usersPage = usersRepository.findByIdIn(user.getFollowing().keySet(), pageable);
     return usersPage.map(userMapper::transform);

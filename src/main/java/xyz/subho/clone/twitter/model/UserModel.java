@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.model;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.UUID;
@@ -36,6 +37,13 @@ public class UserModel {
   @NotBlank(message = "Name is mandatory")
   @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
   private String name;
+
+  @NotBlank(message = "Password is mandatory")
+  private String password;
+
+  @NotBlank(message = "Email is mandatory")
+  @Email(message = "Email should be valid")
+  private String email;
 
   private @Nullable String avatar;
   private @Nullable String bio;

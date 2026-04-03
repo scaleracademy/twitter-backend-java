@@ -29,7 +29,7 @@ public class UserMapper implements Mapper<Users, UserModel> {
   @Override
   public UserModel transform(Users user) {
     var userModel = new UserModel();
-    BeanUtils.copyProperties(user, userModel);
+    BeanUtils.copyProperties(user, userModel, "password");
     return userModel;
   }
 

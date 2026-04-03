@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.controller;
 
+import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ import xyz.subho.clone.twitter.service.PostService;
 import xyz.subho.clone.twitter.service.UserService;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/v1/posts")
 @Slf4j
 public class PostController {
 
@@ -60,7 +61,8 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<PostModel> addPost(@RequestBody PostModel postModel, Principal principal) {
+  public ResponseEntity<PostModel> addPost(
+      @Valid @RequestBody PostModel postModel, Principal principal) {
     var user = userService.getUserByUserName(principal.getName());
     postModel.setUserId(user.getId());
     PostModel post = postService.addPost(postModel);
@@ -89,5 +91,11 @@ public class PostController {
 
     var user = userService.getUserByUserName(principal.getName());
     return new ResponseEntity<>(postService.removeLike(postId, user.getId()), HttpStatus.OK);
+  }
+
+  @GetMapping("/{postId}/replies")
+  public ResponseEntity<Page<PostModel>> getReplies(
+      @PathVariable("postId") UUID postId, Pageable pageable) {
+    return new ResponseEntity<>(postService.getReplies(postId, pageable), HttpStatus.OK);
   }
 }

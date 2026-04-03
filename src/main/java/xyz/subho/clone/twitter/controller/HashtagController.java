@@ -30,7 +30,7 @@ import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.service.HashtagService;
 
 @RestController
-@RequestMapping("/hashtags")
+@RequestMapping("/v1/hashtags")
 public class HashtagController {
 
   @Autowired private HashtagService hashtagService;

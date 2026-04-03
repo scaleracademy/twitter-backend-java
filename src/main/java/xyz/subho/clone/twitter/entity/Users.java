@@ -63,6 +63,9 @@ public class Users {
   @Column(unique = true)
   private String email;
 
+  @Column(nullable = false)
+  private String password;
+
   @Column(length = 240)
   private String bio;
 

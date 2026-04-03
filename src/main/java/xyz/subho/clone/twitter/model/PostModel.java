@@ -18,24 +18,31 @@
 
 package xyz.subho.clone.twitter.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import lombok.Data;
+import org.jspecify.annotations.Nullable;
 
 @Data
 public class PostModel {
 
-  private UUID id;
+  private @Nullable UUID id;
+
+  @NotBlank(message = "Post text cannot be empty")
+  @Size(max = 240, message = "Post text cannot exceed 240 characters")
   private String text;
-  private UUID userId;
+
+  private @Nullable UUID userId;
   private List<String> images = new ArrayList<>(4);
-  private Long likeCount;
-  private Long repostCount;
-  private UUID originalPostId;
-  private UUID replyToId;
-  private Date timestamp;
+  private @Nullable Long likeCount;
+  private @Nullable Long repostCount;
+  private @Nullable UUID originalPostId;
+  private @Nullable UUID replyToId;
+  private @Nullable Date timestamp;
   private List<String> hashtags = new ArrayList<>();
   private List<String> mentions = new ArrayList<>();
 }

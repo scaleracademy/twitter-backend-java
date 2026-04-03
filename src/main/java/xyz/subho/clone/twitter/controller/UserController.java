@@ -41,7 +41,7 @@ import xyz.subho.clone.twitter.service.UserService;
 import xyz.subho.clone.twitter.utility.Utility;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/v1/users")
 @Slf4j
 public class UserController {
 

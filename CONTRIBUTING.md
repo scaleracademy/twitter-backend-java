@@ -7,8 +7,6 @@ This document provides guidelines and standards for contributing to this
 project. Following these helps us maintain a high-quality, high-performance
 codebase.
 
----
-
 ## Code of Conduct
 
 By participating in this project, you are expected to uphold our

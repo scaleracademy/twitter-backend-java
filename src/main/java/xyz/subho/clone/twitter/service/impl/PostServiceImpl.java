@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,27 +50,26 @@ import xyz.subho.clone.twitter.utility.Mapper;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
-  @Autowired private PostsRepository postsRepository;
+  private final PostsRepository postsRepository;
 
-  @Autowired private HashtagPostsRepository hashtagPostRepository;
+  private final HashtagPostsRepository hashtagPostRepository;
 
-  @Autowired private UserService userService;
+  private final UserService userService;
 
-  @Autowired private HashtagService hashtagService;
+  private final HashtagService hashtagService;
 
-  @Autowired private LikesRepository likeRepository;
+  private final LikesRepository likeRepository;
 
-  @Autowired private UsersRepository usersRepository;
+  private final UsersRepository usersRepository;
 
-  @Autowired
   @Qualifier("PostMapper")
-  private Mapper<Posts, PostModel> postMapper;
+  private final Mapper<Posts, PostModel> postMapper;
 
-  @Autowired
   @Qualifier("UserMapper")
-  private Mapper<Users, UserModel> userMapper;
+  private final Mapper<Users, UserModel> userMapper;
 
   @Override
   public @NonNull Page<PostModel> getAllPosts(@NonNull Pageable pageable) {

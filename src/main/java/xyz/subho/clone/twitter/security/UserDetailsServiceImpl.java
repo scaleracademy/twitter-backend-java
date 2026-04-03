@@ -19,7 +19,7 @@
 package xyz.subho.clone.twitter.security;
 
 import java.util.ArrayList;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,9 +28,10 @@ import org.springframework.stereotype.Service;
 import xyz.subho.clone.twitter.repository.UsersRepository;
 
 @Service
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-  @Autowired private UsersRepository userRepository;
+  private final UsersRepository userRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

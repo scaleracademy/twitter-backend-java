@@ -19,9 +19,9 @@
 package xyz.subho.clone.twitter.service.impl;
 
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,15 +35,15 @@ import xyz.subho.clone.twitter.service.UserService;
 import xyz.subho.clone.twitter.utility.Mapper;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-  @Autowired private UsersRepository usersRepository;
+  private final UsersRepository usersRepository;
 
-  @Autowired private PasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder;
 
-  @Autowired
   @Qualifier("UserMapper")
-  private Mapper<Users, UserModel> userMapper;
+  private final Mapper<Users, UserModel> userMapper;
 
   @Override
   public @Nullable UserModel getUserByUserName(@NonNull String username) {

@@ -21,8 +21,8 @@ package xyz.subho.clone.twitter.controller;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -44,11 +44,12 @@ import xyz.subho.clone.twitter.utility.Utility;
 @RestController
 @RequestMapping(UserV1Constants.BASE_PATH)
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
 
-  @Autowired private UserService userService;
+  private final UserService userService;
 
-  @Autowired private Utility utility;
+  private final Utility utility;
 
   @GetMapping(UserV1Constants.USER_ID_OR_NAME)
   public ResponseEntity<UserModel> getUserByUserIdOrUserName(

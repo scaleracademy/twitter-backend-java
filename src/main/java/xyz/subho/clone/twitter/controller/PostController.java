@@ -21,8 +21,8 @@ package xyz.subho.clone.twitter.controller;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -43,11 +43,12 @@ import xyz.subho.clone.twitter.service.UserService;
 @RestController
 @RequestMapping(PostV1Constants.BASE_PATH)
 @Slf4j
+@RequiredArgsConstructor
 public class PostController {
 
-  @Autowired private PostService postService;
+  private final PostService postService;
 
-  @Autowired private UserService userService;
+  private final UserService userService;
 
   @GetMapping
   public ResponseEntity<Page<PostModel>> getAllPosts(Pageable pageable) {

@@ -18,7 +18,7 @@
 
 package xyz.subho.clone.twitter.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,9 +35,10 @@ import xyz.subho.clone.twitter.constant.UserV1Constants;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-  @Autowired private JwtRequestFilter jwtRequestFilter;
+  private final JwtRequestFilter jwtRequestFilter;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

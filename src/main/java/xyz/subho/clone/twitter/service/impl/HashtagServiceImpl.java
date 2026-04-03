@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,19 +43,18 @@ import xyz.subho.clone.twitter.service.HashtagService;
 import xyz.subho.clone.twitter.utility.Mapper;
 
 @Service
+@RequiredArgsConstructor
 public class HashtagServiceImpl implements HashtagService {
 
-  @Autowired private HashtagsRepository hashtagsRepository;
+  private final HashtagsRepository hashtagsRepository;
 
-  @Autowired private HashtagPostsRepository hashtagPostsRepository;
+  private final HashtagPostsRepository hashtagPostsRepository;
 
-  @Autowired
   @Qualifier("HashtagMapper")
-  private Mapper<Hashtags, HashtagModel> hashtagMapper;
+  private final Mapper<Hashtags, HashtagModel> hashtagMapper;
 
-  @Autowired
   @Qualifier("PostMapper")
-  private Mapper<Posts, PostModel> postMapper;
+  private final Mapper<Posts, PostModel> postMapper;
 
   @Override
   public @NonNull Page<HashtagModel> getHashtags(@NonNull Pageable pageable) {

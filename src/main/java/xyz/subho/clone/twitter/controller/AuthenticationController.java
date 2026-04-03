@@ -18,7 +18,7 @@
 
 package xyz.subho.clone.twitter.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,13 +36,14 @@ import xyz.subho.clone.twitter.security.UserDetailsServiceImpl;
 
 @RestController
 @RequestMapping(AuthV1Constants.BASE_PATH)
+@RequiredArgsConstructor
 public class AuthenticationController {
 
-  @Autowired private AuthenticationManager authenticationManager;
+  private final AuthenticationManager authenticationManager;
 
-  @Autowired private JwtUtil jwtTokenUtil;
+  private final JwtUtil jwtTokenUtil;
 
-  @Autowired private UserDetailsServiceImpl userDetailsService;
+  private final UserDetailsServiceImpl userDetailsService;
 
   @PostMapping(AuthV1Constants.AUTHENTICATE)
   public ResponseEntity<?> createAuthenticationToken(

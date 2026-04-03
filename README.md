@@ -1,55 +1,85 @@
-## Twitter Backend Java
+# Moo: Twitter Clone Backend
 
-This repository contains the backend code for a Twitter clone application. The application is built using Java, Spring Boot, and Spring Data JPA.
+[![Master CI](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/master-ci.yml/badge.svg)](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/master-ci.yml)
+[![PR Checker](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/pr-checker.yml/badge.svg)](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/pr-checker.yml)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-### Getting Started
+An enterprise-grade, high-performance Twitter clone backend built with the latest industry standards.
 
-To get started with the Twitter Backend Java application, you will need to:
+## 🚀 Modern Tech Stack
 
-Clone the repository:
-```shell
-git clone https://github.com/scaleracademy/twitter-backend-java
-```
-Navigate to the project directory:
-```shell
-cd twitter-backend-java
-```
-Install the project dependencies:
-```shell
-mvn install
-```
-Load the `.env` file:
-```shell
-cp .env.example .env
-source .env
-```
+- **Java 21** (Microsoft Build of OpenJDK)
+- **Spring Boot 4.0** (Spring Framework 7.0)
+- **Jakarta EE 11** (Jakarta Persistence & Servlet APIs)
+- **Virtual Threads (Project Loom)** enabled for massive concurrency.
+- **JWT-based Security** via Spring Security 7.0.
+- **Spring Data JPA** with MySQL/H2 support.
+- **OpenTelemetry** for native observability.
+- **Springdoc OpenAPI 3** for Swagger documentation.
 
-Update the application.properties file to configure the database connection details:
-```shell
-spring.profiles.active=dev
-```
+## 🛠️ Getting Started
 
-Start the application:
-To start the application, run the following command, after you have the database connection details configured:
-```shell
-mvn spring-boot:run
-```
+### Prerequisites
+- JDK 21+
+- Maven 3.9+
+- Docker & Docker Compose (optional)
 
-Or if you have docker compose installed, you can run the following command to start the application:
-```shell
-docker-compose up -d
-```
-The application will start running on port 8080. You can access the application at http://localhost:8080 in your web browser.
+### Quick Start
+1.  **Clone the Repository:**
+    ```bash
+    git clone https://github.com/scaleracademy/twitter-backend-java
+    cd twitter-backend-java
+    ```
 
-### Using the API
+2.  **Environment Setup:**
+    ```bash
+    cp .env.example .env
+    # Edit .env with your local MySQL credentials if needed
+    ```
 
-Please refer to the [Wiki](https://github.com/scaleracademy/twitter-backend-java/wiki/API-Endpoints) for detailed documentation on the API endpoints.
+3.  **Run with Maven:**
+    ```bash
+    ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+    ```
 
+4.  **Run with Docker:**
+    ```bash
+    docker-compose up -d
+    ```
 
-### Contributing
+The API will be available at `http://localhost:8080`.
 
-We welcome contributions to the Twitter Backend Java application. If you would like to contribute, please fork the repository and submit a pull request.
+## 📖 API Documentation
 
-### Support
+Access the Interactive Swagger UI at:
+👉 `http://localhost:8080/swagger-ui/index.html`
 
-If you have any questions or need help using the Twitter Backend Java application, please feel free to open an issue on GitHub.
+### Key Endpoints
+- **POST `/authenticate`**: Login and receive a JWT token.
+- **GET `/users`**: User management and social graph.
+- **GET `/posts`**: Scalable paginated feed access.
+
+## 🏗️ Architecture & Best Practices
+
+- **Scalable Pagination**: All list endpoints use `Pageable` to prevent memory exhaustion.
+- **Distroless Containers**: Docker images are built using Google's **Distroless** images for minimal attack surface and maximum security.
+- **Multi-Arch Support**: Official images are published for both `amd64` and `arm64` architectures.
+- **Zero-Qualified Names**: The codebase strictly uses imports for readability and cleaner syntax.
+- **Null Safety**: Integrated **JSpecify** annotations across the service layer.
+
+## 🤖 CI/CD Pipeline
+
+Our pipeline is optimized for enterprise speed and reliability:
+- **PR Checker**: Runs cross-platform linting (Spotless) and a Docker smoke build on every PR.
+- **Master CI**: Performs artifact archival, CodeQL security scanning, and multi-arch image distribution to GHCR and DockerHub.
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
+- Coding standards (Spotless, JSpecify, etc.)
+- Development environment setup
+- Pull request process
+
+## 📜 License
+
+This project is licensed under the **GNU Affero General Public License v3.0**.

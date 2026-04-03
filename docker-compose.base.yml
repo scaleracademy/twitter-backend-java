@@ -1,0 +1,44 @@
+#
+# Twitter Backend - Moo: Base Dependencies (Shared)
+#
+
+services:
+  db:
+    image: mysql:8.4
+    container_name: moo-db
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-twitter_clone}
+      MYSQL_USER: ${DB_USER:-moouser}
+      MYSQL_PASSWORD: ${DB_PASS:-moopass}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-rootpass}
+    ports:
+      - "${DB_PORT_HOST:-3306}:3306"
+    volumes:
+      - moo-data:/var/lib/mysql
+    networks:
+      - moo-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
+      timeout: 5s
+      retries: 10
+    restart: always
+
+  adminer:
+    image: adminer:latest
+    container_name: moo-adminer
+    ports:
+      - "${ADMINER_PORT:-8083}:8080"
+    depends_on:
+      - db
+    networks:
+      - moo-network
+    restart: always
+
+networks:
+  moo-network:
+    driver: bridge
+
+volumes:
+  moo-data:
+    driver: local

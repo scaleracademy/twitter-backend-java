@@ -1,45 +1,6 @@
 #
-# Twitter Backend - Moo: Developer Dependencies Stack
-# Includes only Database and Tooling. Run the App natively for better dev experience.
+# Twitter Backend - Moo: Developer Dependencies Stack (DB + Adminer)
 #
 
-services:
-  db:
-    image: mysql:8.4
-    container_name: moo-db-dev
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_DATABASE: ${DB_NAME:-twitter_clone}
-      MYSQL_USER: ${DB_USER:-moouser}
-      MYSQL_PASSWORD: ${DB_PASS:-moopass}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-rootpass}
-    ports:
-      - "3306:3306" # Standard port for local dev
-    volumes:
-      - moo-db-dev-data:/var/lib/mysql
-    networks:
-      - moo-dev-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
-      timeout: 5s
-      retries: 10
-    restart: always
-
-  adminer:
-    image: adminer:latest
-    container_name: moo-adminer-dev
-    ports:
-      - "${ADMINER_PORT:-8083}:8080"
-    depends_on:
-      - db
-    networks:
-      - moo-dev-network
-    restart: always
-
-networks:
-  moo-dev-network:
-    driver: bridge
-
-volumes:
-  moo-db-dev-data:
-    driver: local
+include:
+  - docker-compose.base.yml

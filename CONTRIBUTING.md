@@ -1,5 +1,3 @@
-# Contributing to Moo
-
 First off, thank you for considering contributing to Moo! It's people like you
 that make Moo such a great tool for the community.
 

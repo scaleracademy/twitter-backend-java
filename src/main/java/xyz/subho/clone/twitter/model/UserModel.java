@@ -22,11 +22,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.UUID;
 import lombok.Data;
+import org.jspecify.annotations.Nullable;
 
 @Data
 public class UserModel {
 
-  private UUID id;
+  private @Nullable UUID id;
 
   @NotBlank(message = "Username is mandatory")
   @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
@@ -36,9 +37,9 @@ public class UserModel {
   @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
   private String name;
 
-  private String avatar;
-  private String bio;
-  private Long followerCount;
-  private Long followingCount;
-  private Boolean verified;
+  private @Nullable String avatar;
+  private @Nullable String bio;
+  private @Nullable Long followerCount;
+  private @Nullable Long followingCount;
+  private @Nullable Boolean verified;
 }

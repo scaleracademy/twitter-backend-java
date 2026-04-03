@@ -39,27 +39,22 @@ industry standards.
 
     ```bash
     cp .env.example .env
-    # Edit .env with your local MySQL credentials if needed
     ```
 
-3. **Run with Maven:**
+3. **Build and Run (Docker - Recommended):**
 
     ```bash
-    ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+    ./mvnw clean package -DskipTests
+    docker compose up -d
     ```
 
-4. **Run with Docker:**
-
-    ```bash
-    docker-compose up -d
-    ```
-
-The API will be available at `http://localhost:8080`.
+The API is now running at `http://localhost:8082`.
+Database management (Adminer) is available at `http://localhost:8083`.
 
 ## API Documentation
 
 Access the Interactive Swagger UI at:
-👉 `http://localhost:8080/swagger-ui/index.html`
+👉 `http://localhost:8082/swagger-ui/index.html`
 
 ### Key Endpoints
 

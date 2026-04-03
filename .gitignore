@@ -33,3 +33,5 @@ build/
 .vscode/
 
 .env
+GEMINI.md
+UPGRADE_PROPOSAL.md

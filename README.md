@@ -28,28 +28,21 @@ industry standards.
 
 ### Quick Start
 
-1. **Clone the Repository:**
+Choose the setup that fits your workflow:
 
-    ```bash
-    git clone https://github.com/scaleracademy/twitter-backend-java
-    cd twitter-backend-java
-    ```
+#### Option A: Zero-Installation (Full Stack)
+Ideal for testing or a quick look. Runs everything in Docker.
+1. `cp .env.example .env`
+2. `docker compose up -d`
+3. API: `http://localhost:8082` | DB Admin: `http://localhost:8083`
 
-2. **Environment Setup:**
-
-    ```bash
-    cp .env.example .env
-    ```
-
-3. **Build and Run (Docker - Recommended):**
-
-    ```bash
-    ./mvnw clean package -DskipTests
-    docker compose up -d
-    ```
-
-The API is now running at `http://localhost:8082`.
-Database management (Adminer) is available at `http://localhost:8083`.
+#### Option B: Native Development (Dependencies Only)
+Ideal for coding. Runs DB in Docker, App in your IDE/CLI.
+1. `cp .env.example .env`
+2. `docker compose -f docker-compose.dev.yml up -d`
+3. Run the **"Moo API"** configuration in IntelliJ IDEA, or use:
+   `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev`
+4. API: `http://localhost:8080` (Standard) | DB Admin: `http://localhost:8083`
 
 ## API Documentation
 

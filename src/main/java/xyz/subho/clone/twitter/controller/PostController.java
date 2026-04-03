@@ -58,7 +58,8 @@ public class PostController {
 
   @PostMapping
   public ResponseEntity<PostModel> addPost(@RequestBody PostModel postModel, Principal principal) {
-    UUID userId = UUID.randomUUID(); // TODO: Extract from Principal
+    var user = userService.getUserByUserName(principal.getName());
+    postModel.setUserId(user.getId());
     PostModel post = postService.addPost(postModel);
     return new ResponseEntity<>(post, HttpStatus.OK);
   }
@@ -67,23 +68,23 @@ public class PostController {
   public ResponseEntity<HttpStatus> deletePost(
       @PathVariable("postId") UUID postId, Principal principal) {
 
-    UUID userId = UUID.randomUUID(); // TODO: Extract from Principal
-    postService.deletePost(postId, userId);
+    var user = userService.getUserByUserName(principal.getName());
+    postService.deletePost(postId, user.getId());
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PutMapping("/{postId}/like")
   public ResponseEntity<Long> likePost(@PathVariable("postId") UUID postId, Principal principal) {
 
-    UUID userId = UUID.randomUUID(); // TODO: Extract from Principal
-    return new ResponseEntity<>(postService.addLike(postId, userId), HttpStatus.CREATED);
+    var user = userService.getUserByUserName(principal.getName());
+    return new ResponseEntity<>(postService.addLike(postId, user.getId()), HttpStatus.CREATED);
   }
 
   @DeleteMapping("/{postId}/like")
   public ResponseEntity<Long> removeLikePost(
       @PathVariable("postId") UUID postId, Principal principal) {
 
-    UUID userId = UUID.randomUUID(); // TODO: Extract from Principal
-    return new ResponseEntity<>(postService.removeLike(postId, userId), HttpStatus.OK);
+    var user = userService.getUserByUserName(principal.getName());
+    return new ResponseEntity<>(postService.removeLike(postId, user.getId()), HttpStatus.OK);
   }
 }

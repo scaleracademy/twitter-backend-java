@@ -81,14 +81,16 @@ public class UserController {
 
   @PutMapping("/{userId}/follow")
   public ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId, Principal principal) {
-    userService.addFollower(userId, UUID.randomUUID()); // TODO: Extract from Principal
+    var follower = userService.getUserByUserName(principal.getName());
+    userService.addFollower(follower.getId(), userId);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @DeleteMapping("/{userId}/follow")
   public ResponseEntity<HttpStatus> removeFollower(
       @PathVariable("userId") UUID userId, Principal principal) {
-    userService.removeFollower(userId, UUID.randomUUID()); // TODO: Extract from Principal
+    var follower = userService.getUserByUserName(principal.getName());
+    userService.removeFollower(follower.getId(), userId);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 

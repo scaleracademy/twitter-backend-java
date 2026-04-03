@@ -83,6 +83,7 @@ Access the Interactive Swagger UI at:
 ## 🤖 CI/CD Pipeline
 
 Our pipeline is optimized for enterprise speed and reliability:
+
 - **PR Checker**: Runs cross-platform linting (Spotless) and a Docker smoke
   build on every PR.
 - **Master CI**: Performs artifact archival, CodeQL security scanning, and

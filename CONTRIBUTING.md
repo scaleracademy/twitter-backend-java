@@ -1,5 +1,3 @@
-# Contributing to Moo: Twitter Clone Backend
-
 First off, thank you for considering contributing to Moo! It's people like you
 that make Moo such a great tool for the community.
 
@@ -79,13 +77,18 @@ To keep the codebase clean and stable, we enforce the following rules:
 ## 🌿 Git Flow & Branching
 
 1. **Branch Naming:**
+
     - Features: `feature/short-description`
     - Bug Fixes: `fix/issue-id-description`
     - Chores/Docs: `chore/description`
+
 2. **Commit Messages:**
+
     - Use conventional commits (e.g., `feat: ...`, `fix: ...`, `docs: ...`).
     - Keep messages concise but descriptive.
+
 3. **Rebasing:**
+
     - Always rebase your feature branch against the latest `master` before
       submitting a PR.
 
@@ -105,9 +108,12 @@ To keep the codebase clean and stable, we enforce the following rules:
 
 1. **Update Documentation:** If you add or change an API, ensure the
    Swagger/OpenAPI metadata is updated.
+
 2. **Self-Review:** Go through your changes and ensure no "TODOs" or debug logs
    are left behind.
+
 3. **CI Check:** Ensure the `PR Checker` workflow passes on GitHub.
+
 4. **Reviewers:** Assign at least one maintainer for review. Be responsive to
    feedback!
 

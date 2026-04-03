@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.subho.clone.twitter.constant.AuthV1Constants;
 import xyz.subho.clone.twitter.exception.BadRequestException;
 import xyz.subho.clone.twitter.model.AuthenticationRequest;
 import xyz.subho.clone.twitter.model.AuthenticationResponse;
@@ -34,7 +35,7 @@ import xyz.subho.clone.twitter.security.JwtUtil;
 import xyz.subho.clone.twitter.security.UserDetailsServiceImpl;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping(AuthV1Constants.BASE_PATH)
 public class AuthenticationController {
 
   @Autowired private AuthenticationManager authenticationManager;
@@ -43,7 +44,7 @@ public class AuthenticationController {
 
   @Autowired private UserDetailsServiceImpl userDetailsService;
 
-  @PostMapping("/authenticate")
+  @PostMapping(AuthV1Constants.AUTHENTICATE)
   public ResponseEntity<?> createAuthenticationToken(
       @RequestBody AuthenticationRequest authenticationRequest) {
 

@@ -35,12 +35,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.subho.clone.twitter.constant.PostV1Constants;
 import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.service.PostService;
 import xyz.subho.clone.twitter.service.UserService;
 
 @RestController
-@RequestMapping("/v1/posts")
+@RequestMapping(PostV1Constants.BASE_PATH)
 @Slf4j
 public class PostController {
 
@@ -54,7 +55,7 @@ public class PostController {
     return new ResponseEntity<>(posts, HttpStatus.OK);
   }
 
-  @GetMapping("/{postId}")
+  @GetMapping(PostV1Constants.POST_ID)
   public ResponseEntity<PostModel> getPost(@PathVariable("postId") UUID postId) {
     PostModel post = postService.getPost(postId);
     return new ResponseEntity<>(post, HttpStatus.OK);
@@ -69,7 +70,7 @@ public class PostController {
     return new ResponseEntity<>(post, HttpStatus.OK);
   }
 
-  @DeleteMapping("/{postId}")
+  @DeleteMapping(PostV1Constants.POST_ID)
   public ResponseEntity<HttpStatus> deletePost(
       @PathVariable("postId") UUID postId, Principal principal) {
 
@@ -78,14 +79,14 @@ public class PostController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @PutMapping("/{postId}/like")
+  @PutMapping(PostV1Constants.LIKE)
   public ResponseEntity<Long> likePost(@PathVariable("postId") UUID postId, Principal principal) {
 
     var user = userService.getUserByUserName(principal.getName());
     return new ResponseEntity<>(postService.addLike(postId, user.getId()), HttpStatus.CREATED);
   }
 
-  @DeleteMapping("/{postId}/like")
+  @DeleteMapping(PostV1Constants.LIKE)
   public ResponseEntity<Long> removeLikePost(
       @PathVariable("postId") UUID postId, Principal principal) {
 
@@ -93,7 +94,7 @@ public class PostController {
     return new ResponseEntity<>(postService.removeLike(postId, user.getId()), HttpStatus.OK);
   }
 
-  @GetMapping("/{postId}/replies")
+  @GetMapping(PostV1Constants.REPLIES)
   public ResponseEntity<Page<PostModel>> getReplies(
       @PathVariable("postId") UUID postId, Pageable pageable) {
     return new ResponseEntity<>(postService.getReplies(postId, pageable), HttpStatus.OK);

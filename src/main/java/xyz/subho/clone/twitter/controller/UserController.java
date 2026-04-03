@@ -36,12 +36,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.subho.clone.twitter.constant.UserV1Constants;
 import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.service.UserService;
 import xyz.subho.clone.twitter.utility.Utility;
 
 @RestController
-@RequestMapping("/v1/users")
+@RequestMapping(UserV1Constants.BASE_PATH)
 @Slf4j
 public class UserController {
 
@@ -49,7 +50,7 @@ public class UserController {
 
   @Autowired private Utility utility;
 
-  @GetMapping("/{userNameOrUserId}")
+  @GetMapping(UserV1Constants.USER_ID_OR_NAME)
   public ResponseEntity<UserModel> getUserByUserIdOrUserName(
       @PathVariable("userNameOrUserId") String userNameOrUserId) {
 
@@ -79,14 +80,14 @@ public class UserController {
     return userService.editUser(userResponse);
   }
 
-  @PutMapping("/{userId}/follow")
+  @PutMapping(UserV1Constants.FOLLOW)
   public ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId, Principal principal) {
     var follower = userService.getUserByUserName(principal.getName());
     userService.addFollower(follower.getId(), userId);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-  @DeleteMapping("/{userId}/follow")
+  @DeleteMapping(UserV1Constants.FOLLOW)
   public ResponseEntity<HttpStatus> removeFollower(
       @PathVariable("userId") UUID userId, Principal principal) {
     var follower = userService.getUserByUserName(principal.getName());
@@ -94,12 +95,12 @@ public class UserController {
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-  @GetMapping("/{userId}/followers")
+  @GetMapping(UserV1Constants.FOLLOWERS)
   public Page<UserModel> getFollowers(@PathVariable("userId") UUID userId, Pageable pageable) {
     return userService.getFollowers(userId, pageable);
   }
 
-  @GetMapping("/{userId}/followings")
+  @GetMapping(UserV1Constants.FOLLOWINGS)
   public Page<UserModel> getFollowings(@PathVariable("userId") UUID userId, Pageable pageable) {
     return userService.getFollowings(userId, pageable);
   }

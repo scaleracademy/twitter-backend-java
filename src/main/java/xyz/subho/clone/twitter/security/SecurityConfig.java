@@ -30,6 +30,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import xyz.subho.clone.twitter.constant.AuthV1Constants;
+import xyz.subho.clone.twitter.constant.UserV1Constants;
 
 @Configuration
 @EnableWebSecurity
@@ -43,7 +45,10 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers(
-                        "/v1/authenticate", "/v1/users", "/swagger-ui/**", "/v3/api-docs/**")
+                        AuthV1Constants.BASE_PATH + AuthV1Constants.AUTHENTICATE,
+                        UserV1Constants.BASE_PATH,
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

@@ -25,12 +25,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.subho.clone.twitter.constant.HashtagV1Constants;
 import xyz.subho.clone.twitter.model.HashtagModel;
 import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.service.HashtagService;
 
 @RestController
-@RequestMapping("/v1/hashtags")
+@RequestMapping(HashtagV1Constants.BASE_PATH)
 public class HashtagController {
 
   @Autowired private HashtagService hashtagService;
@@ -40,7 +41,7 @@ public class HashtagController {
     return hashtagService.getHashtags(pageable);
   }
 
-  @GetMapping("/{tag}/posts")
+  @GetMapping(HashtagV1Constants.TAG_POSTS)
   public Page<PostModel> getPosts(@PathVariable("tag") String tag, Pageable pageable) {
     return hashtagService.getPosts(tag, pageable);
   }

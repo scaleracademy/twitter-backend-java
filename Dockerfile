@@ -5,7 +5,7 @@
 
 # Use Google's Distroless image for Java 21
 # This is a minimal, secure, and production-ready runtime.
-FROM gcr.io/distroless/java21-debian12:latest
+FROM gcr.io/distroless/java21-debian12:nonroot
 
 LABEL maintainer="Subhrodip Mohanta <hello@subho.xyz>"
 LABEL org.opencontainers.image.source="https://github.com/scaleracademy/twitter-backend-java"

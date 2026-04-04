@@ -18,6 +18,8 @@
 
 package xyz.subho.clone.twitter.controller;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,7 @@ import xyz.subho.clone.twitter.service.UserService;
 
 @RestController
 @RequestMapping(AuthV1Constants.BASE_PATH)
+@Timed(value = "moo.auth.timer", description = "Time taken to process auth requests")
 public class AuthenticationController {
 
   private final AuthenticationManager authenticationManager;
@@ -62,6 +65,7 @@ public class AuthenticationController {
   }
 
   @PostMapping(AuthV1Constants.AUTHENTICATE)
+  @Counted(value = "moo.auth.login", description = "Number of user logins")
   public ResponseEntity<AuthenticationResponse> createAuthenticationToken(
       @RequestBody AuthenticationRequest authenticationRequest) {
 

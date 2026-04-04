@@ -18,6 +18,8 @@
 
 package xyz.subho.clone.twitter.controller;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
@@ -43,6 +45,7 @@ import xyz.subho.clone.twitter.utility.Utility;
 
 @RestController
 @RequestMapping(UserV1Constants.BASE_PATH)
+@Timed(value = "moo.users.timer", description = "Time taken to process user requests")
 public class UserController {
 
   private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -75,17 +78,20 @@ public class UserController {
   }
 
   @PostMapping
+  @Counted(value = "moo.users.signup", description = "Number of user signups")
   public ResponseEntity<UserModel> createUser(@Valid @RequestBody UserModel userResponse) {
     var user = userService.addUser(userResponse);
     return new ResponseEntity<>(user, HttpStatus.CREATED);
   }
 
   @PatchMapping
+  @Timed(value = "moo.users.update", description = "Time taken to update user profile")
   public UserModel updateUser(@Valid @RequestBody UserModel userResponse, Principal principal) {
     return userService.editUser(userResponse);
   }
 
   @PutMapping(UserV1Constants.FOLLOW)
+  @Counted(value = "moo.users.follow", description = "Number of follow actions")
   public ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId, Principal principal) {
     var follower = userService.getUserByUserName(principal.getName());
     if (follower != null) {

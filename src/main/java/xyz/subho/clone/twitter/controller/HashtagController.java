@@ -18,6 +18,8 @@
 
 package xyz.subho.clone.twitter.controller;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,7 @@ import xyz.subho.clone.twitter.service.HashtagService;
 
 @RestController
 @RequestMapping(HashtagV1Constants.BASE_PATH)
+@Timed(value = "moo.hashtags.timer", description = "Time taken to process hashtag requests")
 public class HashtagController {
 
   private final HashtagService hashtagService;
@@ -40,6 +43,7 @@ public class HashtagController {
   }
 
   @GetMapping
+  @Counted(value = "moo.hashtags.viewed", description = "Number of times hashtags were viewed")
   public Page<HashtagModel> getAllHashtags(Pageable pageable) {
     return hashtagService.getHashtags(pageable);
   }

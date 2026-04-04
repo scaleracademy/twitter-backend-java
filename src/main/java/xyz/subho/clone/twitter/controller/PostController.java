@@ -18,6 +18,8 @@
 
 package xyz.subho.clone.twitter.controller;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
@@ -42,6 +44,7 @@ import xyz.subho.clone.twitter.service.UserService;
 
 @RestController
 @RequestMapping(PostV1Constants.BASE_PATH)
+@Timed(value = "moo.posts.timer", description = "Time taken to process post requests")
 public class PostController {
 
   private static final Logger log = LoggerFactory.getLogger(PostController.class);
@@ -67,6 +70,7 @@ public class PostController {
   }
 
   @PostMapping
+  @Counted(value = "moo.posts.created", description = "Number of posts created")
   public ResponseEntity<PostModel> addPost(
       @Valid @RequestBody PostModel postModel, Principal principal) {
     var user = userService.getUserByUserName(principal.getName());
@@ -105,6 +109,7 @@ public class PostController {
   }
 
   @PutMapping(PostV1Constants.LIKE)
+  @Counted(value = "moo.posts.liked", description = "Number of posts liked")
   public ResponseEntity<Long> likePost(@PathVariable("postId") UUID postId, Principal principal) {
 
     var user = userService.getUserByUserName(principal.getName());

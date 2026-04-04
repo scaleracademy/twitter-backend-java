@@ -55,8 +55,6 @@ public class Hashtags extends Auditable {
   @JsonIgnore
   private List<HashtagPosts> hashtagPosts = new ArrayList<>();
 
-  public Hashtags() {}
-
   public UUID getId() {
     return id;
   }

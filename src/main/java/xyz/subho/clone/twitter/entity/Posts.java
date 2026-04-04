@@ -87,8 +87,6 @@ public class Posts extends Auditable {
   @JsonIgnore
   private List<Likes> postLikes = new ArrayList<>();
 
-  public Posts() {}
-
   public long incrementLikeCount() {
     return ++likeCount;
   }

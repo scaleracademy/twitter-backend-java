@@ -54,8 +54,6 @@ public class HashtagPosts extends Auditable {
       nullable = false)
   private Posts posts;
 
-  public HashtagPosts() {}
-
   public UUID getId() {
     return id;
   }

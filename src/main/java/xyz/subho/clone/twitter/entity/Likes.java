@@ -54,8 +54,6 @@ public class Likes extends Auditable {
       nullable = false)
   private Posts posts;
 
-  public Likes() {}
-
   public UUID getId() {
     return id;
   }

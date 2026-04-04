@@ -4,7 +4,7 @@
 [![PR Checker](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/pr-checker.yml/badge.svg)](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/pr-checker.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-An robust, high-performance Twitter clone backend built with the latest
+A robust, high-performance Twitter clone backend built with the latest
 industry standards.
 
 ## Modern Tech Stack
@@ -31,13 +31,17 @@ industry standards.
 Choose the setup that fits your workflow:
 
 #### Option A: Zero-Installation (Full Stack)
+
 Ideal for testing or a quick look. Runs everything in Docker.
+
 1. `cp .env.example .env`
 2. `docker compose up -d`
 3. API: `http://localhost:8082` | DB Admin: `http://localhost:8083`
 
 #### Option B: Native Development (Dependencies Only)
+
 Ideal for coding. Runs DB in Docker, App in your IDE/CLI.
+
 1. `cp .env.example .env`
 2. `docker compose -f docker-compose.dev.yml up -d`
 3. Run the **"Moo API"** configuration in IntelliJ IDEA, or use:

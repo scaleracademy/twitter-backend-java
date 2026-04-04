@@ -87,8 +87,6 @@ public class Users extends Auditable {
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
 
-  public Users() {}
-
   public UUID getId() {
     return id;
   }

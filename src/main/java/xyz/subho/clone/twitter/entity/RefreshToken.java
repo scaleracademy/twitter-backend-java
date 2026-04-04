@@ -49,8 +49,6 @@ public class RefreshToken extends Auditable {
   @Column(nullable = false)
   private Instant expiryDate;
 
-  public RefreshToken() {}
-
   public UUID getId() {
     return id;
   }

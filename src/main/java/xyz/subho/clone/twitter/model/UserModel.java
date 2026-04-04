@@ -18,28 +18,25 @@
 
 package xyz.subho.clone.twitter.model;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.UUID;
-import lombok.Data;
 import org.jspecify.annotations.Nullable;
 
-@Data
-public class UserModel {
-
-  private @Nullable UUID id;
-
-  @NotBlank(message = "Username is mandatory")
-  @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
-  private String username;
-
-  @NotBlank(message = "Name is mandatory")
-  @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
-  private String name;
-
-  private @Nullable String avatar;
-  private @Nullable String bio;
-  private @Nullable Long followerCount;
-  private @Nullable Long followingCount;
-  private @Nullable Boolean verified;
-}
+public record UserModel(
+    @Nullable UUID id,
+    @NotBlank(message = "Username is mandatory")
+        @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+        String username,
+    @NotBlank(message = "Name is mandatory")
+        @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
+        String name,
+    @NotBlank(message = "Password is mandatory") String password,
+    @NotBlank(message = "Email is mandatory") @Email(message = "Email should be valid")
+        String email,
+    @Nullable String avatar,
+    @Nullable String bio,
+    @Nullable Long followerCount,
+    @Nullable Long followingCount,
+    @Nullable Boolean verified) {}

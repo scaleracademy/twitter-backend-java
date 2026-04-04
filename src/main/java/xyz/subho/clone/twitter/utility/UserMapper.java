@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,29 +18,22 @@
 
 package xyz.subho.clone.twitter.utility;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.UserModel;
 
-@Component("UserMapper")
-public class UserMapper implements Mapper<Users, UserModel> {
+@Mapper(componentModel = "spring")
+public interface UserMapper {
 
-  @Override
-  public UserModel transform(Users user) {
-    var userModel = new UserModel();
-    BeanUtils.copyProperties(user, userModel);
-    return userModel;
-  }
+  @Mapping(target = "password", ignore = true)
+  UserModel toModel(Users user);
 
-  @Override
-  public Users transformBack(UserModel userModel) {
-    var user = new Users();
-    BeanUtils.copyProperties(userModel, user, "followerCount", "followingCount", "verified");
-    user.setFollowerCount(userModel.getFollowerCount() != null ? userModel.getFollowerCount() : 0L);
-    user.setFollowingCount(
-        userModel.getFollowingCount() != null ? userModel.getFollowingCount() : 0L);
-    user.setVerified(userModel.getVerified() != null ? userModel.getVerified() : false);
-    return user;
-  }
+  @Mapping(target = "userLikes", ignore = true)
+  @Mapping(target = "userPosts", ignore = true)
+  @Mapping(target = "followers", ignore = true)
+  @Mapping(target = "following", ignore = true)
+  @Mapping(target = "createdAt", ignore = true)
+  @Mapping(target = "updatedAt", ignore = true)
+  Users toEntity(UserModel userModel);
 }

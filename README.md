@@ -4,7 +4,7 @@
 [![PR Checker](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/pr-checker.yml/badge.svg)](https://github.com/scaleracademy/twitter-backend-java/actions/workflows/pr-checker.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-An robust, high-performance Twitter clone backend built with the latest
+A robust, high-performance Twitter clone backend built with the latest
 industry standards.
 
 ## Modern Tech Stack
@@ -28,38 +28,30 @@ industry standards.
 
 ### Quick Start
 
-1. **Clone the Repository:**
+Choose the setup that fits your workflow:
 
-    ```bash
-    git clone https://github.com/scaleracademy/twitter-backend-java
-    cd twitter-backend-java
-    ```
+#### Option A: Zero-Installation (Full Stack)
 
-2. **Environment Setup:**
+Ideal for testing or a quick look. Runs everything in Docker.
 
-    ```bash
-    cp .env.example .env
-    # Edit .env with your local MySQL credentials if needed
-    ```
+1. `cp .env.example .env`
+2. `docker compose up -d`
+3. API: `http://localhost:8082` | DB Admin: `http://localhost:8083`
 
-3. **Run with Maven:**
+#### Option B: Native Development (Dependencies Only)
 
-    ```bash
-    ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
-    ```
+Ideal for coding. Runs DB in Docker, App in your IDE/CLI.
 
-4. **Run with Docker:**
-
-    ```bash
-    docker-compose up -d
-    ```
-
-The API will be available at `http://localhost:8080`.
+1. `cp .env.example .env`
+2. `docker compose -f docker-compose.dev.yml up -d`
+3. Run the **"Moo API"** configuration in IntelliJ IDEA, or use:
+   `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev`
+4. API: `http://localhost:8080` (Standard) | DB Admin: `http://localhost:8083`
 
 ## API Documentation
 
 Access the Interactive Swagger UI at:
-👉 `http://localhost:8080/swagger-ui/index.html`
+👉 `http://localhost:8082/swagger-ui/index.html`
 
 ### Key Endpoints
 

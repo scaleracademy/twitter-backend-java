@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,8 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.model;
+package xyz.subho.clone.twitter.config;
 
-import java.util.UUID;
+import io.micrometer.core.aop.CountedAspect;
+import io.micrometer.core.aop.TimedAspect;
+import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-public record LikeModel(UUID id, PostModel post, UserModel user) {}
+@Configuration
+@EnableAspectJAutoProxy
+public class MicrometerConfig {
+
+  @Bean
+  public TimedAspect timedAspect(MeterRegistry registry) {
+    return new TimedAspect(registry);
+  }
+
+  @Bean
+  public CountedAspect countedAspect(MeterRegistry registry) {
+    return new CountedAspect(registry);
+  }
+}

@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,25 +18,18 @@
 
 package xyz.subho.clone.twitter.utility;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import xyz.subho.clone.twitter.entity.Hashtags;
 import xyz.subho.clone.twitter.model.HashtagModel;
 
-@Component("HashtagMapper")
-public class HashtagMapper implements Mapper<Hashtags, HashtagModel> {
+@Mapper(componentModel = "spring")
+public interface HashtagMapper {
 
-  @Override
-  public HashtagModel transform(Hashtags hashtag) {
-    var hashtagModel = new HashtagModel();
-    BeanUtils.copyProperties(hashtag, hashtagModel);
-    return hashtagModel;
-  }
+  HashtagModel toModel(Hashtags hashtag);
 
-  @Override
-  public Hashtags transformBack(HashtagModel hashtagModel) {
-    var hashtag = new Hashtags();
-    BeanUtils.copyProperties(hashtagModel, hashtag);
-    return hashtag;
-  }
+  @Mapping(target = "hashtagPosts", ignore = true)
+  @Mapping(target = "createdAt", ignore = true)
+  @Mapping(target = "updatedAt", ignore = true)
+  Hashtags toEntity(HashtagModel hashtagModel);
 }

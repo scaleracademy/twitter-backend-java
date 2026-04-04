@@ -21,7 +21,6 @@ package xyz.subho.clone.twitter.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,21 +30,15 @@ import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
-import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(
     name = "users",
     indexes = {@Index(columnList = "username")})
-@Data
-public class Users {
+public class Users extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -63,6 +56,9 @@ public class Users {
   @Column(unique = true)
   private String email;
 
+  @Column(nullable = false)
+  private String password;
+
   @Column(length = 240)
   private String bio;
 
@@ -75,35 +71,158 @@ public class Users {
   @Column(columnDefinition = "boolean default false", nullable = false)
   private Boolean verified = false;
 
-  @CreationTimestamp private Date createdAt;
-
-  @UpdateTimestamp private Date updatedAt;
-
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Likes> userLikes = new ArrayList<>();
 
-  @ElementCollection private Map<UUID, Date> follower = new HashMap<>();
+  @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<Follow> followers = new ArrayList<>();
 
-  @ElementCollection private Map<UUID, Date> following = new HashMap<>();
+  @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<Follow> following = new ArrayList<>();
 
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Posts> userPosts = new ArrayList<>();
 
-  public void setFollower(final UUID userId) {
-    follower.put(userId, new Date());
+  public UUID getId() {
+    return id;
   }
 
-  public void setFollowing(final UUID userId) {
-    following.put(userId, new Date());
+  public void setId(UUID id) {
+    this.id = id;
   }
 
-  public void removeFollower(final UUID userId) {
-    follower.remove(userId);
+  public String getUsername() {
+    return username;
   }
 
-  public void removeFollowing(final UUID userId) {
-    following.remove(userId);
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getAvatar() {
+    return avatar;
+  }
+
+  public void setAvatar(String avatar) {
+    this.avatar = avatar;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getBio() {
+    return bio;
+  }
+
+  public void setBio(String bio) {
+    this.bio = bio;
+  }
+
+  public long getFollowerCount() {
+    return followerCount;
+  }
+
+  public void setFollowerCount(long followerCount) {
+    this.followerCount = followerCount;
+  }
+
+  public Long getFollowingCount() {
+    return followingCount;
+  }
+
+  public void setFollowingCount(Long followingCount) {
+    this.followingCount = followingCount;
+  }
+
+  public Boolean getVerified() {
+    return verified;
+  }
+
+  public void setVerified(Boolean verified) {
+    this.verified = verified;
+  }
+
+  public List<Likes> getUserLikes() {
+    return userLikes;
+  }
+
+  public void setUserLikes(List<Likes> userLikes) {
+    this.userLikes = userLikes;
+  }
+
+  public List<Follow> getFollowers() {
+    return followers;
+  }
+
+  public void setFollowers(List<Follow> followers) {
+    this.followers = followers;
+  }
+
+  public List<Follow> getFollowing() {
+    return following;
+  }
+
+  public void setFollowing(List<Follow> following) {
+    this.following = following;
+  }
+
+  public List<Posts> getUserPosts() {
+    return userPosts;
+  }
+
+  public void setUserPosts(List<Posts> userPosts) {
+    this.userPosts = userPosts;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Users users = (Users) o;
+    return Objects.equals(id, users.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
+
+  @Override
+  public String toString() {
+    return "Users{"
+        + "id="
+        + id
+        + ", username='"
+        + username
+        + '\''
+        + ", name='"
+        + name
+        + '\''
+        + '}';
   }
 }

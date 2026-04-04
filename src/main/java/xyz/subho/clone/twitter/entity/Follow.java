@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,12 +26,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "hashtag_posts")
-public class HashtagPosts extends Auditable {
+@Table(
+    name = "follows",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"follower_id", "following_id"})})
+public class Follow extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,20 +42,19 @@ public class HashtagPosts extends Auditable {
   private UUID id;
 
   @ManyToOne
-  @JoinColumn(
-      name = "hashtags_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
-  private Hashtags hashtags;
+  @JoinColumn(name = "follower_id", nullable = false)
+  private Users follower;
 
   @ManyToOne
-  @JoinColumn(
-      name = "posts_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
-  private Posts posts;
+  @JoinColumn(name = "following_id", nullable = false)
+  private Users following;
+
+  public Follow() {}
+
+  public Follow(Users follower, Users following) {
+    this.follower = follower;
+    this.following = following;
+  }
 
   public UUID getId() {
     return id;
@@ -62,37 +64,32 @@ public class HashtagPosts extends Auditable {
     this.id = id;
   }
 
-  public Hashtags getHashtags() {
-    return hashtags;
+  public Users getFollower() {
+    return follower;
   }
 
-  public void setHashtags(Hashtags hashtags) {
-    this.hashtags = hashtags;
+  public void setFollower(Users follower) {
+    this.follower = follower;
   }
 
-  public Posts getPosts() {
-    return posts;
+  public Users getFollowing() {
+    return following;
   }
 
-  public void setPosts(Posts posts) {
-    this.posts = posts;
+  public void setFollowing(Users following) {
+    this.following = following;
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    HashtagPosts that = (HashtagPosts) o;
-    return Objects.equals(id, that.id);
+    Follow follow = (Follow) o;
+    return Objects.equals(id, follow.id);
   }
 
   @Override
   public int hashCode() {
     return Objects.hashCode(id);
-  }
-
-  @Override
-  public String toString() {
-    return "HashtagPosts{" + "id=" + id + '}';
   }
 }

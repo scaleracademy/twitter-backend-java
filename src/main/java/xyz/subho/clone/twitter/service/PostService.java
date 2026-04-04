@@ -19,21 +19,25 @@
 package xyz.subho.clone.twitter.service;
 
 import java.util.UUID;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import xyz.subho.clone.twitter.model.PostModel;
 
 public interface PostService {
 
-  public Page<PostModel> getAllPosts(Pageable pageable);
+  public @NonNull Page<PostModel> getAllPosts(@NonNull Pageable pageable);
 
-  public PostModel getPost(UUID postId);
+  public @Nullable PostModel getPost(@NonNull UUID postId);
 
-  public PostModel addPost(PostModel postModel);
+  public @NonNull PostModel addPost(@NonNull PostModel postModel);
 
-  public boolean deletePost(UUID postId, UUID userId);
+  public boolean deletePost(@NonNull UUID postId, @NonNull UUID userId);
 
-  public long addLike(UUID postId, UUID userId);
+  public long addLike(@NonNull UUID postId, @NonNull UUID userId);
 
-  public long removeLike(UUID postId, UUID userId);
+  public long removeLike(@NonNull UUID postId, @NonNull UUID userId);
+
+  public @NonNull Page<PostModel> getReplies(@NonNull UUID postId, @NonNull Pageable pageable);
 }

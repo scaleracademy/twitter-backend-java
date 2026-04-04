@@ -24,63 +24,60 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import xyz.subho.clone.twitter.entity.Hashtags;
-import xyz.subho.clone.twitter.entity.Posts;
 import xyz.subho.clone.twitter.model.HashtagModel;
 import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.repository.HashtagPostsRepository;
 import xyz.subho.clone.twitter.repository.HashtagsRepository;
 import xyz.subho.clone.twitter.service.HashtagService;
-import xyz.subho.clone.twitter.utility.Mapper;
+import xyz.subho.clone.twitter.utility.HashtagMapper;
+import xyz.subho.clone.twitter.utility.PostMapper;
 
 @Service
 public class HashtagServiceImpl implements HashtagService {
 
-  @Autowired private HashtagsRepository hashtagsRepository;
+  private final HashtagsRepository hashtagsRepository;
+  private final HashtagPostsRepository hashtagPostsRepository;
+  private final HashtagMapper hashtagMapper;
+  private final PostMapper postMapper;
 
-  @Autowired private HashtagPostsRepository hashtagPostsRepository;
-
-  @Autowired
-  @Qualifier("HashtagMapper")
-  private Mapper<Hashtags, HashtagModel> hashtagMapper;
-
-  @Autowired
-  @Qualifier("PostMapper")
-  private Mapper<Posts, PostModel> postMapper;
-
-  @Override
-  public List<HashtagModel> getHashtags() {
-
-    var hashtags = hashtagsRepository.findAll();
-    List<HashtagModel> hashtagModels = new ArrayList<>();
-    Optional.ofNullable(hashtags)
-        .ifPresent(
-            hashtag -> hashtag.forEach(hTag -> hashtagModels.add(hashtagMapper.transform(hTag))));
-    return hashtagModels;
-  } // TODO: Create a stored procedure in DB.
+  public HashtagServiceImpl(
+      HashtagsRepository hashtagsRepository,
+      HashtagPostsRepository hashtagPostsRepository,
+      HashtagMapper hashtagMapper,
+      PostMapper postMapper) {
+    this.hashtagsRepository = hashtagsRepository;
+    this.hashtagPostsRepository = hashtagPostsRepository;
+    this.hashtagMapper = hashtagMapper;
+    this.postMapper = postMapper;
+  }
 
   @Override
-  public List<PostModel> getPosts(String tag) {
+  public @NonNull Page<HashtagModel> getHashtags(@NonNull Pageable pageable) {
+    var hashtagsPage = hashtagsRepository.findAll(pageable);
+    return hashtagsPage.map(hashtagMapper::toModel);
+  }
 
+  @Override
+  public @NonNull Page<PostModel> getPosts(@NonNull String tag, @NonNull Pageable pageable) {
     var hashtag = hashtagsRepository.findByTag(tag);
-    List<Posts> posts = new ArrayList<>();
-    if (null != hashtag) {
-      posts = hashtagPostsRepository.findByHashtags(hashtag);
+    if (null == hashtag) {
+      return Page.empty();
     }
-    List<PostModel> postModels = new ArrayList<>();
-    Optional.ofNullable(posts)
-        .ifPresent(post -> post.forEach(pst -> postModels.add(postMapper.transform(pst))));
-    return postModels;
+    var hashtagPostsPage = hashtagPostsRepository.findByHashtags(hashtag, pageable);
+    return hashtagPostsPage.map(hp -> postMapper.toModel(hp.getPosts()));
   }
 
   @Override
   @Transactional
-  public List<Hashtags> getHashtagsByTags(List<String> tags) {
+  public @Nullable List<Hashtags> getHashtagsByTags(@NonNull List<String> tags) {
 
     List<Hashtags> outputListOfHashtags = new ArrayList<>();
     List<Hashtags> hashTags = hashtagsRepository.findByTagIn(tags);
@@ -115,7 +112,7 @@ public class HashtagServiceImpl implements HashtagService {
 
   private Set<String> fetchExistingTags(List<Hashtags> hashTags) {
     if (!CollectionUtils.isEmpty(hashTags)) {
-      return hashTags.stream().map(hTag -> hTag.getTag()).collect(Collectors.toSet());
+      return hashTags.stream().map(Hashtags::getTag).collect(Collectors.toSet());
     }
     return new HashSet<>();
   }

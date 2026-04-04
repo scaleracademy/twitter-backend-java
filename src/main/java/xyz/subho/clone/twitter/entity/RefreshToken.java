@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,35 +24,30 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "hashtag_posts")
-public class HashtagPosts extends Auditable {
+@Table(name = "refresh_tokens")
+public class RefreshToken extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @ManyToOne
-  @JoinColumn(
-      name = "hashtags_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
-  private Hashtags hashtags;
+  @OneToOne
+  @JoinColumn(name = "users_id", referencedColumnName = "id")
+  private Users users;
 
-  @ManyToOne
-  @JoinColumn(
-      name = "posts_id",
-      columnDefinition = "BINARY(16)",
-      updatable = false,
-      nullable = false)
-  private Posts posts;
+  @Column(nullable = false, unique = true)
+  private String token;
+
+  @Column(nullable = false)
+  private Instant expiryDate;
 
   public UUID getId() {
     return id;
@@ -62,37 +57,40 @@ public class HashtagPosts extends Auditable {
     this.id = id;
   }
 
-  public Hashtags getHashtags() {
-    return hashtags;
+  public Users getUsers() {
+    return users;
   }
 
-  public void setHashtags(Hashtags hashtags) {
-    this.hashtags = hashtags;
+  public void setUsers(Users users) {
+    this.users = users;
   }
 
-  public Posts getPosts() {
-    return posts;
+  public String getToken() {
+    return token;
   }
 
-  public void setPosts(Posts posts) {
-    this.posts = posts;
+  public void setToken(String token) {
+    this.token = token;
+  }
+
+  public Instant getExpiryDate() {
+    return expiryDate;
+  }
+
+  public void setExpiryDate(Instant expiryDate) {
+    this.expiryDate = expiryDate;
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    HashtagPosts that = (HashtagPosts) o;
+    RefreshToken that = (RefreshToken) o;
     return Objects.equals(id, that.id);
   }
 
   @Override
   public int hashCode() {
     return Objects.hashCode(id);
-  }
-
-  @Override
-  public String toString() {
-    return "HashtagPosts{" + "id=" + id + '}';
   }
 }

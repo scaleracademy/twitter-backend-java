@@ -18,46 +18,95 @@
 
 package xyz.subho.clone.twitter.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+import jakarta.validation.Valid;
+import java.security.Principal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.subho.clone.twitter.constant.AuthV1Constants;
 import xyz.subho.clone.twitter.exception.BadRequestException;
 import xyz.subho.clone.twitter.model.AuthenticationRequest;
 import xyz.subho.clone.twitter.model.AuthenticationResponse;
+import xyz.subho.clone.twitter.model.TokenRefreshRequest;
 import xyz.subho.clone.twitter.security.JwtUtil;
 import xyz.subho.clone.twitter.security.UserDetailsServiceImpl;
+import xyz.subho.clone.twitter.service.RefreshTokenService;
+import xyz.subho.clone.twitter.service.UserService;
 
 @RestController
+@RequestMapping(AuthV1Constants.BASE_PATH)
+@Timed(value = "moo.auth.timer", description = "Time taken to process auth requests")
 public class AuthenticationController {
 
-  @Autowired private AuthenticationManager authenticationManager;
+  private final AuthenticationManager authenticationManager;
+  private final JwtUtil jwtTokenUtil;
+  private final UserDetailsServiceImpl userDetailsService;
+  private final RefreshTokenService refreshTokenService;
+  private final UserService userService;
 
-  @Autowired private JwtUtil jwtTokenUtil;
+  public AuthenticationController(
+      AuthenticationManager authenticationManager,
+      JwtUtil jwtTokenUtil,
+      UserDetailsServiceImpl userDetailsService,
+      RefreshTokenService refreshTokenService,
+      UserService userService) {
+    this.authenticationManager = authenticationManager;
+    this.jwtTokenUtil = jwtTokenUtil;
+    this.userDetailsService = userDetailsService;
+    this.refreshTokenService = refreshTokenService;
+    this.userService = userService;
+  }
 
-  @Autowired private UserDetailsServiceImpl userDetailsService;
-
-  @PostMapping("/authenticate")
-  public ResponseEntity<?> createAuthenticationToken(
+  @PostMapping(AuthV1Constants.AUTHENTICATE)
+  @Counted(value = "moo.auth.login", description = "Number of user logins")
+  public ResponseEntity<AuthenticationResponse> createAuthenticationToken(
       @RequestBody AuthenticationRequest authenticationRequest) {
 
     try {
       authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(
-              authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+              authenticationRequest.username(), authenticationRequest.password()));
     } catch (BadCredentialsException e) {
       throw new BadRequestException("Incorrect username or password", e);
     }
 
-    final var userDetails =
-        userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+    final var userDetails = userDetailsService.loadUserByUsername(authenticationRequest.username());
 
     final String jwt = jwtTokenUtil.generateToken(userDetails);
+    var user = userService.getUserByUserName(authenticationRequest.username());
+    var refreshToken = refreshTokenService.createRefreshToken(user.id());
 
-    return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    return ResponseEntity.ok(new AuthenticationResponse(jwt, refreshToken.getToken()));
+  }
+
+  @PostMapping(AuthV1Constants.REFRESH)
+  public ResponseEntity<AuthenticationResponse> refreshToken(
+      @Valid @RequestBody TokenRefreshRequest request) {
+    return refreshTokenService
+        .findByToken(request.refreshToken())
+        .map(refreshTokenService::verifyExpiration)
+        .map(
+            token -> {
+              var user = token.getUsers();
+              String jwt =
+                  jwtTokenUtil.generateToken(
+                      userDetailsService.loadUserByUsername(user.getUsername()));
+              return ResponseEntity.ok(new AuthenticationResponse(jwt, token.getToken()));
+            })
+        .orElseThrow(() -> new BadRequestException("Refresh token is not in database!"));
+  }
+
+  @PostMapping(AuthV1Constants.LOGOUT)
+  public ResponseEntity<String> logoutUser(Principal principal) {
+    var user = userService.getUserByUserName(principal.getName());
+    refreshTokenService.deleteByUserId(user.id());
+    return ResponseEntity.ok("Log out successful!");
   }
 }

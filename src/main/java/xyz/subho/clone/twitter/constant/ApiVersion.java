@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,11 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.utility;
+package xyz.subho.clone.twitter.constant;
 
-public interface Mapper<S, T> {
+/** ApiVersion - Holds the global API versioning constants. */
+public class ApiVersion {
 
-  T transform(S source);
+  public static final String V1 = "/v1";
 
-  S transformBack(T source);
+  private ApiVersion() {
+    // Prevent instantiation
+  }
 }

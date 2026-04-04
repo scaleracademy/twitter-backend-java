@@ -30,36 +30,78 @@ import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
-import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(
     name = "hashtags",
     indexes = {@Index(columnList = "tag")})
-@Data
-public class Hashtags {
+public class Hashtags extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @Column(unique = true, nullable = false)
+  @Column(unique = true, nullable = false, length = 50)
   private String tag;
 
-  @Column(name = "recent_post_count", columnDefinition = "BIGINT(20) default '1'", nullable = false)
-  private Long recentPostCount = 1L;
+  @Column(name = "post_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
+  private long recentPostCount = 0L;
 
   @OneToMany(mappedBy = "hashtags", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonIgnore
   private List<HashtagPosts> hashtagPosts = new ArrayList<>();
 
-  @CreationTimestamp private Date createdAt;
+  public UUID getId() {
+    return id;
+  }
 
-  @UpdateTimestamp private Date updatedAt;
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public String getTag() {
+    return tag;
+  }
+
+  public void setTag(String tag) {
+    this.tag = tag;
+  }
+
+  public long getRecentPostCount() {
+    return recentPostCount;
+  }
+
+  public void setRecentPostCount(long recentPostCount) {
+    this.recentPostCount = recentPostCount;
+  }
+
+  public List<HashtagPosts> getHashtagPosts() {
+    return hashtagPosts;
+  }
+
+  public void setHashtagPosts(List<HashtagPosts> hashtagPosts) {
+    this.hashtagPosts = hashtagPosts;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Hashtags hashtags = (Hashtags) o;
+    return Objects.equals(id, hashtags.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
+
+  @Override
+  public String toString() {
+    return "Hashtags{" + "id=" + id + ", tag='" + tag + '\'' + '}';
+  }
 }

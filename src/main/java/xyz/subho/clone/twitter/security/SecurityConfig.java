@@ -18,7 +18,6 @@
 
 package xyz.subho.clone.twitter.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,23 +25,33 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import xyz.subho.clone.twitter.constant.AuthV1Constants;
+import xyz.subho.clone.twitter.constant.UserV1Constants;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-  @Autowired private JwtRequestFilter jwtRequestFilter;
+  private final JwtRequestFilter jwtRequestFilter;
+
+  public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+    this.jwtRequestFilter = jwtRequestFilter;
+  }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/authenticate", "/users", "/swagger-ui/**", "/v3/api-docs/**")
+                auth.requestMatchers(
+                        AuthV1Constants.BASE_PATH + AuthV1Constants.AUTHENTICATE,
+                        UserV1Constants.BASE_PATH,
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
@@ -56,7 +65,7 @@ public class SecurityConfig {
 
   @Bean
   public PasswordEncoder passwordEncoder() {
-    return NoOpPasswordEncoder.getInstance();
+    return new BCryptPasswordEncoder();
   }
 
   @Bean

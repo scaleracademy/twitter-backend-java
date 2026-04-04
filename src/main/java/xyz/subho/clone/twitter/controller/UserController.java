@@ -18,11 +18,13 @@
 
 package xyz.subho.clone.twitter.controller;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,20 +38,27 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.subho.clone.twitter.constant.UserV1Constants;
 import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.service.UserService;
 import xyz.subho.clone.twitter.utility.Utility;
 
 @RestController
-@RequestMapping("/users")
-@Slf4j
+@RequestMapping(UserV1Constants.BASE_PATH)
+@Timed(value = "moo.users.timer", description = "Time taken to process user requests")
 public class UserController {
 
-  @Autowired private UserService userService;
+  private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-  @Autowired private Utility utility;
+  private final UserService userService;
+  private final Utility utility;
 
-  @GetMapping("/{userNameOrUserId}")
+  public UserController(UserService userService, Utility utility) {
+    this.userService = userService;
+    this.utility = utility;
+  }
+
+  @GetMapping(UserV1Constants.USER_ID_OR_NAME)
   public ResponseEntity<UserModel> getUserByUserIdOrUserName(
       @PathVariable("userNameOrUserId") String userNameOrUserId) {
 
@@ -69,37 +78,44 @@ public class UserController {
   }
 
   @PostMapping
+  @Counted(value = "moo.users.signup", description = "Number of user signups")
   public ResponseEntity<UserModel> createUser(@Valid @RequestBody UserModel userResponse) {
     var user = userService.addUser(userResponse);
     return new ResponseEntity<>(user, HttpStatus.CREATED);
   }
 
   @PatchMapping
+  @Timed(value = "moo.users.update", description = "Time taken to update user profile")
   public UserModel updateUser(@Valid @RequestBody UserModel userResponse, Principal principal) {
     return userService.editUser(userResponse);
   }
 
-  @PutMapping("/{userId}/follow")
+  @PutMapping(UserV1Constants.FOLLOW)
+  @Counted(value = "moo.users.follow", description = "Number of follow actions")
   public ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId, Principal principal) {
     var follower = userService.getUserByUserName(principal.getName());
-    userService.addFollower(follower.getId(), userId);
+    if (follower != null) {
+      userService.addFollower(follower.id(), userId);
+    }
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-  @DeleteMapping("/{userId}/follow")
+  @DeleteMapping(UserV1Constants.FOLLOW)
   public ResponseEntity<HttpStatus> removeFollower(
       @PathVariable("userId") UUID userId, Principal principal) {
     var follower = userService.getUserByUserName(principal.getName());
-    userService.removeFollower(follower.getId(), userId);
+    if (follower != null) {
+      userService.removeFollower(follower.id(), userId);
+    }
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-  @GetMapping("/{userId}/followers")
+  @GetMapping(UserV1Constants.FOLLOWERS)
   public Page<UserModel> getFollowers(@PathVariable("userId") UUID userId, Pageable pageable) {
     return userService.getFollowers(userId, pageable);
   }
 
-  @GetMapping("/{userId}/followings")
+  @GetMapping(UserV1Constants.FOLLOWINGS)
   public Page<UserModel> getFollowings(@PathVariable("userId") UUID userId, Pageable pageable) {
     return userService.getFollowings(userId, pageable);
   }

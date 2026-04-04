@@ -16,20 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-###### THIS IS THE ROOT PROPERTIES ######
+#
+# Twitter Backend - Moo: Developer Dependencies Stack (DB + Adminer)
+#
 
-# =======================================
-# ========== ACTIVE PROPERTIES ==========
-# =======================================
-spring.profiles.active=test
-
-# Available profiles = dev, test
-
-
-spring.application.name=TwitterClone
-spring.threads.virtual.enabled=true
-jwt.secret=9a4f4342453527245a462d4a614e645267556b58703273357638792f423f4528
-jwt.expiration=3600000
-spring.mvc.apiversion.enabled=true
-spring.mvc.apiversion.default-version=1
-jwt.refreshExpiration=604800000
+include:
+  - docker-compose.base.yml

@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,6 +18,6 @@
 
 package xyz.subho.clone.twitter.model;
 
-import java.util.UUID;
+import jakarta.validation.constraints.NotBlank;
 
-public record LikeModel(UUID id, PostModel post, UserModel user) {}
+public record TokenRefreshRequest(@NotBlank String refreshToken) {}

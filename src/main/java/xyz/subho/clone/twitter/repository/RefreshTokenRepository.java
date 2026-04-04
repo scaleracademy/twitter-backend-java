@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,8 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.subho.clone.twitter.model;
+package xyz.subho.clone.twitter.repository;
 
+import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import xyz.subho.clone.twitter.entity.RefreshToken;
+import xyz.subho.clone.twitter.entity.Users;
 
-public record LikeModel(UUID id, PostModel post, UserModel user) {}
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID> {
+
+  Optional<RefreshToken> findByToken(String token);
+
+  @Modifying
+  int deleteByUsers(Users user);
+}

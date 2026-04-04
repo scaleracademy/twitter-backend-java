@@ -16,40 +16,35 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-version: "3"
-    
+#
+# Twitter Backend - Moo: Full Stack (API + Dependencies)
+#
+
+include:
+  - docker-compose.base.yml
+
 services:
-  
-  db:
-    image: mysql:8
-    container_name: db
-    volumes:
-      - db_data:/var/lib/mysql
-    restart: always
-    hostname: db
-    ports:
-      - "${MYSQL_DB_PORT}:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: twitter
-      MYSQL_USER: twitter
-      MYSQL_PASSWORD: twitter
-    
-  twitter-backend:
-    depends_on:
-      - db
-    container_name: twitter-backend
+  app:
     build:
       context: .
-      dockerfile: Dockerfile
+      args:
+        JAR_FILE: target/*.jar
+    container_name: moo-api
     ports:
-      - "${APP_PORT_BACKEND}:8080"
-    restart: always
+      - "${HOST_PORT:-8082}:8080"
     environment:
-      MYSQL_DB_HOST: ${MYSQL_DB_HOST}
-      MYSQL_DB_PORT: ${MYSQL_DB_PORT}
-      MYSQL_DB_UNAME: ${MYSQL_DB_UNAME}
-      MYSQL_DB_PASSWD: ${MYSQL_DB_PASSWD}
-
-volumes:
-  db_data: {}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
+      - MYSQL_DB_HOST=${DB_HOST:-db}
+      - MYSQL_DB_PORT=${DB_PORT:-3306}
+      - MYSQL_DB_UNAME=${DB_USER:-moouser}
+      - MYSQL_DB_PASSWD=${DB_PASS:-moopass}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 512M

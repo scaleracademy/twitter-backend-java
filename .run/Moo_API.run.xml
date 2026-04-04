@@ -1,0 +1,38 @@
+<!--
+
+    Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
+    Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Moo API" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="twitter" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="xyz.subho.clone.twitter.TwitterBackendApplication" />
+    <option name="ACTIVE_PROFILES" value="dev" />
+    <envs>
+      <env name="DB_HOST" value="localhost" />
+      <env name="DB_PORT" value="3306" />
+      <env name="DB_NAME" value="twitter_clone" />
+      <env name="DB_USER" value="moouser" />
+      <env name="DB_PASS" value="moopass" />
+      <env name="JWT_SECRET" value="9a4f4342453527245a462d4a614e645267556b58703273357638792f423f4528" />
+      <env name="JWT_EXPIRATION" value="3600000" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

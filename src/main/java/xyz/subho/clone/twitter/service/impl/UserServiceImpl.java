@@ -19,85 +19,120 @@
 package xyz.subho.clone.twitter.service.impl;
 
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import xyz.subho.clone.twitter.entity.Follow;
 import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.UserModel;
+import xyz.subho.clone.twitter.repository.FollowRepository;
 import xyz.subho.clone.twitter.repository.UsersRepository;
 import xyz.subho.clone.twitter.service.UserService;
-import xyz.subho.clone.twitter.utility.Mapper;
+import xyz.subho.clone.twitter.utility.UserMapper;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-  @Autowired private UsersRepository usersRepository;
+  private final UsersRepository usersRepository;
+  private final FollowRepository followRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final UserMapper userMapper;
 
-  @Autowired
-  @Qualifier("UserMapper")
-  private Mapper<Users, UserModel> userMapper;
-
-  @Override
-  public UserModel getUserByUserName(String username) {
-    return userMapper.transform(usersRepository.findByUsername(username));
+  public UserServiceImpl(
+      UsersRepository usersRepository,
+      FollowRepository followRepository,
+      PasswordEncoder passwordEncoder,
+      UserMapper userMapper) {
+    this.usersRepository = usersRepository;
+    this.followRepository = followRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.userMapper = userMapper;
   }
 
   @Override
-  public UserModel getUserByUserId(UUID userId) {
+  public @Nullable UserModel getUserByUserName(@NonNull String username) {
+    return userMapper.toModel(usersRepository.findByUsername(username));
+  }
+
+  @Override
+  public @Nullable UserModel getUserByUserId(@NonNull UUID userId) {
     var user = usersRepository.getById(userId);
-    return userMapper.transform(user);
+    return userMapper.toModel(user);
   }
 
   @Override
-  public Users getUserEntityByUserId(UUID userId) {
+  public @Nullable Users getUserEntityByUserId(@NonNull UUID userId) {
     return usersRepository.getById(userId);
   }
 
   @Override
   @Transactional
-  public UserModel addUser(UserModel user) {
-    Users users = userMapper.transformBack(user);
-    return userMapper.transform(usersRepository.save(users));
+  public @NonNull UserModel addUser(@NonNull UserModel userModel) {
+    var user = userMapper.toEntity(userModel);
+    user.setPassword(passwordEncoder.encode(userModel.password()));
+    return userMapper.toModel(usersRepository.save(user));
   }
 
   @Override
   @Transactional
-  public UserModel editUser(UserModel user) {
-    Users users = userMapper.transformBack(user);
-    return userMapper.transform(usersRepository.save(users));
+  public @NonNull UserModel editUser(@NonNull UserModel userModel) {
+    Users users = userMapper.toEntity(userModel);
+    return userMapper.toModel(usersRepository.save(users));
   }
 
   @Override
   @Transactional
-  public boolean addFollower(UUID followerId, UUID userId) {
+  public boolean addFollower(@NonNull UUID followerId, @NonNull UUID userId) {
+    if (followRepository.existsByFollowerAndFollowing(
+        usersRepository.getById(followerId), usersRepository.getById(userId))) {
+      return false;
+    }
+
     Users user = usersRepository.getById(userId);
-    user.setFollower(followerId);
+    Users follower = usersRepository.getById(followerId);
+
+    Follow follow = new Follow(follower, user);
+    followRepository.save(follow);
+
+    user.setFollowerCount(user.getFollowerCount() + 1);
     usersRepository.save(user);
+
+    follower.setFollowingCount(follower.getFollowingCount() + 1);
+    usersRepository.save(follower);
     return true;
   }
 
   @Override
-  public boolean removeFollower(UUID followerId, UUID userId) {
+  @Transactional
+  public boolean removeFollower(@NonNull UUID followerId, @NonNull UUID userId) {
     Users user = usersRepository.getById(userId);
-    user.removeFollower(followerId);
+    Users follower = usersRepository.getById(followerId);
+
+    followRepository.deleteByFollowerAndFollowing(follower, user);
+
+    user.setFollowerCount(Math.max(0, user.getFollowerCount() - 1));
     usersRepository.save(user);
+
+    follower.setFollowingCount(Math.max(0, follower.getFollowingCount() - 1));
+    usersRepository.save(follower);
     return true;
   }
 
   @Override
-  public Page<UserModel> getFollowers(UUID userId, Pageable pageable) {
+  public @NonNull Page<UserModel> getFollowers(@NonNull UUID userId, @NonNull Pageable pageable) {
     Users user = usersRepository.getById(userId);
-    var usersPage = usersRepository.findByIdIn(user.getFollower().keySet(), pageable);
-    return usersPage.map(userMapper::transform);
+    var followsPage = followRepository.findByFollowing(user, pageable);
+    return followsPage.map(f -> userMapper.toModel(f.getFollower()));
   }
 
   @Override
-  public Page<UserModel> getFollowings(UUID userId, Pageable pageable) {
+  public @NonNull Page<UserModel> getFollowings(@NonNull UUID userId, @NonNull Pageable pageable) {
     Users user = usersRepository.getById(userId);
-    var usersPage = usersRepository.findByIdIn(user.getFollowing().keySet(), pageable);
-    return usersPage.map(userMapper::transform);
+    var followsPage = followRepository.findByFollower(user, pageable);
+    return followsPage.map(f -> userMapper.toModel(f.getFollowing()));
   }
 }

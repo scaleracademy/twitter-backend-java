@@ -1,6 +1,6 @@
 /*
  * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
- * Copyright © 2021-2023 Subhrodip Mohanta (hello@subho.xyz)
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,37 +21,46 @@ package xyz.subho.clone.twitter.utility;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import xyz.subho.clone.twitter.entity.Posts;
 import xyz.subho.clone.twitter.model.PostModel;
 
-@Component("PostMapper")
-public class PostMapper implements Mapper<Posts, PostModel> {
+@Mapper(componentModel = "spring")
+public interface PostMapper {
 
-  @Override
-  public PostModel transform(Posts post) {
-    PostModel postModel = new PostModel();
-    BeanUtils.copyProperties(post, postModel, "hashtags", "mentions");
-    postModel.setHashtags(new ArrayList<>(post.getHashtags().keySet()));
-    postModel.setMentions(new ArrayList<>(post.getMentions().keySet()));
-    postModel.setUserId(post.getUsers().getId());
-    return postModel;
+  @Mapping(target = "userId", source = "users.id")
+  @Mapping(target = "hashtags", source = "hashtags", qualifiedByName = "mapToKeysList")
+  @Mapping(target = "mentions", source = "mentions", qualifiedByName = "mapToKeysList")
+  @Mapping(target = "images", source = "images", qualifiedByName = "mapToKeysList")
+  @Mapping(target = "timestamp", source = "createdAt")
+  PostModel toModel(Posts post);
+
+  @Mapping(target = "users", ignore = true)
+  @Mapping(target = "postHashtags", ignore = true)
+  @Mapping(target = "postLikes", ignore = true)
+  @Mapping(target = "createdAt", ignore = true)
+  @Mapping(target = "updatedAt", ignore = true)
+  @Mapping(target = "hashtags", source = "hashtags", qualifiedByName = "listToDateMap")
+  @Mapping(target = "mentions", source = "mentions", qualifiedByName = "listToDateMap")
+  @Mapping(target = "images", source = "images", qualifiedByName = "listToDateMap")
+  Posts toEntity(PostModel postModel);
+
+  @Named("mapToKeysList")
+  default List<String> mapToKeysList(Map<String, Date> map) {
+    if (map == null) return new ArrayList<>();
+    return new ArrayList<>(map.keySet());
   }
 
-  @Override
-  public Posts transformBack(PostModel postModel) {
-    Posts post = new Posts();
-    BeanUtils.copyProperties(postModel, post, "hashtags", "mentions", "likeCount", "repostCount");
-    Map<String, Date> hashtags = new HashMap<>();
-    Map<String, Date> mentions = new HashMap<>();
-    postModel.getHashtags().forEach(tag -> hashtags.put(tag, new Date()));
-    postModel.getMentions().forEach(mention -> mentions.put(mention, new Date()));
-    post.setHashtags(hashtags);
-    post.setMentions(mentions);
-    post.setLikeCount(null != postModel.getLikeCount() ? postModel.getLikeCount() : 0L);
-    post.setRepostCount(null != postModel.getRepostCount() ? postModel.getRepostCount() : 0L);
-    return post;
+  @Named("listToDateMap")
+  default Map<String, Date> listToDateMap(List<String> list) {
+    Map<String, Date> map = new HashMap<>();
+    if (list != null) {
+      list.forEach(item -> map.put(item, new Date()));
+    }
+    return map;
   }
 }

@@ -10,7 +10,8 @@ industry standards.
 ## 🚀 Modern Tech Stack
 
 For a detailed breakdown of our architectural choices, visit our
-[Technology Selection](https://github.com/scaleracademy/twitter-backend-java/wiki/Technology-Selections) wiki page.
+[Technology Selection](https://github.com/scaleracademy/twitter-backend-java/wiki/Technology-Selections)
+wiki page.
 
 - **Java 21** (Microsoft Build of OpenJDK)
 - **Spring Boot 4.0** (Spring Framework 7.0)
@@ -51,7 +52,7 @@ Ideal for coding. Runs DB in Docker, App in your IDE/CLI.
 3. Configure your IDE using our [IDE Instructions](https://github.com/scaleracademy/twitter-backend-java/wiki/IDE-Instructions).
 4. Run the **"Moo API"** configuration in IntelliJ IDEA, or use:
    `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev`
-5. API: `http://localhost:8080` (Standard) | DB Admin: `http://localhost:8083`
+5. API: `http://localhost:8080` | DB Admin: `http://localhost:8083`
 
 For advanced configuration, visit [Project Configuration](https://github.com/scaleracademy/twitter-backend-java/wiki/Project-Configuration).
 
@@ -61,6 +62,7 @@ Access the Interactive Swagger UI at:
 👉 `http://localhost:8082/swagger-ui/index.html`
 
 Comprehensive endpoint details and data contracts are available at:
+
 - [API Endpoints Overview](https://github.com/scaleracademy/twitter-backend-java/wiki/API-Endpoints)
 - [Request and Response Models](https://github.com/scaleracademy/twitter-backend-java/wiki/Request-and-Response-Models)
 - [How to Test Endpoints](https://github.com/scaleracademy/twitter-backend-java/wiki/How-to-Test-Endpoints)
@@ -87,6 +89,7 @@ and [Static Analysis](https://github.com/scaleracademy/twitter-backend-java/wiki
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md)
 and the following wiki sections:
+
 - [Working with Issues](https://github.com/scaleracademy/twitter-backend-java/wiki/Working-with-issues)
 - [Reviewing Pull Requests](https://github.com/scaleracademy/twitter-backend-java/wiki/Reviewing-pull-requests)
 - [Recognizing Contributors](https://github.com/scaleracademy/twitter-backend-java/wiki/Recognizing-contributors)

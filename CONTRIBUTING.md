@@ -124,16 +124,28 @@ To keep the codebase clean and stable, we enforce the following rules:
 
 ## Pull Request Process
 
+### 1. Eligibility for Review (The "Green Gate")
+
+To respect the time of our maintainers, a Pull Request will **not** be
+reviewed until the following conditions are met:
+
+- **DCO Compliance:** Every commit must be signed-off (`git commit -s`).
+- **Green CI:** The `PR Checker` workflow must pass successfully on GitHub.
+- **No Conflicts:** The PR must be rebased against the latest `master`.
+
+If your PR is missing sign-offs, you can fix it using:
+`git rebase HEAD~N --signoff` (where N is the number of commits).
+
+### 2. Implementation Steps
+
 1. **Update Documentation:** If you add or change an API, ensure the
    Swagger/OpenAPI metadata is updated.
 
 2. **Self-Review:** Go through your changes and ensure no "TODOs" or debug logs
    are left behind.
 
-3. **CI Check:** Ensure the `PR Checker` workflow passes on GitHub.
-
-4. **Reviewers:** Assign at least one maintainer for review. Be responsive to
-   feedback!
+3. **Assign Reviewers:** Assign at least one maintainer for review once the CI
+   is green. Be responsive to feedback!
 
 ## License
 

@@ -7,7 +7,10 @@
 A robust, high-performance Twitter clone backend built with the latest
 industry standards.
 
-## Modern Tech Stack
+## 🚀 Modern Tech Stack
+
+For a detailed breakdown of our architectural choices, visit our
+[Technology Selection](https://github.com/scaleracademy/twitter-backend-java/wiki/Technology-Selections) wiki page.
 
 - **Java 21** (Microsoft Build of OpenJDK)
 - **Spring Boot 4.0** (Spring Framework 7.0)
@@ -18,7 +21,7 @@ industry standards.
 - **OpenTelemetry** for native observability.
 - **Springdoc OpenAPI 3** for Swagger documentation.
 
-## Getting Started
+## 🛠️ Getting Started
 
 ### Prerequisites
 
@@ -28,7 +31,8 @@ industry standards.
 
 ### Quick Start
 
-Choose the setup that fits your workflow:
+Choose the setup that fits your workflow. For more details, see our
+[Installation Guide](https://github.com/scaleracademy/twitter-backend-java/wiki/Installation).
 
 #### Option A: Zero-Installation (Full Stack)
 
@@ -44,52 +48,52 @@ Ideal for coding. Runs DB in Docker, App in your IDE/CLI.
 
 1. `cp .env.example .env`
 2. `docker compose -f docker-compose.dev.yml up -d`
-3. Run the **"Moo API"** configuration in IntelliJ IDEA, or use:
+3. Configure your IDE using our [IDE Instructions](https://github.com/scaleracademy/twitter-backend-java/wiki/IDE-Instructions).
+4. Run the **"Moo API"** configuration in IntelliJ IDEA, or use:
    `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev`
-4. API: `http://localhost:8080` (Standard) | DB Admin: `http://localhost:8083`
+5. API: `http://localhost:8080` | DB Admin: `http://localhost:8083`
 
-## API Documentation
+For advanced configuration, visit [Project Configuration](https://github.com/scaleracademy/twitter-backend-java/wiki/Project-Configuration).
+
+## 📖 API Documentation
 
 Access the Interactive Swagger UI at:
 👉 `http://localhost:8082/swagger-ui/index.html`
 
-### Key Endpoints
+Comprehensive endpoint details and data contracts are available at:
+- [API Endpoints Overview](https://github.com/scaleracademy/twitter-backend-java/wiki/API-Endpoints)
+- [Request and Response Models](https://github.com/scaleracademy/twitter-backend-java/wiki/Request-and-Response-Models)
+- [How to Test Endpoints](https://github.com/scaleracademy/twitter-backend-java/wiki/How-to-Test-Endpoints)
 
-- **POST `/authenticate`**: Login and receive a JWT token.
-- **GET `/users`**: User management and social graph.
-- **GET `/posts`**: Scalable paginated feed access.
+## 🏗️ Architecture & Best Practices
 
-## Architecture & Best Practices
+- **Scalable Pagination**: All list endpoints use `Pageable`. See our
+  [Entity Design](https://github.com/scaleracademy/twitter-backend-java/wiki/Entity-Design).
+- **Distroless Containers**: Secure, minimal runtime environment.
+- **Multi-Arch Support**: Images optimized for `amd64` and `arm64`.
+- **Zero-Qualified Names**: The codebase strictly uses imports.
+- **Null Safety**: Integrated **JSpecify** annotations.
 
-- **Scalable Pagination**: All list endpoints use `Pageable` to prevent memory
-  exhaustion.
-- **Distroless Containers**: Docker images are built using Google's
-  **Distroless** images for minimal attack surface and maximum security.
-- **Multi-Arch Support**: Official images are published for both `amd64` and
-  `arm64` architectures.
-- **Zero-Qualified Names**: The codebase strictly uses imports for readability
-  and cleaner syntax.
-- **Null Safety**: Integrated **JSpecify** annotations across the service
-  layer.
+## 🤖 CI/CD Pipeline
 
-## CI/CD Pipeline
+Our pipeline is optimized for robust speed and reliability. Learn more about
+how we maintain quality in [Collaboration](https://github.com/scaleracademy/twitter-backend-java/wiki/Collaboration)
+and [Static Analysis](https://github.com/scaleracademy/twitter-backend-java/wiki/Static-Analysis).
 
-Our pipeline is optimized for robust speed and reliability:
+- **PR Checker**: Cross-platform linting and multi-arch smoke builds.
+- **Master CI**: Artifact archival, CodeQL scanning, and official distribution.
 
-- **PR Checker**: Runs cross-platform linting (Spotless) and a Docker smoke
-  build on every PR.
-- **Master CI**: Performs artifact archival, CodeQL security scanning, and
-  multi-arch image distribution to GHCR and DockerHub.
-
-## Contributing
+## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md)
-for details on:
+and the following wiki sections:
+- [Working with Issues](https://github.com/scaleracademy/twitter-backend-java/wiki/Working-with-issues)
+- [Reviewing Pull Requests](https://github.com/scaleracademy/twitter-backend-java/wiki/Reviewing-pull-requests)
+- [Recognizing Contributors](https://github.com/scaleracademy/twitter-backend-java/wiki/Recognizing-contributors)
 
-- Coding standards (Spotless, JSpecify, etc.)
-- Development environment setup
-- Pull request process
+For our future vision, check the [Roadmap](https://github.com/scaleracademy/twitter-backend-java/wiki/Roadmap).
 
-## License
+## 📜 License
 
 This project is licensed under the **GNU Affero General Public License v3.0**.
+See [LICENSE](LICENSE) for details.

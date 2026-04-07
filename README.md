@@ -51,7 +51,7 @@ Ideal for coding. Runs DB in Docker, App in your IDE/CLI.
 3. Configure your IDE using our [IDE Instructions](https://github.com/scaleracademy/twitter-backend-java/wiki/IDE-Instructions).
 4. Run the **"Moo API"** configuration in IntelliJ IDEA, or use:
    `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev`
-5. API: `http://localhost:8080` | DB Admin: `http://localhost:8083`
+5. API: `http://localhost:8080` (Standard) | DB Admin: `http://localhost:8083`
 
 For advanced configuration, visit [Project Configuration](https://github.com/scaleracademy/twitter-backend-java/wiki/Project-Configuration).
 

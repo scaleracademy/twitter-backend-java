@@ -100,9 +100,12 @@ public class UserController {
 
   @PatchMapping
   @Timed(value = "moo.users.update", description = "Time taken to update user profile")
-  public UserModel updateUser(
+  public ResponseEntity<UserModel> updateUser(
       @Valid @RequestBody UserUpdateRequest userUpdateRequest, Principal principal) {
-    return userService.editUser(principal.getName(), userUpdateRequest);
+    if (userService.getUserByUserName(principal.getName()) == null) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+    return ResponseEntity.ok(userService.editUser(principal.getName(), userUpdateRequest));
   }
 
   @PutMapping(UserV1Constants.FOLLOW)

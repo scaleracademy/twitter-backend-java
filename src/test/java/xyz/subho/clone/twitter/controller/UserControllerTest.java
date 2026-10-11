@@ -66,12 +66,26 @@ class UserControllerTest {
     when(userService.editUser(
             "alice", new UserUpdateRequest("Alice", "a@e.test", null, null, null)))
         .thenReturn(user);
+    when(userService.getUserByUserName("alice")).thenReturn(user);
 
     assertThat(controller.createUser(user).getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    assertThat(
-            controller.updateUser(
-                new UserUpdateRequest("Alice", "a@e.test", null, null, null), principal))
-        .isEqualTo(user);
+    var response =
+        controller.updateUser(
+            new UserUpdateRequest("Alice", "a@e.test", null, null, null), principal);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isEqualTo(user);
+  }
+
+  @Test
+  void profileUpdateRejectsAStaleAuthenticatedPrincipal() {
+    when(userService.getUserByUserName("alice")).thenReturn(null);
+
+    var response =
+        controller.updateUser(
+            new UserUpdateRequest("Alice", "a@e.test", null, null, null), principal);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    verify(userService, never())
+        .editUser("alice", new UserUpdateRequest("Alice", "a@e.test", null, null, null));
   }
 
   @Test

@@ -88,9 +88,10 @@ class PostControllerTest {
   }
 
   @Test
-  void deleteSkipsUnknownProfilesAndDelegatesKnownProfiles() {
+  void deleteRequiresAProfileAndDelegatesKnownProfiles() {
     when(userService.getUserByUserName("alice")).thenReturn(null);
-    assertThat(controller.deletePost(postId, principal).getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(controller.deletePost(postId, principal).getStatusCode())
+        .isEqualTo(HttpStatus.UNAUTHORIZED);
     verify(postService, never()).deletePost(any(), any());
 
     when(userService.getUserByUserName("alice"))

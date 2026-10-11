@@ -109,9 +109,10 @@ public class UserController {
   @Counted(value = "moo.users.follow", description = "Number of follow actions")
   public ResponseEntity<HttpStatus> addFollower(@PathVariable UUID userId, Principal principal) {
     var follower = userService.getUserByUserName(principal.getName());
-    if (follower != null) {
-      userService.addFollower(follower.id(), userId);
+    if (follower == null) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+    userService.addFollower(follower.id(), userId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
@@ -119,9 +120,10 @@ public class UserController {
   public ResponseEntity<HttpStatus> removeFollower(
       @PathVariable("userId") UUID userId, Principal principal) {
     var follower = userService.getUserByUserName(principal.getName());
-    if (follower != null) {
-      userService.removeFollower(follower.id(), userId);
+    if (follower == null) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+    userService.removeFollower(follower.id(), userId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

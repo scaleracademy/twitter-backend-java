@@ -114,6 +114,14 @@ class AuthenticationControllerTest {
     verify(refreshTokenService).deleteByUserId(userId);
   }
 
+  @Test
+  void logoutRejectsAStalePrincipal() {
+    when(userService.getUserByUserName("alice")).thenReturn(null);
+
+    assertThat(controller.logoutUser(() -> "alice").getStatusCode())
+        .isEqualTo(HttpStatus.UNAUTHORIZED);
+  }
+
   private RefreshToken token(String value) {
     RefreshToken token = new RefreshToken();
     token.setToken(value);

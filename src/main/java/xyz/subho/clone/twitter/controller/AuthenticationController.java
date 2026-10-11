@@ -22,6 +22,7 @@ import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import java.security.Principal;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -99,6 +100,9 @@ public class AuthenticationController {
   @PostMapping(AuthV1Constants.LOGOUT)
   public ResponseEntity<String> logoutUser(Principal principal) {
     var user = userService.getUserByUserName(principal.getName());
+    if (user == null) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
     refreshTokenService.deleteByUserId(user.id());
     return ResponseEntity.ok("Log out successful!");
   }

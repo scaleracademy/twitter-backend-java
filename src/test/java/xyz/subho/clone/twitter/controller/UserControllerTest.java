@@ -75,12 +75,12 @@ class UserControllerTest {
   }
 
   @Test
-  void followAndUnfollowSkipMissingProfilesAndDelegateKnownProfiles() {
+  void followAndUnfollowRequireAProfileAndDelegateKnownProfiles() {
     when(userService.getUserByUserName("alice")).thenReturn(null);
     assertThat(controller.addFollower(otherId, principal).getStatusCode())
-        .isEqualTo(HttpStatus.NO_CONTENT);
+        .isEqualTo(HttpStatus.UNAUTHORIZED);
     assertThat(controller.removeFollower(otherId, principal).getStatusCode())
-        .isEqualTo(HttpStatus.NO_CONTENT);
+        .isEqualTo(HttpStatus.UNAUTHORIZED);
     verify(userService, never()).addFollower(any(), any());
     verify(userService, never()).removeFollower(any(), any());
 

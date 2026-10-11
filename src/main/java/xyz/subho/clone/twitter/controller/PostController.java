@@ -109,9 +109,10 @@ public class PostController {
       @PathVariable("postId") UUID postId, Principal principal) {
 
     var user = userService.getUserByUserName(principal.getName());
-    if (user != null) {
-      postService.deletePost(postId, user.id());
+    if (user == null) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+    postService.deletePost(postId, user.id());
     return new ResponseEntity<>(HttpStatus.OK);
   }
 

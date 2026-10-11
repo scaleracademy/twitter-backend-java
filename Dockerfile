@@ -3,9 +3,9 @@
 # Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
 #
 
-# Use Google's Distroless image for Java 21
+# Use Google's Distroless image for Java 25
 # This is a minimal, secure, and production-ready runtime.
-FROM gcr.io/distroless/java21-debian12:nonroot
+FROM gcr.io/distroless/java25-debian13:nonroot
 
 LABEL maintainer="Subhrodip Mohanta <hello@subho.xyz>"
 LABEL org.opencontainers.image.source="https://github.com/scaleracademy/twitter-backend-java"

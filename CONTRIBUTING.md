@@ -45,7 +45,7 @@ the project maintainers.
 
 ### 2. Environment Setup
 
-- **JDK:** Ensure you have **Microsoft Build of OpenJDK 21** installed.
+- **JDK:** Ensure you have **Microsoft Build of OpenJDK 25** installed.
 - **Maven:** Use the provided wrapper `./mvnw`.
 - **Database:** Local MySQL or H2 (configured via profiles).
 - **IDE:** IntelliJ IDEA is recommended (Google Java Format plugin encouraged).

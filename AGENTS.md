@@ -23,7 +23,7 @@ development; `.github/workflows/` contains CI definitions.
 
 ## Coding Style & Naming Conventions
 
-Use Java 21, four-space indentation, Google Java Format, and imports instead of
+Use Java 25, four-space indentation, Google Java Format, and imports instead of
 inline fully qualified names. Classes and interfaces use `PascalCase`; methods,
 fields, and variables use `camelCase`; constants use `UPPER_SNAKE_CASE`.
 Preserve `Controller -> Service -> Repository` layering, expose DTO/model

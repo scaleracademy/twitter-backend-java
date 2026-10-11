@@ -13,6 +13,7 @@ package xyz.subho.clone.twitter;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -59,5 +60,13 @@ class SecurityMvcTest {
     mockMvc
         .perform(get(PostV1Constants.BASE_PATH).header("Authorization", "Bearer not-a-jwt"))
         .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void openApiDocumentIsPublicAndAvailable() throws Exception {
+    mockMvc
+        .perform(get("/v3/api-docs").accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.openapi").isString());
   }
 }

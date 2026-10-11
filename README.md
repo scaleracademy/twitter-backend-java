@@ -13,8 +13,8 @@ For a detailed breakdown of our architectural choices, visit our
 [Technology Selection](https://github.com/scaleracademy/twitter-backend-java/wiki/Technology-Selections)
 wiki page.
 
-- **Java 21** (Microsoft Build of OpenJDK)
-- **Spring Boot 4.0** (Spring Framework 7.0)
+- **Java 25** (Microsoft Build of OpenJDK)
+- **Spring Boot 4.1** (Spring Framework 7.0)
 - **Jakarta EE 11** (Jakarta Persistence & Servlet APIs)
 - **Virtual Threads (Project Loom)** enabled for massive concurrency.
 - **JWT-based Security** via Spring Security 7.0.
@@ -26,7 +26,7 @@ wiki page.
 
 ### Prerequisites
 
-- JDK 21+
+- JDK 25+
 - Maven 3.9+
 - Docker & Docker Compose (optional)
 

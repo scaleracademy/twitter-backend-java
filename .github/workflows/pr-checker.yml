@@ -19,11 +19,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
-      - name: Set up Microsoft JDK 21
+      - name: Set up Microsoft JDK 25
         uses: actions/setup-java@v6
         with:
           distribution: 'microsoft'
-          java-version: '21'
+          java-version: '25'
           cache: 'maven'
       - name: Cache Maven Wrapper
         uses: actions/cache@v6
@@ -44,11 +44,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
-      - name: Set up Microsoft JDK 21
+      - name: Set up Microsoft JDK 25
         uses: actions/setup-java@v6
         with:
           distribution: 'microsoft'
-          java-version: '21'
+          java-version: '25'
           cache: 'maven'
       - name: Cache Maven Wrapper
         uses: actions/cache@v6

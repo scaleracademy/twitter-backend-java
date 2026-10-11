@@ -80,7 +80,7 @@ class UserControllerTest {
     assertThat(controller.addFollower(otherId, principal).getStatusCode())
         .isEqualTo(HttpStatus.NO_CONTENT);
     assertThat(controller.removeFollower(otherId, principal).getStatusCode())
-        .isEqualTo(HttpStatus.CREATED);
+        .isEqualTo(HttpStatus.NO_CONTENT);
     verify(userService, never()).addFollower(any(), any());
     verify(userService, never()).removeFollower(any(), any());
 

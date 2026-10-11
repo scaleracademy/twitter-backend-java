@@ -67,12 +67,14 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public @NonNull Page<PostModel> getAllPosts(@NonNull Pageable pageable) {
     var postsPage = postsRepository.findAll(pageable);
     return postsPage.map(postMapper::toModel);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public @Nullable PostModel getPost(@NonNull UUID postId) {
 
     var post = postsRepository.findById(postId);
@@ -85,6 +87,8 @@ public class PostServiceImpl implements PostService {
   public @NonNull PostModel addPost(@NonNull PostModel postModel) {
 
     List<HashtagPosts> hashtagPosts = new ArrayList<>();
+    validateReferencedPost(postModel.originalPostId(), "Original post ID is invalid");
+    validateReferencedPost(postModel.replyToId(), "Reply post ID is invalid");
     var post = postMapper.toEntity(postModel);
     post.setUsers(usersRepository.getById(postModel.userId()));
     var savedPost = postsRepository.save(post);
@@ -162,8 +166,15 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public @NonNull Page<PostModel> getReplies(@NonNull UUID postId, @NonNull Pageable pageable) {
     var repliesPage = postsRepository.findByReplyToId(postId, pageable);
     return repliesPage.map(postMapper::toModel);
+  }
+
+  private void validateReferencedPost(UUID postId, String message) {
+    if (postId != null && !postsRepository.existsById(postId)) {
+      throw new ResourceNotFoundException(message);
+    }
   }
 }

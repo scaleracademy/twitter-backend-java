@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -58,7 +60,9 @@ public class PostController {
   }
 
   @GetMapping
-  public ResponseEntity<Page<PostModel>> getAllPosts(Pageable pageable) {
+  public ResponseEntity<Page<PostModel>> getAllPosts(
+      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+          Pageable pageable) {
     Page<PostModel> posts = postService.getAllPosts(pageable);
     return new ResponseEntity<>(posts, HttpStatus.OK);
   }
@@ -94,7 +98,7 @@ public class PostController {
             postModel.mentions());
 
     PostModel post = postService.addPost(enrichedPost);
-    return new ResponseEntity<>(post, HttpStatus.OK);
+    return new ResponseEntity<>(post, HttpStatus.CREATED);
   }
 
   @DeleteMapping(PostV1Constants.POST_ID)
@@ -132,7 +136,9 @@ public class PostController {
 
   @GetMapping(PostV1Constants.REPLIES)
   public ResponseEntity<Page<PostModel>> getReplies(
-      @PathVariable("postId") UUID postId, Pageable pageable) {
+      @PathVariable("postId") UUID postId,
+      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+          Pageable pageable) {
     return new ResponseEntity<>(postService.getReplies(postId, pageable), HttpStatus.OK);
   }
 }

@@ -78,7 +78,8 @@ class PostControllerTest {
             new UserModel(userId, "alice", "Alice", null, "a@e.test", null, null, 0L, 0L, false));
     when(postService.addPost(any())).thenReturn(request);
 
-    assertThat(controller.addPost(request, principal).getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(controller.addPost(request, principal).getStatusCode())
+        .isEqualTo(HttpStatus.CREATED);
     verify(postService)
         .addPost(
             new PostModel(

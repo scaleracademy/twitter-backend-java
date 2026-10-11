@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,6 +41,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.subho.clone.twitter.constant.UserV1Constants;
+import xyz.subho.clone.twitter.exception.BadRequestException;
+import xyz.subho.clone.twitter.exception.ResourceNotFoundException;
 import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.model.UserUpdateRequest;
 import xyz.subho.clone.twitter.service.UserService;
@@ -69,12 +73,21 @@ public class UserController {
       log.info("input resource is a username");
       var username = userNameOrUserId.substring(1);
       userResponse = userService.getUserByUserName(username);
+      if (userResponse == null) {
+        throw new ResourceNotFoundException("User is Invalid");
+      }
       return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     log.info("input resource is a UUID");
     var userId = utility.converStringToUUID(userNameOrUserId);
+    if (userId == null) {
+      throw new BadRequestException("User ID is invalid");
+    }
     userResponse = userService.getUserByUserId(userId);
+    if (userResponse == null) {
+      throw new ResourceNotFoundException("User is Invalid");
+    }
     return new ResponseEntity<>(userResponse, HttpStatus.OK);
   }
 
@@ -109,16 +122,22 @@ public class UserController {
     if (follower != null) {
       userService.removeFollower(follower.id(), userId);
     }
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping(UserV1Constants.FOLLOWERS)
-  public Page<UserModel> getFollowers(@PathVariable("userId") UUID userId, Pageable pageable) {
+  public Page<UserModel> getFollowers(
+      @PathVariable("userId") UUID userId,
+      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+          Pageable pageable) {
     return userService.getFollowers(userId, pageable);
   }
 
   @GetMapping(UserV1Constants.FOLLOWINGS)
-  public Page<UserModel> getFollowings(@PathVariable("userId") UUID userId, Pageable pageable) {
+  public Page<UserModel> getFollowings(
+      @PathVariable("userId") UUID userId,
+      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+          Pageable pageable) {
     return userService.getFollowings(userId, pageable);
   }
 }

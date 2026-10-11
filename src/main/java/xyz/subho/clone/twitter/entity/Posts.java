@@ -27,6 +27,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -41,7 +42,12 @@ import java.util.UUID;
 import org.springframework.data.annotation.CreatedBy;
 
 @Entity
-@Table(name = "posts")
+@Table(
+    name = "posts",
+    indexes = {
+      @Index(name = "idx_posts_reply_to_id", columnList = "reply_to_id"),
+      @Index(name = "idx_posts_created_at_id", columnList = "created_at,id")
+    })
 public class Posts extends Auditable {
 
   @Id
@@ -52,7 +58,7 @@ public class Posts extends Auditable {
   @Column(length = 240)
   private String text;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "users_id",
       columnDefinition = "BINARY(16)",

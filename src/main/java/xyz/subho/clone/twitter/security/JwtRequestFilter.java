@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -34,11 +34,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-  private final UserDetailsServiceImpl userDetailsService;
   private final JwtUtil jwtUtil;
 
-  public JwtRequestFilter(UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil) {
-    this.userDetailsService = userDetailsService;
+  public JwtRequestFilter(JwtUtil jwtUtil) {
     this.jwtUtil = jwtUtil;
   }
 
@@ -59,9 +57,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
       }
 
       if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-        var userDetails = this.userDetailsService.loadUserByUsername(username);
-
-        if (jwtUtil.validateToken(jwt, userDetails)) {
+        if (jwtUtil.validateToken(jwt)) {
+          var userDetails = User.withUsername(username).password("").build();
           var usernamePasswordAuthenticationToken =
               new UsernamePasswordAuthenticationToken(
                   userDetails, null, userDetails.getAuthorities());
@@ -70,7 +67,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
           SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
       }
-    } catch (JwtException | IllegalArgumentException | UsernameNotFoundException ignored) {
+    } catch (JwtException | IllegalArgumentException ignored) {
       SecurityContextHolder.clearContext();
     }
     chain.doFilter(request, response);

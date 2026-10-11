@@ -22,6 +22,8 @@ import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,12 +46,17 @@ public class HashtagController {
 
   @GetMapping
   @Counted(value = "moo.hashtags.viewed", description = "Number of times hashtags were viewed")
-  public Page<HashtagModel> getAllHashtags(Pageable pageable) {
+  public Page<HashtagModel> getAllHashtags(
+      @PageableDefault(size = 20, sort = "recentPostCount", direction = Sort.Direction.DESC)
+          Pageable pageable) {
     return hashtagService.getHashtags(pageable);
   }
 
   @GetMapping(HashtagV1Constants.TAG_POSTS)
-  public Page<PostModel> getPosts(@PathVariable("tag") String tag, Pageable pageable) {
+  public Page<PostModel> getPosts(
+      @PathVariable("tag") String tag,
+      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+          Pageable pageable) {
     return hashtagService.getPosts(tag, pageable);
   }
 }

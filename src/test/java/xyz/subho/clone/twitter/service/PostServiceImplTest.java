@@ -146,6 +146,17 @@ class PostServiceImplTest {
   }
 
   @Test
+  void missingReplyOrOriginalPostIsRejected() {
+    PostModel request =
+        new PostModel(
+            null, "post", userId, List.of(), null, null, postId, null, null, List.of(), List.of());
+    when(postsRepository.existsById(postId)).thenReturn(false);
+
+    assertThrows(ResourceNotFoundException.class, () -> service.addPost(request));
+    verify(postMapper, never()).toEntity(request);
+  }
+
+  @Test
   void getPostMapsAnExistingPost() {
     Posts post = post(postId, userId);
     PostModel model = postModel(null, 0L, 0L);

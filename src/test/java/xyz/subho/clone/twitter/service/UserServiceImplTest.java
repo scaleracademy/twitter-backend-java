@@ -179,20 +179,20 @@ class UserServiceImplTest {
 
   @Test
   void selfFollowIsRejectedBeforeTakingLocks() {
-    assertThrows(
-        BadRequestException.class,
-        () -> service.addFollower(userId, userId));
+    assertThrows(BadRequestException.class, () -> service.addFollower(userId, userId));
     verify(usersRepository, never()).findByIdForUpdate(any());
   }
 
   @Test
   void relationshipPagesMapTheCorrectSide() {
     Users user = user("target");
+    user.setId(userId);
     Users follower = user("follower");
+    follower.setId(followerId);
     Follow follow = new Follow(follower, user);
     UserModel followerModel = userModel(null);
     UserModel followingModel = userModel(null);
-    when(usersRepository.getById(userId)).thenReturn(user);
+    when(usersRepository.findById(userId)).thenReturn(Optional.of(user));
     when(followRepository.findByFollowing(any(), any()))
         .thenReturn(new PageImpl<>(List.of(follow)));
     when(followRepository.findByFollower(any(), any())).thenReturn(new PageImpl<>(List.of(follow)));

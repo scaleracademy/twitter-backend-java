@@ -72,10 +72,9 @@ class JwtSecurityTest {
 
   @Test
   void filterIgnoresRequestsWithoutBearerTokens() throws Exception {
-    UserDetailsServiceImpl users = mock(UserDetailsServiceImpl.class);
     JwtUtil jwtUtil = mock(JwtUtil.class);
     FilterChain chain = mock(FilterChain.class);
-    JwtRequestFilter filter = new JwtRequestFilter(users, jwtUtil);
+    JwtRequestFilter filter = new JwtRequestFilter(jwtUtil);
     MockHttpServletRequest request = new MockHttpServletRequest();
     MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -89,11 +88,10 @@ class JwtSecurityTest {
 
   @Test
   void filterClearsContextForMalformedBearerTokens() throws Exception {
-    UserDetailsServiceImpl users = mock(UserDetailsServiceImpl.class);
     JwtUtil jwtUtil = mock(JwtUtil.class);
     FilterChain chain = mock(FilterChain.class);
     when(jwtUtil.extractUsername("bad")).thenThrow(new JwtException("bad token"));
-    JwtRequestFilter filter = new JwtRequestFilter(users, jwtUtil);
+    JwtRequestFilter filter = new JwtRequestFilter(jwtUtil);
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("Authorization", "Bearer bad");
     MockHttpServletResponse response = new MockHttpServletResponse();
@@ -106,13 +104,11 @@ class JwtSecurityTest {
 
   @Test
   void filterAuthenticatesValidBearerTokens() throws Exception {
-    UserDetailsServiceImpl users = mock(UserDetailsServiceImpl.class);
     JwtUtil jwtUtil = mock(JwtUtil.class);
     FilterChain chain = mock(FilterChain.class);
     when(jwtUtil.extractUsername("good")).thenReturn("alice");
-    when(users.loadUserByUsername("alice")).thenReturn(user);
-    when(jwtUtil.validateToken("good", user)).thenReturn(true);
-    JwtRequestFilter filter = new JwtRequestFilter(users, jwtUtil);
+    when(jwtUtil.validateToken("good")).thenReturn(true);
+    JwtRequestFilter filter = new JwtRequestFilter(jwtUtil);
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("Authorization", "Bearer good");
     MockHttpServletResponse response = new MockHttpServletResponse();
@@ -126,13 +122,11 @@ class JwtSecurityTest {
   @Test
   void filterLeavesRequestUnauthenticatedWhenTokenIsInvalidOrAlreadyAuthenticated()
       throws Exception {
-    UserDetailsServiceImpl users = mock(UserDetailsServiceImpl.class);
     JwtUtil jwtUtil = mock(JwtUtil.class);
     FilterChain chain = mock(FilterChain.class);
     when(jwtUtil.extractUsername("invalid")).thenReturn("alice");
-    when(users.loadUserByUsername("alice")).thenReturn(user);
-    when(jwtUtil.validateToken("invalid", user)).thenReturn(false);
-    JwtRequestFilter filter = new JwtRequestFilter(users, jwtUtil);
+    when(jwtUtil.validateToken("invalid")).thenReturn(false);
+    JwtRequestFilter filter = new JwtRequestFilter(jwtUtil);
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("Authorization", "Bearer invalid");
     MockHttpServletResponse response = new MockHttpServletResponse();

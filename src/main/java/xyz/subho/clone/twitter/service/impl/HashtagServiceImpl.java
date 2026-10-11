@@ -57,12 +57,14 @@ public class HashtagServiceImpl implements HashtagService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public @NonNull Page<HashtagModel> getHashtags(@NonNull Pageable pageable) {
     var hashtagsPage = hashtagsRepository.findAll(pageable);
     return hashtagsPage.map(hashtagMapper::toModel);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public @NonNull Page<PostModel> getPosts(@NonNull String tag, @NonNull Pageable pageable) {
     var hashtag = hashtagsRepository.findByTag(tag);
     if (null == hashtag) {

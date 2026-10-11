@@ -20,9 +20,11 @@ package xyz.subho.clone.twitter.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -30,7 +32,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "hashtag_posts")
+@Table(
+    name = "hashtag_posts",
+    indexes = {
+      @Index(
+          name = "idx_hashtag_posts_hashtag_created_at",
+          columnList = "hashtags_id,created_at,id"),
+      @Index(name = "idx_hashtag_posts_post_id", columnList = "posts_id")
+    })
 public class HashtagPosts extends Auditable {
 
   @Id
@@ -38,7 +47,7 @@ public class HashtagPosts extends Auditable {
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "hashtags_id",
       columnDefinition = "BINARY(16)",
@@ -46,7 +55,7 @@ public class HashtagPosts extends Auditable {
       nullable = false)
   private Hashtags hashtags;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "posts_id",
       columnDefinition = "BINARY(16)",

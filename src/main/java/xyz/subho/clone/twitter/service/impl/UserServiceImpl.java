@@ -163,15 +163,23 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public @NonNull Page<UserModel> getFollowers(@NonNull UUID userId, @NonNull Pageable pageable) {
-    Users user = usersRepository.getById(userId);
+    Users user =
+        usersRepository
+            .findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User is Invalid"));
     var followsPage = followRepository.findByFollowing(user, pageable);
     return followsPage.map(f -> userMapper.toModel(f.getFollower()));
   }
 
   @Override
+  @Transactional(readOnly = true)
   public @NonNull Page<UserModel> getFollowings(@NonNull UUID userId, @NonNull Pageable pageable) {
-    Users user = usersRepository.getById(userId);
+    Users user =
+        usersRepository
+            .findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User is Invalid"));
     var followsPage = followRepository.findByFollower(user, pageable);
     return followsPage.map(f -> userMapper.toModel(f.getFollowing()));
   }

@@ -86,6 +86,14 @@ public class JwtUtil {
     }
   }
 
+  public boolean validateToken(String token) {
+    try {
+      return extractUsername(token) != null && !isTokenExpired(token);
+    } catch (JwtException | IllegalArgumentException exception) {
+      return false;
+    }
+  }
+
   private SecretKey getSignInKey() {
     return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
   }

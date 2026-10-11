@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import xyz.subho.clone.twitter.entity.Posts;
@@ -32,6 +33,12 @@ import xyz.subho.clone.twitter.entity.Posts;
 public interface PostsRepository extends JpaRepository<Posts, UUID> {
 
   public Page<Posts> findByReplyToId(UUID replyToId, Pageable pageable);
+
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Query(
+      "update Posts p set p.replyToId = null, p.originalPostId = null "
+          + "where p.replyToId = :postId or p.originalPostId = :postId")
+  int clearReferences(@Param("postId") UUID postId);
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   @Query("select p from Posts p where p.id = :id")

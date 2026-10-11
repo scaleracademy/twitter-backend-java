@@ -93,6 +93,19 @@ class HashtagServiceImplTest {
   }
 
   @Test
+  void aTagFoundWhileCreatingIsCountedAsExisting() {
+    Hashtags concurrentTag = hashtag("spring", 2);
+    when(hashtagsRepository.findByTagIn(List.of("spring")))
+        .thenReturn(List.of(), List.of(concurrentTag));
+    when(hashtagsRepository.findByTagForUpdate("spring")).thenReturn(concurrentTag);
+
+    assertThat(service.getHashtagsByTags(List.of("spring"))).containsExactly(concurrentTag);
+
+    verify(hashtagsRepository).incrementRecentPostCount(List.of("spring"));
+    verify(hashtagsRepository, never()).saveAll(any());
+  }
+
+  @Test
   void missingTagReturnsAnEmptyPageAndKnownTagMapsPosts() {
     when(hashtagsRepository.findByTag("missing")).thenReturn(null);
     assertThat(service.getPosts("missing", PageRequest.of(0, 10))).isEmpty();
@@ -120,7 +133,8 @@ class HashtagServiceImplTest {
         .thenReturn(new PageImpl<>(List.of(join)));
     when(postMapper.toModel(post)).thenReturn(model);
 
-    assertThat(service.getPosts("java", PageRequest.of(0, 10)).getContent()).containsExactly(model);
+    assertThat(service.getPosts(" JAVA ", PageRequest.of(0, 10)).getContent())
+        .containsExactly(model);
   }
 
   @Test

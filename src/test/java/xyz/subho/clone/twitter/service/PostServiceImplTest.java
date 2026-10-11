@@ -81,7 +81,7 @@ class PostServiceImplTest {
     hashtag.setTag("java");
     PostModel response = postModel(null, 0L, 0L);
     when(postMapper.toEntity(request)).thenReturn(post);
-    when(usersRepository.getById(userId)).thenReturn(owner);
+    when(usersRepository.getReferenceById(userId)).thenReturn(owner);
     when(postsRepository.save(post)).thenReturn(post);
     when(hashtagService.getHashtagsByTags(List.of("Java"))).thenReturn(List.of(hashtag));
     when(postMapper.toModel(post)).thenReturn(response);
@@ -103,6 +103,7 @@ class PostServiceImplTest {
     verify(postsRepository, never()).delete(post);
 
     assertThat(service.deletePost(postId, userId)).isTrue();
+    verify(postsRepository).clearReferences(postId);
     verify(postsRepository).delete(post);
   }
 
@@ -150,7 +151,7 @@ class PostServiceImplTest {
     PostModel request =
         new PostModel(
             null, "post", userId, List.of(), null, null, postId, null, null, List.of(), List.of());
-    when(postsRepository.existsById(postId)).thenReturn(false);
+    when(postsRepository.findByIdForUpdate(postId)).thenReturn(Optional.empty());
 
     assertThrows(ResourceNotFoundException.class, () -> service.addPost(request));
     verify(postMapper, never()).toEntity(request);

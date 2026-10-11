@@ -46,6 +46,7 @@ import org.springframework.data.annotation.CreatedBy;
     name = "posts",
     indexes = {
       @Index(name = "idx_posts_reply_to_id", columnList = "reply_to_id"),
+      @Index(name = "idx_posts_orig_post_id", columnList = "orig_post_id"),
       @Index(name = "idx_posts_created_at_id", columnList = "created_at,id")
     })
 public class Posts extends Auditable {

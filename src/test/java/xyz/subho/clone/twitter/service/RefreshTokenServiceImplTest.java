@@ -103,7 +103,7 @@ class RefreshTokenServiceImplTest {
     Users user = user();
     when(refreshTokenRepository.findByToken(any(), any()))
         .thenReturn(Optional.of(token(Instant.now())));
-    when(usersRepository.getById(userId)).thenReturn(user);
+    when(usersRepository.getReferenceById(userId)).thenReturn(user);
     when(refreshTokenRepository.deleteByUsers(user)).thenReturn(1);
 
     assertThat(service.findByToken("token")).isPresent();

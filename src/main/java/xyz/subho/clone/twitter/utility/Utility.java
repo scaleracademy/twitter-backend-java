@@ -29,13 +29,7 @@ public class Utility {
    * @return TRUE or FALSE if the given String is a valid UUID
    */
   public boolean isUUID(String uuid) {
-
-    try {
-      UUID.fromString(uuid);
-      return true;
-    } catch (Exception exp) {
-      return false;
-    }
+    return converStringToUUID(uuid) != null;
   }
 
   /**
@@ -43,6 +37,13 @@ public class Utility {
    * @return UUID uuid or NULL if invalid
    */
   public UUID converStringToUUID(String uuid) {
-    return isUUID(uuid) ? UUID.fromString(uuid) : null;
+    if (uuid == null) {
+      return null;
+    }
+    try {
+      return UUID.fromString(uuid);
+    } catch (IllegalArgumentException exception) {
+      return null;
+    }
   }
 }

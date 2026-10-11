@@ -90,7 +90,7 @@ public class PostServiceImpl implements PostService {
     validateReferencedPost(postModel.originalPostId(), "Original post ID is invalid");
     validateReferencedPost(postModel.replyToId(), "Reply post ID is invalid");
     var post = postMapper.toEntity(postModel);
-    post.setUsers(usersRepository.getById(postModel.userId()));
+    post.setUsers(usersRepository.getReferenceById(postModel.userId()));
     var savedPost = postsRepository.save(post);
     var hashtags = hashtagService.getHashtagsByTags(postModel.hashtags());
     hashtags.forEach(
@@ -113,6 +113,7 @@ public class PostServiceImpl implements PostService {
     if (!post.getUsers().getId().equals(userId)) {
       throw new AccessDeniedException("You cannot delete another user's post");
     }
+    postsRepository.clearReferences(postId);
     postsRepository.delete(post);
     return true;
   }
@@ -173,8 +174,10 @@ public class PostServiceImpl implements PostService {
   }
 
   private void validateReferencedPost(UUID postId, String message) {
-    if (postId != null && !postsRepository.existsById(postId)) {
-      throw new ResourceNotFoundException(message);
+    if (postId != null) {
+      postsRepository
+          .findByIdForUpdate(postId)
+          .orElseThrow(() -> new ResourceNotFoundException(message));
     }
   }
 }

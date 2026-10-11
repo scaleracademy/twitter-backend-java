@@ -66,7 +66,7 @@ public class HashtagServiceImpl implements HashtagService {
   @Override
   @Transactional(readOnly = true)
   public @NonNull Page<PostModel> getPosts(@NonNull String tag, @NonNull Pageable pageable) {
-    var hashtag = hashtagsRepository.findByTag(tag);
+    var hashtag = hashtagsRepository.findByTag(tag.trim().toLowerCase(Locale.ROOT));
     if (null == hashtag) {
       return Page.empty();
     }
@@ -87,26 +87,31 @@ public class HashtagServiceImpl implements HashtagService {
       return List.of();
     }
 
-    List<Hashtags> existingHashtags = hashtagsRepository.findByTagIn(normalizedTags);
+    List<Hashtags> existingHashtags =
+        new ArrayList<>(hashtagsRepository.findByTagIn(normalizedTags));
     Set<String> existingTags =
         existingHashtags.stream().map(Hashtags::getTag).collect(Collectors.toSet());
     List<String> tagsToCreate =
         normalizedTags.stream().filter(tag -> !existingTags.contains(tag)).toList();
 
+    List<Hashtags> newHashtags = new ArrayList<>();
+    for (String tag : tagsToCreate) {
+      Hashtags lockedHashtag = hashtagsRepository.findByTagForUpdate(tag);
+      if (lockedHashtag != null) {
+        existingHashtags.add(lockedHashtag);
+        existingTags.add(tag);
+        continue;
+      }
+      Hashtags hashtag = new Hashtags();
+      hashtag.setTag(tag);
+      hashtag.setRecentPostCount(1L);
+      newHashtags.add(hashtag);
+    }
+
     if (!existingTags.isEmpty()) {
       hashtagsRepository.incrementRecentPostCount(new ArrayList<>(existingTags));
     }
-    if (!tagsToCreate.isEmpty()) {
-      List<Hashtags> newHashtags =
-          tagsToCreate.stream()
-              .map(
-                  tag -> {
-                    Hashtags hashtag = new Hashtags();
-                    hashtag.setTag(tag);
-                    hashtag.setRecentPostCount(1L);
-                    return hashtag;
-                  })
-              .toList();
+    if (!newHashtags.isEmpty()) {
       hashtagsRepository.saveAll(newHashtags);
     }
     return hashtagsRepository.findByTagIn(normalizedTags);

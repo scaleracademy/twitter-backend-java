@@ -31,11 +31,16 @@ import xyz.subho.clone.twitter.entity.Users;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID> {
 
-  Optional<RefreshToken> findByToken(String token);
+  @Query("select rt from RefreshToken rt where rt.token = :hashedToken or rt.token = :rawToken")
+  Optional<RefreshToken> findByToken(
+      @Param("hashedToken") String hashedToken, @Param("rawToken") String rawToken);
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
-  @Query("select rt from RefreshToken rt join fetch rt.users where rt.token = :token")
-  Optional<RefreshToken> findByTokenForUpdate(@Param("token") String token);
+  @Query(
+      "select rt from RefreshToken rt join fetch rt.users "
+          + "where rt.token = :hashedToken or rt.token = :rawToken")
+  Optional<RefreshToken> findByTokenForUpdate(
+      @Param("hashedToken") String hashedToken, @Param("rawToken") String rawToken);
 
   @Modifying
   int deleteByUsers(Users user);

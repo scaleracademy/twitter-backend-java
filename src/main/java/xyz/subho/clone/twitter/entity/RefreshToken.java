@@ -26,6 +26,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
@@ -45,6 +46,8 @@ public class RefreshToken extends Auditable {
 
   @Column(nullable = false, unique = true)
   private String token;
+
+  @Transient private String rawToken;
 
   @Column(nullable = false)
   private Instant expiryDate;
@@ -66,11 +69,15 @@ public class RefreshToken extends Auditable {
   }
 
   public String getToken() {
-    return token;
+    return rawToken != null ? rawToken : token;
   }
 
   public void setToken(String token) {
     this.token = token;
+  }
+
+  public void setRawToken(String rawToken) {
+    this.rawToken = rawToken;
   }
 
   public Instant getExpiryDate() {

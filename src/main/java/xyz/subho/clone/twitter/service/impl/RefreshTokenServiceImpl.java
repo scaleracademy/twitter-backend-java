@@ -18,7 +18,11 @@
 
 package xyz.subho.clone.twitter.service.impl;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.util.HexFormat;
 import java.util.Optional;
 import java.util.UUID;
 import org.jspecify.annotations.NonNull;
@@ -62,14 +66,16 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     RefreshToken refreshToken = new RefreshToken();
     refreshToken.setUsers(user);
     refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
-    refreshToken.setToken(UUID.randomUUID().toString());
+    String rawToken = UUID.randomUUID().toString();
+    refreshToken.setToken(hashToken(rawToken));
+    refreshToken.setRawToken(rawToken);
 
     return refreshTokenRepository.save(refreshToken);
   }
 
   @Override
   public Optional<RefreshToken> findByToken(@NonNull String token) {
-    return refreshTokenRepository.findByToken(token);
+    return refreshTokenRepository.findByToken(hashToken(token), token);
   }
 
   @Override
@@ -86,7 +92,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   public RefreshToken rotateRefreshToken(@NonNull String tokenValue) {
     var currentToken =
         refreshTokenRepository
-            .findByTokenForUpdate(tokenValue)
+            .findByTokenForUpdate(hashToken(tokenValue), tokenValue)
             .orElseThrow(() -> new BadRequestException("Refresh token is not in database!"));
     verifyExpiration(currentToken);
     var user =
@@ -102,5 +108,15 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   @Transactional
   public int deleteByUserId(@NonNull UUID userId) {
     return refreshTokenRepository.deleteByUsers(usersRepository.getById(userId));
+  }
+
+  private String hashToken(String token) {
+    try {
+      return HexFormat.of()
+          .formatHex(
+              MessageDigest.getInstance("SHA-256").digest(token.getBytes(StandardCharsets.UTF_8)));
+    } catch (NoSuchAlgorithmException exception) {
+      throw new IllegalStateException("SHA-256 is unavailable", exception);
+    }
   }
 }

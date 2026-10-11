@@ -59,6 +59,7 @@ class RefreshTokenServiceImplTest {
 
     assertThat(result.getUsers()).isEqualTo(user);
     assertThat(result.getToken()).isNotBlank();
+    assertThat(ReflectionTestUtils.getField(result, "token")).isNotEqualTo(result.getToken());
     assertThat(result.getExpiryDate()).isAfter(Instant.now());
     verify(refreshTokenRepository).deleteByUsers(user);
     verify(refreshTokenRepository).flush();
@@ -77,7 +78,8 @@ class RefreshTokenServiceImplTest {
     Users user = user();
     RefreshToken current = token(Instant.now().plusSeconds(60));
     current.setUsers(user);
-    when(refreshTokenRepository.findByTokenForUpdate("old")).thenReturn(Optional.of(current));
+    when(refreshTokenRepository.findByTokenForUpdate(any(), any()))
+        .thenReturn(Optional.of(current));
     when(usersRepository.findByIdForUpdate(userId)).thenReturn(Optional.of(user));
     when(refreshTokenRepository.save(any(RefreshToken.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
@@ -91,7 +93,7 @@ class RefreshTokenServiceImplTest {
 
   @Test
   void unknownTokensAreRejected() {
-    when(refreshTokenRepository.findByTokenForUpdate("missing")).thenReturn(Optional.empty());
+    when(refreshTokenRepository.findByTokenForUpdate(any(), any())).thenReturn(Optional.empty());
 
     assertThrows(BadRequestException.class, () -> service.rotateRefreshToken("missing"));
   }
@@ -99,7 +101,8 @@ class RefreshTokenServiceImplTest {
   @Test
   void findAndLogoutDelegateToRepositories() {
     Users user = user();
-    when(refreshTokenRepository.findByToken("token")).thenReturn(Optional.of(token(Instant.now())));
+    when(refreshTokenRepository.findByToken(any(), any()))
+        .thenReturn(Optional.of(token(Instant.now())));
     when(usersRepository.getById(userId)).thenReturn(user);
     when(refreshTokenRepository.deleteByUsers(user)).thenReturn(1);
 

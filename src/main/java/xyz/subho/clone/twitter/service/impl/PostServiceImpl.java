@@ -169,6 +169,9 @@ public class PostServiceImpl implements PostService {
   @Override
   @Transactional(readOnly = true)
   public @NonNull Page<PostModel> getReplies(@NonNull UUID postId, @NonNull Pageable pageable) {
+    if (!postsRepository.existsById(postId)) {
+      throw new ResourceNotFoundException("Post ID is Invalid");
+    }
     var repliesPage = postsRepository.findByReplyToId(postId, pageable);
     return repliesPage.map(postMapper::toModel);
   }

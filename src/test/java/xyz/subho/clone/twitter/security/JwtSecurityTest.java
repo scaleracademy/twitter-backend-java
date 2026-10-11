@@ -71,6 +71,17 @@ class JwtSecurityTest {
   }
 
   @Test
+  void tokenWithoutASubjectIsRejectedWithoutThrowing() {
+    JwtUtil jwtUtil = spy(jwtUtil(60_000L));
+    doReturn(null).when(jwtUtil).extractUsername("missing-subject");
+    doReturn(new Date(System.currentTimeMillis() + 60_000L))
+        .when(jwtUtil)
+        .extractExpiration("missing-subject");
+
+    assertThat(jwtUtil.validateToken("missing-subject", user)).isFalse();
+  }
+
+  @Test
   void filterIgnoresRequestsWithoutBearerTokens() throws Exception {
     JwtUtil jwtUtil = mock(JwtUtil.class);
     FilterChain chain = mock(FilterChain.class);

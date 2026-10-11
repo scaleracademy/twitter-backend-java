@@ -172,6 +172,7 @@ class PostServiceImplTest {
     Posts post = post(postId, userId);
     PostModel model = postModel(null, 0L, 0L);
     when(postsRepository.findAll(PageRequest.of(0, 10))).thenReturn(new PageImpl<>(List.of(post)));
+    when(postsRepository.existsById(postId)).thenReturn(true);
     when(postsRepository.findByReplyToId(postId, PageRequest.of(0, 10)))
         .thenReturn(new PageImpl<>(List.of(post)));
     when(postMapper.toModel(post)).thenReturn(model);
@@ -179,6 +180,15 @@ class PostServiceImplTest {
     assertThat(service.getAllPosts(PageRequest.of(0, 10)).getContent()).containsExactly(model);
     assertThat(service.getReplies(postId, PageRequest.of(0, 10)).getContent())
         .containsExactly(model);
+  }
+
+  @Test
+  void repliesRejectAnUnknownParentPost() {
+    when(postsRepository.existsById(postId)).thenReturn(false);
+
+    assertThrows(
+        ResourceNotFoundException.class, () -> service.getReplies(postId, PageRequest.of(0, 10)));
+    verify(postsRepository, never()).findByReplyToId(any(), any());
   }
 
   private Posts post(UUID id, UUID ownerId) {

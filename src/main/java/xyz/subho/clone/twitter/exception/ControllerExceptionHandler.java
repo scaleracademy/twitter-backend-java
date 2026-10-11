@@ -18,17 +18,21 @@
 
 package xyz.subho.clone.twitter.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import xyz.subho.clone.twitter.model.ErrorResponse;
 
 @ControllerAdvice
@@ -75,6 +79,20 @@ public class ControllerExceptionHandler {
     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler({
+    HttpMessageNotReadableException.class,
+    MethodArgumentTypeMismatchException.class,
+    ConstraintViolationException.class
+  })
+  public ResponseEntity<ErrorResponse> malformedRequestExceptionHandler(WebRequest request) {
+    return errorResponse(HttpStatus.BAD_REQUEST, "Malformed request", request);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ErrorResponse> dataIntegrityExceptionHandler(WebRequest request) {
+    return errorResponse(HttpStatus.CONFLICT, "Request conflicts with existing data", request);
+  }
+
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<ErrorResponse> accessDeniedExceptionHandler(
       AccessDeniedException ex, WebRequest request) {
@@ -91,12 +109,13 @@ public class ControllerExceptionHandler {
   public ResponseEntity<ErrorResponse> globalExceptionHandler(
       Exception exception, WebRequest request) {
     log.error("Unhandled request failure", exception);
+    return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", request);
+  }
+
+  private ResponseEntity<ErrorResponse> errorResponse(
+      HttpStatus status, String message, WebRequest request) {
     var errorResponse =
-        new ErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            new Date(),
-            "Internal server error",
-            request.getDescription(false));
-    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        new ErrorResponse(status.value(), new Date(), message, request.getDescription(false));
+    return new ResponseEntity<>(errorResponse, status);
   }
 }

@@ -19,5 +19,6 @@
 package xyz.subho.clone.twitter.model;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-public record TokenRefreshRequest(@NotBlank String refreshToken) {}
+public record TokenRefreshRequest(@NotBlank @Size(max = 512) String refreshToken) {}

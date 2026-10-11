@@ -13,6 +13,7 @@ package xyz.subho.clone.twitter.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -85,6 +86,18 @@ class AuthenticationControllerTest {
     assertThrows(
         BadRequestException.class,
         () -> controller.createAuthenticationToken(new AuthenticationRequest("alice", "bad")));
+  }
+
+  @Test
+  void loginRejectsAProfileRemovedAfterAuthentication() {
+    when(userDetailsService.loadUserByUsername("alice"))
+        .thenReturn(User.withUsername("alice").password("hash").build());
+    when(userService.getUserByUserName("alice")).thenReturn(null);
+
+    assertThrows(
+        BadRequestException.class,
+        () -> controller.createAuthenticationToken(new AuthenticationRequest("alice", "password")));
+    verify(refreshTokenService, never()).createRefreshToken(any());
   }
 
   @Test

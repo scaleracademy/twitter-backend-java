@@ -82,6 +82,9 @@ public class AuthenticationController {
 
     final String jwt = jwtTokenUtil.generateToken(userDetails);
     var user = userService.getUserByUserName(authenticationRequest.username());
+    if (user == null) {
+      throw new BadRequestException("Incorrect username or password");
+    }
     var refreshToken = refreshTokenService.createRefreshToken(user.id());
 
     return ResponseEntity.ok(new AuthenticationResponse(jwt, refreshToken.getToken()));

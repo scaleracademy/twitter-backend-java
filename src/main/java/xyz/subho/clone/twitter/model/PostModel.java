@@ -32,14 +32,14 @@ public record PostModel(
         @Size(max = 240, message = "Post text cannot exceed 240 characters")
         String text,
     @Nullable UUID userId,
-    List<String> images,
+    @Size(max = 4) List<@NotBlank @Size(max = 255) String> images,
     @Nullable Long likeCount,
     @Nullable Long repostCount,
     @Nullable UUID originalPostId,
     @Nullable UUID replyToId,
     @Nullable Date timestamp,
-    List<String> hashtags,
-    List<String> mentions) {
+    @Size(max = 20) List<@NotBlank @Size(max = 50) String> hashtags,
+    @Size(max = 20) List<@NotBlank @Size(max = 50) String> mentions) {
 
   public PostModel {
     if (images == null) images = new ArrayList<>(4);

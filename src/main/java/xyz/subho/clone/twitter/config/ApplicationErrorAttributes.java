@@ -35,8 +35,10 @@ public class ApplicationErrorAttributes extends DefaultErrorAttributes {
 
     errorAttributes.put("locale", webRequest.getLocale().toString());
     errorAttributes.remove("error");
-    errorAttributes.put("cause", errorAttributes.get("message"));
+    errorAttributes.put("cause", "Request failed");
     errorAttributes.remove("message");
+    errorAttributes.remove("exception");
+    errorAttributes.remove("trace");
     errorAttributes.put("status", String.valueOf(errorAttributes.get("status")));
 
     return errorAttributes;

@@ -77,7 +77,7 @@ class RefreshTokenServiceImplTest {
     Users user = user();
     RefreshToken current = token(Instant.now().plusSeconds(60));
     current.setUsers(user);
-    when(refreshTokenRepository.findByToken("old")).thenReturn(Optional.of(current));
+    when(refreshTokenRepository.findByTokenForUpdate("old")).thenReturn(Optional.of(current));
     when(usersRepository.findByIdForUpdate(userId)).thenReturn(Optional.of(user));
     when(refreshTokenRepository.save(any(RefreshToken.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
@@ -91,7 +91,7 @@ class RefreshTokenServiceImplTest {
 
   @Test
   void unknownTokensAreRejected() {
-    when(refreshTokenRepository.findByToken("missing")).thenReturn(Optional.empty());
+    when(refreshTokenRepository.findByTokenForUpdate("missing")).thenReturn(Optional.empty());
 
     assertThrows(BadRequestException.class, () -> service.rotateRefreshToken("missing"));
   }

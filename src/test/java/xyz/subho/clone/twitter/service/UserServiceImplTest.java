@@ -30,6 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import xyz.subho.clone.twitter.entity.Follow;
 import xyz.subho.clone.twitter.entity.Users;
+import xyz.subho.clone.twitter.exception.BadRequestException;
 import xyz.subho.clone.twitter.exception.ResourceNotFoundException;
 import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.model.UserUpdateRequest;
@@ -158,8 +159,10 @@ class UserServiceImplTest {
   @Test
   void unfollowOnlyChangesCountersWhenAJoinRowWasDeleted() {
     Users user = user("target");
+    user.setId(userId);
     user.setFollowerCount(2);
     Users follower = user("follower");
+    follower.setId(followerId);
     follower.setFollowingCount(3L);
     when(usersRepository.findByIdForUpdate(userId)).thenReturn(Optional.of(user));
     when(usersRepository.findByIdForUpdate(followerId)).thenReturn(Optional.of(follower));
@@ -172,6 +175,14 @@ class UserServiceImplTest {
     when(followRepository.deleteByFollowerAndFollowing(follower, user)).thenReturn(0);
     assertThat(service.removeFollower(followerId, userId)).isFalse();
     assertThat(user.getFollowerCount()).isEqualTo(1);
+  }
+
+  @Test
+  void selfFollowIsRejectedBeforeTakingLocks() {
+    assertThrows(
+        BadRequestException.class,
+        () -> service.addFollower(userId, userId));
+    verify(usersRepository, never()).findByIdForUpdate(any());
   }
 
   @Test

@@ -19,6 +19,9 @@
 package xyz.subho.clone.twitter.exception;
 
 import java.util.Date;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -30,6 +33,8 @@ import xyz.subho.clone.twitter.model.ErrorResponse;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+
+  private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
   @ExceptionHandler(ResourceNotFoundException.class)
   public ResponseEntity<ErrorResponse> resourceNotFoundExceptionHandler(
@@ -62,7 +67,10 @@ public class ControllerExceptionHandler {
         new ErrorResponse(
             HttpStatus.BAD_REQUEST.value(),
             new Date(),
-            "Validation Failed: " + ex.getBindingResult().toString(),
+            "Validation failed: "
+                + ex.getBindingResult().getFieldErrors().stream()
+                    .map(error -> error.getField() + " " + error.getDefaultMessage())
+                    .collect(Collectors.joining(", ")),
             request.getDescription(false));
     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
@@ -82,11 +90,12 @@ public class ControllerExceptionHandler {
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> globalExceptionHandler(
       Exception exception, WebRequest request) {
+    log.error("Unhandled request failure", exception);
     var errorResponse =
         new ErrorResponse(
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             new Date(),
-            exception.getMessage(),
+            "Internal server error",
             request.getDescription(false));
     return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
   }

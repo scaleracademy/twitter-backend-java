@@ -20,4 +20,4 @@ public record UserUpdateRequest(
     @NotBlank @Email String email,
     @Size(max = 240) String avatar,
     @Size(max = 240) String bio,
-    @Size(min = 8, max = 100) String password) {}
+    @Size(min = 8, max = 72) String password) {}

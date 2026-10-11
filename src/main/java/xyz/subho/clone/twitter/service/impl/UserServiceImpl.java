@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.subho.clone.twitter.entity.Follow;
 import xyz.subho.clone.twitter.entity.Users;
+import xyz.subho.clone.twitter.exception.BadRequestException;
 import xyz.subho.clone.twitter.exception.ResourceNotFoundException;
 import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.model.UserUpdateRequest;
@@ -101,14 +102,13 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public boolean addFollower(@NonNull UUID followerId, @NonNull UUID userId) {
-    Users user =
-        usersRepository
-            .findByIdForUpdate(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User is Invalid"));
-    Users follower =
-        usersRepository
-            .findByIdForUpdate(followerId)
-            .orElseThrow(() -> new ResourceNotFoundException("Follower is Invalid"));
+    if (followerId.equals(userId)) {
+      throw new BadRequestException("You cannot follow yourself");
+    }
+    Users first = lockUser(firstId(followerId, userId), "User is Invalid");
+    Users second = lockUser(secondId(followerId, userId), "Follower is Invalid");
+    Users user = userId.equals(first.getId()) ? first : second;
+    Users follower = followerId.equals(first.getId()) ? first : second;
     if (followRepository.existsByFollowerAndFollowing(follower, user)) {
       return false;
     }
@@ -127,14 +127,13 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public boolean removeFollower(@NonNull UUID followerId, @NonNull UUID userId) {
-    Users user =
-        usersRepository
-            .findByIdForUpdate(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User is Invalid"));
-    Users follower =
-        usersRepository
-            .findByIdForUpdate(followerId)
-            .orElseThrow(() -> new ResourceNotFoundException("Follower is Invalid"));
+    if (followerId.equals(userId)) {
+      throw new BadRequestException("You cannot unfollow yourself");
+    }
+    Users first = lockUser(firstId(followerId, userId), "User is Invalid");
+    Users second = lockUser(secondId(followerId, userId), "Follower is Invalid");
+    Users user = userId.equals(first.getId()) ? first : second;
+    Users follower = followerId.equals(first.getId()) ? first : second;
 
     int deleted = followRepository.deleteByFollowerAndFollowing(follower, user);
     if (deleted == 0) {
@@ -147,6 +146,20 @@ public class UserServiceImpl implements UserService {
     follower.setFollowingCount(Math.max(0, follower.getFollowingCount() - 1));
     usersRepository.save(follower);
     return true;
+  }
+
+  private Users lockUser(UUID userId, String message) {
+    return usersRepository
+        .findByIdForUpdate(userId)
+        .orElseThrow(() -> new ResourceNotFoundException(message));
+  }
+
+  private UUID firstId(UUID left, UUID right) {
+    return left.compareTo(right) < 0 ? left : right;
+  }
+
+  private UUID secondId(UUID left, UUID right) {
+    return left.compareTo(right) < 0 ? right : left;
   }
 
   @Override

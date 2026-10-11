@@ -67,7 +67,7 @@ public class AuthenticationController {
   @PostMapping(AuthV1Constants.AUTHENTICATE)
   @Counted(value = "moo.auth.login", description = "Number of user logins")
   public ResponseEntity<AuthenticationResponse> createAuthenticationToken(
-      @RequestBody AuthenticationRequest authenticationRequest) {
+      @Valid @RequestBody AuthenticationRequest authenticationRequest) {
 
     try {
       authenticationManager.authenticate(

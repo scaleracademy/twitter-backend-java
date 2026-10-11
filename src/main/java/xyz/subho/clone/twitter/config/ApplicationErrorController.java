@@ -50,7 +50,6 @@ public class ApplicationErrorController extends BasicErrorController {
     Map<String, Object> body =
         getErrorAttributes(request, getErrorAttributeOptions(request, MediaType.APPLICATION_JSON));
 
-    body.put("jsonkey", "New JSON");
     HttpStatus status = getStatus(request);
 
     return new ResponseEntity<>(body, status);

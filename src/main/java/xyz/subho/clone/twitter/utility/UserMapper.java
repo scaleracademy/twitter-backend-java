@@ -33,6 +33,10 @@ public interface UserMapper {
   @Mapping(target = "userPosts", ignore = true)
   @Mapping(target = "followers", ignore = true)
   @Mapping(target = "following", ignore = true)
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "followerCount", ignore = true)
+  @Mapping(target = "followingCount", ignore = true)
+  @Mapping(target = "verified", ignore = true)
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
   Users toEntity(UserModel userModel);

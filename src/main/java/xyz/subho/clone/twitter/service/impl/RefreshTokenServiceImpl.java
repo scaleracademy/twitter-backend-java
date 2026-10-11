@@ -86,7 +86,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   public RefreshToken rotateRefreshToken(@NonNull String tokenValue) {
     var currentToken =
         refreshTokenRepository
-            .findByToken(tokenValue)
+            .findByTokenForUpdate(tokenValue)
             .orElseThrow(() -> new BadRequestException("Refresh token is not in database!"));
     verifyExpiration(currentToken);
     var user =

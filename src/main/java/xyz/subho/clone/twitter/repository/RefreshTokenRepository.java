@@ -20,14 +20,22 @@ package xyz.subho.clone.twitter.repository;
 
 import java.util.Optional;
 import java.util.UUID;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import xyz.subho.clone.twitter.entity.RefreshToken;
 import xyz.subho.clone.twitter.entity.Users;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID> {
 
   Optional<RefreshToken> findByToken(String token);
+
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
+  @Query("select rt from RefreshToken rt join fetch rt.users where rt.token = :token")
+  Optional<RefreshToken> findByTokenForUpdate(@Param("token") String token);
 
   @Modifying
   int deleteByUsers(Users user);

@@ -36,10 +36,12 @@ services:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
       - MYSQL_DB_HOST=${DB_HOST:-db}
       - MYSQL_DB_PORT=${DB_PORT:-3306}
-      - MYSQL_DB_UNAME=${DB_USER:-moouser}
-      - MYSQL_DB_PASSWD=${DB_PASS:-moopass}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - MYSQL_DB_NAME=${DB_NAME:?DB_NAME is required}
+      - MYSQL_DB_UNAME=${DB_USER:?DB_USER is required}
+      - MYSQL_DB_PASSWD=${DB_PASS:?DB_PASS is required}
+      - JWT_SECRET=${JWT_SECRET:?JWT_SECRET is required}
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-900000}
+      - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION:-604800000}
     depends_on:
       db:
         condition: service_healthy

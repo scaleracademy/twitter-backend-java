@@ -19,8 +19,10 @@
 package xyz.subho.clone.twitter.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,11 +78,15 @@ public class JwtUtil {
   }
 
   public Boolean validateToken(String token, UserDetails userDetails) {
-    final String username = extractUsername(token);
-    return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    try {
+      final String username = extractUsername(token);
+      return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    } catch (JwtException | IllegalArgumentException exception) {
+      return false;
+    }
   }
 
   private SecretKey getSignInKey() {
-    return Keys.hmacShaKeyFor(secret.getBytes());
+    return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
   }
 }

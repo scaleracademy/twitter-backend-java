@@ -19,18 +19,15 @@
 package xyz.subho.clone.twitter.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import xyz.subho.clone.twitter.entity.Hashtags;
 import xyz.subho.clone.twitter.model.HashtagModel;
 import xyz.subho.clone.twitter.model.PostModel;
@@ -77,43 +74,39 @@ public class HashtagServiceImpl implements HashtagService {
 
   @Override
   @Transactional
-  public @Nullable List<Hashtags> getHashtagsByTags(@NonNull List<String> tags) {
-
-    List<Hashtags> outputListOfHashtags = new ArrayList<>();
-    List<Hashtags> hashTags = hashtagsRepository.findByTagIn(tags);
-    Set<String> existingTags = fetchExistingTags(hashTags);
-    Set<String> allTags = new HashSet<>(tags);
-    allTags.removeAll(existingTags);
-    setHashTagCount(hashTags);
-    List<Hashtags> toBeCreatedHashTags = new ArrayList<>(hashTags);
-    Optional.ofNullable(allTags)
-        .ifPresent(
-            notPresentTags -> {
-              notPresentTags.forEach(
-                  notPresentTag -> {
-                    Hashtags newHashtag = new Hashtags();
-                    newHashtag.setTag(notPresentTag);
-                    newHashtag.setRecentPostCount(1L);
-                    toBeCreatedHashTags.add(newHashtag);
-                  });
-            });
-
-    outputListOfHashtags.addAll(hashtagsRepository.saveAll(toBeCreatedHashTags));
-    return outputListOfHashtags;
-  }
-
-  private void setHashTagCount(List<Hashtags> hashTags) {
-    if (!CollectionUtils.isEmpty(hashTags)) {
-      hashTags.forEach(
-          presentHashTag ->
-              presentHashTag.setRecentPostCount(presentHashTag.getRecentPostCount() + 1));
+  public @NonNull List<Hashtags> getHashtagsByTags(@NonNull List<String> tags) {
+    List<String> normalizedTags =
+        tags.stream()
+            .filter(tag -> tag != null && !tag.isBlank())
+            .map(tag -> tag.trim().toLowerCase(Locale.ROOT))
+            .distinct()
+            .toList();
+    if (normalizedTags.isEmpty()) {
+      return List.of();
     }
-  }
 
-  private Set<String> fetchExistingTags(List<Hashtags> hashTags) {
-    if (!CollectionUtils.isEmpty(hashTags)) {
-      return hashTags.stream().map(Hashtags::getTag).collect(Collectors.toSet());
+    List<Hashtags> existingHashtags = hashtagsRepository.findByTagIn(normalizedTags);
+    Set<String> existingTags =
+        existingHashtags.stream().map(Hashtags::getTag).collect(Collectors.toSet());
+    List<String> tagsToCreate =
+        normalizedTags.stream().filter(tag -> !existingTags.contains(tag)).toList();
+
+    if (!existingTags.isEmpty()) {
+      hashtagsRepository.incrementRecentPostCount(new ArrayList<>(existingTags));
     }
-    return new HashSet<>();
+    if (!tagsToCreate.isEmpty()) {
+      List<Hashtags> newHashtags =
+          tagsToCreate.stream()
+              .map(
+                  tag -> {
+                    Hashtags hashtag = new Hashtags();
+                    hashtag.setTag(tag);
+                    hashtag.setRecentPostCount(1L);
+                    return hashtag;
+                  })
+              .toList();
+      hashtagsRepository.saveAll(newHashtags);
+    }
+    return hashtagsRepository.findByTagIn(normalizedTags);
   }
 }

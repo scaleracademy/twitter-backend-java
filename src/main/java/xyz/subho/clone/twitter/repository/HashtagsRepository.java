@@ -21,6 +21,9 @@ package xyz.subho.clone.twitter.repository;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import xyz.subho.clone.twitter.entity.Hashtags;
 
 public interface HashtagsRepository extends JpaRepository<Hashtags, UUID> {
@@ -28,4 +31,8 @@ public interface HashtagsRepository extends JpaRepository<Hashtags, UUID> {
   public Hashtags findByTag(String tag);
 
   public List<Hashtags> findByTagIn(List<String> tags);
+
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Query("update Hashtags h set h.recentPostCount = h.recentPostCount + 1 where h.tag in :tags")
+  int incrementRecentPostCount(@Param("tags") List<String> tags);
 }

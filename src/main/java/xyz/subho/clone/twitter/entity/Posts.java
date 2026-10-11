@@ -63,10 +63,10 @@ public class Posts extends Auditable {
 
   @ElementCollection private Map<String, Date> images = new HashMap<>(4); // maximum of 4 images
 
-  @Column(name = "like_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
+  @Column(name = "like_count", nullable = false)
   private Long likeCount = 0L;
 
-  @Column(name = "repost_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
+  @Column(name = "repost_count", nullable = false)
   private Long repostCount = 0L;
 
   @Column(name = "orig_post_id")

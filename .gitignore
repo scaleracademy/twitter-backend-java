@@ -33,6 +33,7 @@ build/
 .vscode/
 
 .env
+graphify-out/
 GEMINI.md
 UPGRADE_PROPOSAL.md
 ROBUST_EVOLUTION_PLAN.md

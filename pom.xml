@@ -66,7 +66,7 @@
     <java.version>21</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spotless.plugin.version>2.43.0</spotless.plugin.version>
-    <google-java-format.version>1.18.1</google-java-format.version>
+    <google-java-format.version>1.28.0</google-java-format.version>
     <license-maven-plugin.version>4.3</license-maven-plugin.version>
     <jacoco.version>0.8.12</jacoco.version>
     
@@ -79,12 +79,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-aop</artifactId>
-      <version>3.4.3</version>
     </dependency>
 
     <dependency>
@@ -175,6 +169,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webmvc-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       <version>3.0.0</version>
@@ -256,6 +256,19 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>${jacoco.version}</version>
+        <configuration>
+          <includes>
+            <include>xyz/subho/clone/twitter/**</include>
+          </includes>
+          <excludes>
+        <exclude>**/entity/**</exclude>
+        <exclude>**/model/**</exclude>
+        <exclude>**/*MapperImpl*</exclude>
+        <exclude>**/TwitterBackendApplication*</exclude>
+            <exclude>**/*MockitoMock*</exclude>
+            <exclude>**/*$auxiliary$*</exclude>
+          </excludes>
+        </configuration>
         <executions>
           <execution>
             <id>prepare-agent</id>

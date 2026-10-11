@@ -81,15 +81,15 @@ public class PostController {
     // Create new record instance with the authenticated userId
     PostModel enrichedPost =
         new PostModel(
-            postModel.id(),
+            null,
             postModel.text(),
             user.id(),
             postModel.images(),
-            postModel.likeCount(),
-            postModel.repostCount(),
+            null,
+            null,
             postModel.originalPostId(),
             postModel.replyToId(),
-            postModel.timestamp(),
+            null,
             postModel.hashtags(),
             postModel.mentions());
 

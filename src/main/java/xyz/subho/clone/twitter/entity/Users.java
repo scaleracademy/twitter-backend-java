@@ -62,13 +62,13 @@ public class Users extends Auditable {
   @Column(length = 240)
   private String bio;
 
-  @Column(name = "follower_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
+  @Column(name = "follower_count", nullable = false)
   private long followerCount = 0L;
 
-  @Column(name = "following_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
+  @Column(name = "following_count", nullable = false)
   private Long followingCount = 0L;
 
-  @Column(columnDefinition = "boolean default false", nullable = false)
+  @Column(nullable = false)
   private Boolean verified = false;
 
   @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -48,7 +48,7 @@ public class Hashtags extends Auditable {
   @Column(unique = true, nullable = false, length = 50)
   private String tag;
 
-  @Column(name = "post_count", columnDefinition = "BIGINT(20) default '0'", nullable = false)
+  @Column(name = "post_count", nullable = false)
   private long recentPostCount = 0L;
 
   @OneToMany(mappedBy = "hashtags", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

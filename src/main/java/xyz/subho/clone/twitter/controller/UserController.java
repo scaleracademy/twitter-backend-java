@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.subho.clone.twitter.constant.UserV1Constants;
 import xyz.subho.clone.twitter.model.UserModel;
+import xyz.subho.clone.twitter.model.UserUpdateRequest;
 import xyz.subho.clone.twitter.service.UserService;
 import xyz.subho.clone.twitter.utility.Utility;
 
@@ -86,8 +87,9 @@ public class UserController {
 
   @PatchMapping
   @Timed(value = "moo.users.update", description = "Time taken to update user profile")
-  public UserModel updateUser(@Valid @RequestBody UserModel userResponse, Principal principal) {
-    return userService.editUser(userResponse);
+  public UserModel updateUser(
+      @Valid @RequestBody UserUpdateRequest userUpdateRequest, Principal principal) {
+    return userService.editUser(principal.getName(), userUpdateRequest);
   }
 
   @PutMapping(UserV1Constants.FOLLOW)
@@ -97,7 +99,7 @@ public class UserController {
     if (follower != null) {
       userService.addFollower(follower.id(), userId);
     }
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @DeleteMapping(UserV1Constants.FOLLOW)

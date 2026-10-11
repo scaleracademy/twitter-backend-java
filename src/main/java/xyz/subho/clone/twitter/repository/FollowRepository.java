@@ -31,7 +31,7 @@ public interface FollowRepository extends JpaRepository<Follow, UUID> {
 
   Page<Follow> findByFollower(Users follower, Pageable pageable);
 
-  void deleteByFollowerAndFollowing(Users follower, Users following);
+  int deleteByFollowerAndFollowing(Users follower, Users following);
 
   boolean existsByFollowerAndFollowing(Users follower, Users following);
 }

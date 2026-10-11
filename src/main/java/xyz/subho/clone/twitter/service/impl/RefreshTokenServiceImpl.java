@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.subho.clone.twitter.entity.RefreshToken;
 import xyz.subho.clone.twitter.exception.BadRequestException;
+import xyz.subho.clone.twitter.exception.ResourceNotFoundException;
 import xyz.subho.clone.twitter.repository.RefreshTokenRepository;
 import xyz.subho.clone.twitter.repository.UsersRepository;
 import xyz.subho.clone.twitter.service.RefreshTokenService;
@@ -49,10 +50,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   @Override
   @Transactional
   public RefreshToken createRefreshToken(@NonNull UUID userId) {
-    var user = usersRepository.getById(userId);
+    var user =
+        usersRepository
+            .findByIdForUpdate(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User is Invalid"));
 
     // Clean up existing tokens for the user
     refreshTokenRepository.deleteByUsers(user);
+    refreshTokenRepository.flush();
 
     RefreshToken refreshToken = new RefreshToken();
     refreshToken.setUsers(user);
@@ -74,6 +79,23 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
       throw new BadRequestException("Refresh token was expired. Please make a new signin request");
     }
     return token;
+  }
+
+  @Override
+  @Transactional
+  public RefreshToken rotateRefreshToken(@NonNull String tokenValue) {
+    var currentToken =
+        refreshTokenRepository
+            .findByToken(tokenValue)
+            .orElseThrow(() -> new BadRequestException("Refresh token is not in database!"));
+    verifyExpiration(currentToken);
+    var user =
+        usersRepository
+            .findByIdForUpdate(currentToken.getUsers().getId())
+            .orElseThrow(() -> new ResourceNotFoundException("User is Invalid"));
+    refreshTokenRepository.deleteByUsers(user);
+    refreshTokenRepository.flush();
+    return createRefreshToken(user.getId());
   }
 
   @Override

@@ -26,5 +26,7 @@ import xyz.subho.clone.twitter.entity.Users;
 
 public interface LikesRepository extends JpaRepository<Likes, UUID> {
 
-  void deleteByPostsAndUsers(Posts posts, Users users);
+  int deleteByPostsAndUsers(Posts posts, Users users);
+
+  boolean existsByPostsAndUsers(Posts posts, Users users);
 }

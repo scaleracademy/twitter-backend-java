@@ -28,7 +28,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.subho.clone.twitter.entity.Follow;
 import xyz.subho.clone.twitter.entity.Users;
+import xyz.subho.clone.twitter.exception.ResourceNotFoundException;
 import xyz.subho.clone.twitter.model.UserModel;
+import xyz.subho.clone.twitter.model.UserUpdateRequest;
 import xyz.subho.clone.twitter.repository.FollowRepository;
 import xyz.subho.clone.twitter.repository.UsersRepository;
 import xyz.subho.clone.twitter.service.UserService;
@@ -79,21 +81,37 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public @NonNull UserModel editUser(@NonNull UserModel userModel) {
-    Users users = userMapper.toEntity(userModel);
+  public @NonNull UserModel editUser(
+      @NonNull String username, @NonNull UserUpdateRequest userUpdateRequest) {
+    Users users = usersRepository.findByUsername(username);
+    if (users == null) {
+      throw new ResourceNotFoundException("User is Invalid");
+    }
+
+    users.setName(userUpdateRequest.name());
+    users.setEmail(userUpdateRequest.email());
+    users.setAvatar(userUpdateRequest.avatar());
+    users.setBio(userUpdateRequest.bio());
+    if (userUpdateRequest.password() != null && !userUpdateRequest.password().isBlank()) {
+      users.setPassword(passwordEncoder.encode(userUpdateRequest.password()));
+    }
     return userMapper.toModel(usersRepository.save(users));
   }
 
   @Override
   @Transactional
   public boolean addFollower(@NonNull UUID followerId, @NonNull UUID userId) {
-    if (followRepository.existsByFollowerAndFollowing(
-        usersRepository.getById(followerId), usersRepository.getById(userId))) {
+    Users user =
+        usersRepository
+            .findByIdForUpdate(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User is Invalid"));
+    Users follower =
+        usersRepository
+            .findByIdForUpdate(followerId)
+            .orElseThrow(() -> new ResourceNotFoundException("Follower is Invalid"));
+    if (followRepository.existsByFollowerAndFollowing(follower, user)) {
       return false;
     }
-
-    Users user = usersRepository.getById(userId);
-    Users follower = usersRepository.getById(followerId);
 
     Follow follow = new Follow(follower, user);
     followRepository.save(follow);
@@ -109,10 +127,19 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public boolean removeFollower(@NonNull UUID followerId, @NonNull UUID userId) {
-    Users user = usersRepository.getById(userId);
-    Users follower = usersRepository.getById(followerId);
+    Users user =
+        usersRepository
+            .findByIdForUpdate(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User is Invalid"));
+    Users follower =
+        usersRepository
+            .findByIdForUpdate(followerId)
+            .orElseThrow(() -> new ResourceNotFoundException("Follower is Invalid"));
 
-    followRepository.deleteByFollowerAndFollowing(follower, user);
+    int deleted = followRepository.deleteByFollowerAndFollowing(follower, user);
+    if (deleted == 0) {
+      return false;
+    }
 
     user.setFollowerCount(Math.max(0, user.getFollowerCount() - 1));
     usersRepository.save(user);

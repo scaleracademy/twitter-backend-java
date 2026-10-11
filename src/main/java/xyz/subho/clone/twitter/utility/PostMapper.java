@@ -40,6 +40,9 @@ public interface PostMapper {
   PostModel toModel(Posts post);
 
   @Mapping(target = "users", ignore = true)
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "likeCount", ignore = true)
+  @Mapping(target = "repostCount", ignore = true)
   @Mapping(target = "postHashtags", ignore = true)
   @Mapping(target = "postLikes", ignore = true)
   @Mapping(target = "createdAt", ignore = true)

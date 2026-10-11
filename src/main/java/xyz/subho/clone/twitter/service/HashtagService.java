@@ -20,7 +20,6 @@ package xyz.subho.clone.twitter.service;
 
 import java.util.List;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import xyz.subho.clone.twitter.entity.Hashtags;
@@ -33,5 +32,5 @@ public interface HashtagService {
 
   public @NonNull Page<PostModel> getPosts(@NonNull String tag, @NonNull Pageable pageable);
 
-  public @Nullable List<Hashtags> getHashtagsByTags(@NonNull List<String> hashtag);
+  public @NonNull List<Hashtags> getHashtagsByTags(@NonNull List<String> hashtag);
 }

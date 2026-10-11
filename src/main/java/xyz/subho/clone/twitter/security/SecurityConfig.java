@@ -20,6 +20,7 @@ package xyz.subho.clone.twitter.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,14 +50,22 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers(
                         AuthV1Constants.BASE_PATH + AuthV1Constants.AUTHENTICATE,
-                        UserV1Constants.BASE_PATH,
+                        AuthV1Constants.BASE_PATH + AuthV1Constants.REFRESH,
                         "/swagger-ui/**",
                         "/v3/api-docs/**")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.POST, UserV1Constants.BASE_PATH)
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, UserV1Constants.BASE_PATH + "/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
         .sessionManagement(
-            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .exceptionHandling(
+            exceptions ->
+                exceptions.authenticationEntryPoint(
+                    (request, response, exception) -> response.sendError(401)));
 
     http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

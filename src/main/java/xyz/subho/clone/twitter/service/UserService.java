@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.UserModel;
+import xyz.subho.clone.twitter.model.UserUpdateRequest;
 
 public interface UserService {
 
@@ -36,7 +37,8 @@ public interface UserService {
 
   public @NonNull UserModel addUser(@NonNull UserModel user);
 
-  public @NonNull UserModel editUser(@NonNull UserModel user);
+  public @NonNull UserModel editUser(
+      @NonNull String username, @NonNull UserUpdateRequest userUpdateRequest);
 
   public boolean addFollower(@NonNull UUID followerId, @NonNull UUID userId);
 

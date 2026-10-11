@@ -26,11 +26,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "likes")
+@Table(
+    name = "likes",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"users_id", "posts_id"})})
 public class Likes extends Auditable {
 
   @Id

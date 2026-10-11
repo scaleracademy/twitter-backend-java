@@ -1,0 +1,63 @@
+/*
+ * Twitter Backend - Moo: Twitter Clone Application Backend by Scaler
+ * Copyright © 2021-2026 Subhrodip Mohanta (hello@subho.xyz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+package xyz.subho.clone.twitter;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import xyz.subho.clone.twitter.constant.AuthV1Constants;
+import xyz.subho.clone.twitter.constant.PostV1Constants;
+import xyz.subho.clone.twitter.constant.UserV1Constants;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+class SecurityMvcTest {
+
+  @Autowired private MockMvc mockMvc;
+
+  @Test
+  void profilePatchRequiresAuthentication() throws Exception {
+    mockMvc
+        .perform(
+            patch(UserV1Constants.BASE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "{\"name\":\"Alice\",\"email\":\"alice@example.com\",\"password\":\"password\"}"))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void refreshEndpointIsPublicButInvalidTokensAreRejectedByTheController() throws Exception {
+    mockMvc
+        .perform(
+            post(AuthV1Constants.BASE_PATH + AuthV1Constants.REFRESH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"refreshToken\":\"missing\"}"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void malformedBearerTokensDoNotBecomeServerErrors() throws Exception {
+    mockMvc
+        .perform(get(PostV1Constants.BASE_PATH).header("Authorization", "Bearer not-a-jwt"))
+        .andExpect(status().isUnauthorized());
+  }
+}

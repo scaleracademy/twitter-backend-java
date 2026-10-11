@@ -23,7 +23,6 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.model.UserUpdateRequest;
 
@@ -32,8 +31,6 @@ public interface UserService {
   public @Nullable UserModel getUserByUserName(@NonNull String username);
 
   public @Nullable UserModel getUserByUserId(@NonNull UUID userId);
-
-  public @Nullable Users getUserEntityByUserId(@NonNull UUID userId);
 
   public @NonNull UserModel addUser(@NonNull UserModel user);
 

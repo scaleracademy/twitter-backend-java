@@ -18,7 +18,6 @@
 
 package xyz.subho.clone.twitter.service;
 
-import java.util.Optional;
 import java.util.UUID;
 import org.jspecify.annotations.NonNull;
 import xyz.subho.clone.twitter.entity.RefreshToken;
@@ -26,8 +25,6 @@ import xyz.subho.clone.twitter.entity.RefreshToken;
 public interface RefreshTokenService {
 
   public RefreshToken createRefreshToken(@NonNull UUID userId);
-
-  public Optional<RefreshToken> findByToken(@NonNull String token);
 
   public RefreshToken verifyExpiration(@NonNull RefreshToken token);
 

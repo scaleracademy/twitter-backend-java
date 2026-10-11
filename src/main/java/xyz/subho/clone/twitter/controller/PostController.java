@@ -23,8 +23,6 @@ import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -48,8 +46,6 @@ import xyz.subho.clone.twitter.service.UserService;
 @RequestMapping(PostV1Constants.BASE_PATH)
 @Timed(value = "moo.posts.timer", description = "Time taken to process post requests")
 public class PostController {
-
-  private static final Logger log = LoggerFactory.getLogger(PostController.class);
 
   private final PostService postService;
   private final UserService userService;

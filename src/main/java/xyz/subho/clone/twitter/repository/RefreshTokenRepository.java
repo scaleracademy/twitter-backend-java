@@ -31,10 +31,6 @@ import xyz.subho.clone.twitter.entity.Users;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID> {
 
-  @Query("select rt from RefreshToken rt where rt.token = :hashedToken or rt.token = :rawToken")
-  Optional<RefreshToken> findByToken(
-      @Param("hashedToken") String hashedToken, @Param("rawToken") String rawToken);
-
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   @Query(
       "select rt from RefreshToken rt join fetch rt.users "

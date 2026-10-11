@@ -99,14 +99,11 @@ class RefreshTokenServiceImplTest {
   }
 
   @Test
-  void findAndLogoutDelegateToRepositories() {
+  void logoutDelegatesToRepository() {
     Users user = user();
-    when(refreshTokenRepository.findByToken(any(), any()))
-        .thenReturn(Optional.of(token(Instant.now())));
     when(usersRepository.getReferenceById(userId)).thenReturn(user);
     when(refreshTokenRepository.deleteByUsers(user)).thenReturn(1);
 
-    assertThat(service.findByToken("token")).isPresent();
     assertThat(service.deleteByUserId(userId)).isEqualTo(1);
   }
 

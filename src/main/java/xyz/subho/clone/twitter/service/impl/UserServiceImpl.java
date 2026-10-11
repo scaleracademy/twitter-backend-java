@@ -67,11 +67,6 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public @Nullable Users getUserEntityByUserId(@NonNull UUID userId) {
-    return usersRepository.findById(userId).orElse(null);
-  }
-
-  @Override
   @Transactional
   public @NonNull UserModel addUser(@NonNull UserModel userModel) {
     var user = userMapper.toEntity(userModel);

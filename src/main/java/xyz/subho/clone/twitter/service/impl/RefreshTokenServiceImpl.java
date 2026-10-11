@@ -23,7 +23,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.HexFormat;
-import java.util.Optional;
 import java.util.UUID;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,11 +70,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     refreshToken.setRawToken(rawToken);
 
     return refreshTokenRepository.save(refreshToken);
-  }
-
-  @Override
-  public Optional<RefreshToken> findByToken(@NonNull String token) {
-    return refreshTokenRepository.findByToken(hashToken(token), token);
   }
 
   @Override

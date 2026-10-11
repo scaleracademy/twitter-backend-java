@@ -18,18 +18,14 @@
 
 package xyz.subho.clone.twitter.repository;
 
-import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import xyz.subho.clone.twitter.entity.HashtagPosts;
 import xyz.subho.clone.twitter.entity.Hashtags;
-import xyz.subho.clone.twitter.entity.Posts;
 
 public interface HashtagPostsRepository extends JpaRepository<HashtagPosts, UUID> {
 
   public Page<HashtagPosts> findByHashtags(Hashtags hashtag, Pageable pageable);
-
-  public List<Hashtags> findByPosts(Posts post);
 }

@@ -19,11 +19,8 @@
 package xyz.subho.clone.twitter.repository;
 
 import jakarta.persistence.LockModeType;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -37,6 +34,4 @@ public interface UsersRepository extends JpaRepository<Users, UUID> {
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   @Query("select u from Users u where u.id = :id")
   Optional<Users> findByIdForUpdate(@Param("id") UUID id);
-
-  public Page<Users> findByIdIn(Collection<UUID> ids, Pageable pageable);
 }

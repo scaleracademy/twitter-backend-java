@@ -47,7 +47,10 @@ public class HashtagController {
   @GetMapping
   @Counted(value = "moo.hashtags.viewed", description = "Number of times hashtags were viewed")
   public Page<HashtagModel> getAllHashtags(
-      @PageableDefault(size = 20, sort = "recentPostCount", direction = Sort.Direction.DESC)
+      @PageableDefault(
+              size = 20,
+              sort = {"recentPostCount", "id"},
+              direction = Sort.Direction.DESC)
           Pageable pageable) {
     return hashtagService.getHashtags(pageable);
   }
@@ -55,7 +58,10 @@ public class HashtagController {
   @GetMapping(HashtagV1Constants.TAG_POSTS)
   public Page<PostModel> getPosts(
       @PathVariable("tag") String tag,
-      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+      @PageableDefault(
+              size = 20,
+              sort = {"createdAt", "id"},
+              direction = Sort.Direction.DESC)
           Pageable pageable) {
     return hashtagService.getPosts(tag, pageable);
   }

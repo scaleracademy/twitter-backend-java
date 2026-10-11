@@ -63,13 +63,12 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public @Nullable UserModel getUserByUserId(@NonNull UUID userId) {
-    var user = usersRepository.getById(userId);
-    return userMapper.toModel(user);
+    return usersRepository.findById(userId).map(userMapper::toModel).orElse(null);
   }
 
   @Override
   public @Nullable Users getUserEntityByUserId(@NonNull UUID userId) {
-    return usersRepository.getById(userId);
+    return usersRepository.findById(userId).orElse(null);
   }
 
   @Override

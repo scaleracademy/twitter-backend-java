@@ -30,7 +30,7 @@ public record UserModel(
         @Size(min = 3, max = 30, message = "Username must be between 3 and 30 characters")
         String username,
     @NotBlank(message = "Name is mandatory")
-        @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
+        @Size(min = 1, max = 50, message = "Name must be between 1 and 50 characters")
         String name,
     @NotBlank(message = "Password is mandatory")
         @Size(min = 8, max = 72, message = "Password must be between 8 and 72 characters")
@@ -38,7 +38,7 @@ public record UserModel(
     @NotBlank(message = "Email is mandatory") @Email(message = "Email should be valid")
         String email,
     @Nullable @Size(max = 240) String avatar,
-    @Nullable String bio,
+    @Nullable @Size(max = 240) String bio,
     @Nullable Long followerCount,
     @Nullable Long followingCount,
     @Nullable Boolean verified) {}

@@ -19,7 +19,9 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import xyz.subho.clone.twitter.entity.Posts;
+import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.model.PostModel;
+import xyz.subho.clone.twitter.model.UserModel;
 
 class UtilityAndMapperTest {
 
@@ -64,5 +66,28 @@ class UtilityAndMapperTest {
     assertThat(post.getId()).isNull();
     assertThat(post.getLikeCount()).isZero();
     assertThat(post.getRepostCount()).isZero();
+  }
+
+  @Test
+  void generatedUserMappingDoesNotTrustClientIdentityOrCounters() {
+    UserMapper mapper = Mappers.getMapper(UserMapper.class);
+    Users user =
+        mapper.toEntity(
+            new UserModel(
+                UUID.randomUUID(),
+                "alice",
+                "Alice",
+                "password",
+                "alice@example.com",
+                null,
+                null,
+                99L,
+                88L,
+                true));
+
+    assertThat(user.getId()).isNull();
+    assertThat(user.getFollowerCount()).isZero();
+    assertThat(user.getFollowingCount()).isZero();
+    assertThat(user.getVerified()).isFalse();
   }
 }

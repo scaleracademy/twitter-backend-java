@@ -61,7 +61,10 @@ public class PostController {
 
   @GetMapping
   public ResponseEntity<Page<PostModel>> getAllPosts(
-      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+      @PageableDefault(
+              size = 20,
+              sort = {"createdAt", "id"},
+              direction = Sort.Direction.DESC)
           Pageable pageable) {
     Page<PostModel> posts = postService.getAllPosts(pageable);
     return new ResponseEntity<>(posts, HttpStatus.OK);
@@ -137,7 +140,10 @@ public class PostController {
   @GetMapping(PostV1Constants.REPLIES)
   public ResponseEntity<Page<PostModel>> getReplies(
       @PathVariable("postId") UUID postId,
-      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+      @PageableDefault(
+              size = 20,
+              sort = {"createdAt", "id"},
+              direction = Sort.Direction.DESC)
           Pageable pageable) {
     return new ResponseEntity<>(postService.getReplies(postId, pageable), HttpStatus.OK);
   }

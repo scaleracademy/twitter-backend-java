@@ -129,6 +129,14 @@ class UserServiceImplTest {
   }
 
   @Test
+  void getUserByIdReturnsNullForMissingUser() {
+    when(usersRepository.findById(userId)).thenReturn(Optional.empty());
+
+    assertThat(service.getUserByUserId(userId)).isNull();
+    verify(userMapper, never()).toModel(any(Users.class));
+  }
+
+  @Test
   void followIsIdempotentAndUpdatesBothCounters() {
     Users user = user("target");
     user.setId(userId);

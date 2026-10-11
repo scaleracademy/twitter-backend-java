@@ -128,7 +128,10 @@ public class UserController {
   @GetMapping(UserV1Constants.FOLLOWERS)
   public Page<UserModel> getFollowers(
       @PathVariable("userId") UUID userId,
-      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+      @PageableDefault(
+              size = 20,
+              sort = {"createdAt", "id"},
+              direction = Sort.Direction.DESC)
           Pageable pageable) {
     return userService.getFollowers(userId, pageable);
   }
@@ -136,7 +139,10 @@ public class UserController {
   @GetMapping(UserV1Constants.FOLLOWINGS)
   public Page<UserModel> getFollowings(
       @PathVariable("userId") UUID userId,
-      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+      @PageableDefault(
+              size = 20,
+              sort = {"createdAt", "id"},
+              direction = Sort.Direction.DESC)
           Pageable pageable) {
     return userService.getFollowings(userId, pageable);
   }

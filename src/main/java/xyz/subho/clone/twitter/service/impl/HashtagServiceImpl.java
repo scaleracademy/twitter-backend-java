@@ -82,6 +82,7 @@ public class HashtagServiceImpl implements HashtagService {
             .filter(tag -> tag != null && !tag.isBlank())
             .map(tag -> tag.trim().toLowerCase(Locale.ROOT))
             .distinct()
+            .sorted()
             .toList();
     if (normalizedTags.isEmpty()) {
       return List.of();

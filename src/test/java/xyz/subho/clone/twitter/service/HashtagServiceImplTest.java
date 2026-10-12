@@ -67,7 +67,7 @@ class HashtagServiceImplTest {
     when(hashtagsRepository.findByTagIn(List.of("java", "spring")))
         .thenReturn(List.of(existing), List.of(existing, created));
 
-    assertThat(service.getHashtagsByTags(List.of("Java", "spring", "java")))
+    assertThat(service.getHashtagsByTags(List.of("spring", "Java", "java")))
         .containsExactly(existing, created);
     verify(hashtagsRepository).incrementRecentPostCount(List.of("java"));
     verify(hashtagsRepository).saveAll(any());

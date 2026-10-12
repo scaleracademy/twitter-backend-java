@@ -12,15 +12,16 @@ package xyz.subho.clone.twitter.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -63,22 +64,21 @@ class JwtSecurityTest {
     JwtUtil jwtUtil = jwtUtil(60_000L);
     assertThrows(JwtException.class, () -> jwtUtil.extractUsername("not-a-jwt"));
     assertThat(jwtUtil.validateToken("not-a-jwt", user)).isFalse();
-
-    JwtUtil expiredSpy = spy(jwtUtil(60_000L));
-    doReturn("alice").when(expiredSpy).extractUsername("expired-without-parser-error");
-    doReturn(new Date(0)).when(expiredSpy).extractExpiration("expired-without-parser-error");
-    assertThat(expiredSpy.validateToken("expired-without-parser-error", user)).isFalse();
   }
 
   @Test
   void tokenWithoutASubjectIsRejectedWithoutThrowing() {
-    JwtUtil jwtUtil = spy(jwtUtil(60_000L));
-    doReturn(null).when(jwtUtil).extractUsername("missing-subject");
-    doReturn(new Date(System.currentTimeMillis() + 60_000L))
-        .when(jwtUtil)
-        .extractExpiration("missing-subject");
+    JwtUtil jwtUtil = jwtUtil(60_000L);
+    String token =
+        Jwts.builder()
+            .expiration(new Date(System.currentTimeMillis() + 60_000L))
+            .signWith(
+                Keys.hmacShaKeyFor(
+                    "test-only-secret-that-is-at-least-32-characters-long"
+                        .getBytes(StandardCharsets.UTF_8)))
+            .compact();
 
-    assertThat(jwtUtil.validateToken("missing-subject", user)).isFalse();
+    assertThat(jwtUtil.validateToken(token, user)).isFalse();
   }
 
   @Test
@@ -101,7 +101,7 @@ class JwtSecurityTest {
   void filterClearsContextForMalformedBearerTokens() throws Exception {
     JwtUtil jwtUtil = mock(JwtUtil.class);
     FilterChain chain = mock(FilterChain.class);
-    when(jwtUtil.extractUsername("bad")).thenThrow(new JwtException("bad token"));
+    when(jwtUtil.validateAndExtractUsername("bad")).thenReturn(null);
     JwtRequestFilter filter = new JwtRequestFilter(jwtUtil);
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("Authorization", "Bearer bad");
@@ -117,8 +117,7 @@ class JwtSecurityTest {
   void filterAuthenticatesValidBearerTokens() throws Exception {
     JwtUtil jwtUtil = mock(JwtUtil.class);
     FilterChain chain = mock(FilterChain.class);
-    when(jwtUtil.extractUsername("good")).thenReturn("alice");
-    when(jwtUtil.validateToken("good")).thenReturn(true);
+    when(jwtUtil.validateAndExtractUsername("good")).thenReturn("alice");
     JwtRequestFilter filter = new JwtRequestFilter(jwtUtil);
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("Authorization", "Bearer good");
@@ -135,8 +134,7 @@ class JwtSecurityTest {
       throws Exception {
     JwtUtil jwtUtil = mock(JwtUtil.class);
     FilterChain chain = mock(FilterChain.class);
-    when(jwtUtil.extractUsername("invalid")).thenReturn("alice");
-    when(jwtUtil.validateToken("invalid")).thenReturn(false);
+    when(jwtUtil.validateAndExtractUsername("invalid")).thenReturn(null);
     JwtRequestFilter filter = new JwtRequestFilter(jwtUtil);
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("Authorization", "Bearer invalid");

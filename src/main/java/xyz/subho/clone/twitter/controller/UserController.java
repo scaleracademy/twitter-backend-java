@@ -23,8 +23,6 @@ import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -53,8 +51,6 @@ import xyz.subho.clone.twitter.utility.Utility;
 @Timed(value = "moo.users.timer", description = "Time taken to process user requests")
 public class UserController {
 
-  private static final Logger log = LoggerFactory.getLogger(UserController.class);
-
   private final UserService userService;
   private final Utility utility;
 
@@ -70,7 +66,6 @@ public class UserController {
     UserModel userResponse;
 
     if (userNameOrUserId.startsWith("@")) {
-      log.info("input resource is a username");
       var username = userNameOrUserId.substring(1);
       userResponse = userService.getUserByUserName(username);
       if (userResponse == null) {
@@ -79,7 +74,6 @@ public class UserController {
       return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
-    log.info("input resource is a UUID");
     var userId = utility.converStringToUUID(userNameOrUserId);
     if (userId == null) {
       throw new BadRequestException("User ID is invalid");

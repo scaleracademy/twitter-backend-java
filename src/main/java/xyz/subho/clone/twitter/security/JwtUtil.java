@@ -58,10 +58,6 @@ public class JwtUtil {
     return Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(token).getPayload();
   }
 
-  private Boolean isTokenExpired(String token) {
-    return extractExpiration(token).before(new Date());
-  }
-
   public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
     return createToken(claims, userDetails.getUsername());
@@ -78,21 +74,24 @@ public class JwtUtil {
   }
 
   public Boolean validateToken(String token, UserDetails userDetails) {
-    try {
-      final String username = extractUsername(token);
-      return (username != null
-          && username.equals(userDetails.getUsername())
-          && !isTokenExpired(token));
-    } catch (JwtException | IllegalArgumentException exception) {
-      return false;
-    }
+    String username = validateAndExtractUsername(token);
+    return username != null && username.equals(userDetails.getUsername());
   }
 
   public boolean validateToken(String token) {
+    return validateAndExtractUsername(token) != null;
+  }
+
+  String validateAndExtractUsername(String token) {
     try {
-      return extractUsername(token) != null && !isTokenExpired(token);
+      Claims claims = extractAllClaims(token);
+      String username = claims.getSubject();
+      Date tokenExpiration = claims.getExpiration();
+      return username != null && tokenExpiration != null && !tokenExpiration.before(new Date())
+          ? username
+          : null;
     } catch (JwtException | IllegalArgumentException exception) {
-      return false;
+      return null;
     }
   }
 

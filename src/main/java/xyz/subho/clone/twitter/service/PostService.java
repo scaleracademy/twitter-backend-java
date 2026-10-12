@@ -20,7 +20,6 @@ package xyz.subho.clone.twitter.service;
 
 import java.util.UUID;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import xyz.subho.clone.twitter.model.PostModel;
@@ -29,7 +28,7 @@ public interface PostService {
 
   public @NonNull Page<PostModel> getAllPosts(@NonNull Pageable pageable);
 
-  public @Nullable PostModel getPost(@NonNull UUID postId);
+  public @NonNull PostModel getPost(@NonNull UUID postId);
 
   public @NonNull PostModel addPost(@NonNull PostModel postModel);
 

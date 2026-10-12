@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -79,7 +78,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional(readOnly = true)
-  public @Nullable PostModel getPost(@NonNull UUID postId) {
+  public @NonNull PostModel getPost(@NonNull UUID postId) {
 
     var post = postsRepository.findById(postId);
     if (post.isPresent()) return postMapper.toModel(post.get());
@@ -158,12 +157,6 @@ public class PostServiceImpl implements PostService {
       postsRepository.save(post);
     }
     return post.getLikeCount();
-  }
-
-  private Posts getPostEntity(@NonNull UUID postId) {
-    return postsRepository
-        .findById(postId)
-        .orElseThrow(() -> new ResourceNotFoundException("Post ID is Invalid"));
   }
 
   private Posts getPostEntityForUpdate(@NonNull UUID postId) {

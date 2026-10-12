@@ -41,4 +41,12 @@ public interface HashtagsRepository extends JpaRepository<Hashtags, UUID> {
   @Modifying(clearAutomatically = true, flushAutomatically = true)
   @Query("update Hashtags h set h.recentPostCount = h.recentPostCount + 1 where h.tag in :tags")
   int incrementRecentPostCount(@Param("tags") List<String> tags);
+
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Query(
+      "update Hashtags h set h.recentPostCount = case when h.recentPostCount > 0 "
+          + "then h.recentPostCount - 1 else 0 end "
+          + "where h.id in (select hp.hashtags.id from HashtagPosts hp "
+          + "where hp.posts.id = :postId)")
+  int decrementRecentPostCountForPost(@Param("postId") UUID postId);
 }

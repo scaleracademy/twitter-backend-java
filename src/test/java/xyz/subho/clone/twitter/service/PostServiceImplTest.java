@@ -36,6 +36,7 @@ import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.exception.ResourceNotFoundException;
 import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.repository.HashtagPostsRepository;
+import xyz.subho.clone.twitter.repository.HashtagsRepository;
 import xyz.subho.clone.twitter.repository.LikesRepository;
 import xyz.subho.clone.twitter.repository.PostsRepository;
 import xyz.subho.clone.twitter.repository.UsersRepository;
@@ -47,6 +48,7 @@ class PostServiceImplTest {
 
   @Mock private PostsRepository postsRepository;
   @Mock private HashtagPostsRepository hashtagPostsRepository;
+  @Mock private HashtagsRepository hashtagsRepository;
   @Mock private HashtagService hashtagService;
   @Mock private LikesRepository likesRepository;
   @Mock private UsersRepository usersRepository;
@@ -63,6 +65,7 @@ class PostServiceImplTest {
         new PostServiceImpl(
             postsRepository,
             hashtagPostsRepository,
+            hashtagsRepository,
             hashtagService,
             likesRepository,
             usersRepository,
@@ -103,6 +106,7 @@ class PostServiceImplTest {
     verify(postsRepository, never()).delete(post);
 
     assertThat(service.deletePost(postId, userId)).isTrue();
+    verify(hashtagsRepository).decrementRecentPostCountForPost(postId);
     verify(postsRepository).clearReferences(postId);
     verify(postsRepository).delete(post);
   }

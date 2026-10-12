@@ -34,6 +34,7 @@ import xyz.subho.clone.twitter.entity.Posts;
 import xyz.subho.clone.twitter.exception.ResourceNotFoundException;
 import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.repository.HashtagPostsRepository;
+import xyz.subho.clone.twitter.repository.HashtagsRepository;
 import xyz.subho.clone.twitter.repository.LikesRepository;
 import xyz.subho.clone.twitter.repository.PostsRepository;
 import xyz.subho.clone.twitter.repository.UsersRepository;
@@ -46,6 +47,7 @@ public class PostServiceImpl implements PostService {
 
   private final PostsRepository postsRepository;
   private final HashtagPostsRepository hashtagPostRepository;
+  private final HashtagsRepository hashtagsRepository;
   private final HashtagService hashtagService;
   private final LikesRepository likeRepository;
   private final UsersRepository usersRepository;
@@ -54,12 +56,14 @@ public class PostServiceImpl implements PostService {
   public PostServiceImpl(
       PostsRepository postsRepository,
       HashtagPostsRepository hashtagPostRepository,
+      HashtagsRepository hashtagsRepository,
       HashtagService hashtagService,
       LikesRepository likeRepository,
       UsersRepository usersRepository,
       PostMapper postMapper) {
     this.postsRepository = postsRepository;
     this.hashtagPostRepository = hashtagPostRepository;
+    this.hashtagsRepository = hashtagsRepository;
     this.hashtagService = hashtagService;
     this.likeRepository = likeRepository;
     this.usersRepository = usersRepository;
@@ -113,6 +117,7 @@ public class PostServiceImpl implements PostService {
     if (!post.getUsers().getId().equals(userId)) {
       throw new AccessDeniedException("You cannot delete another user's post");
     }
+    hashtagsRepository.decrementRecentPostCountForPost(postId);
     postsRepository.clearReferences(postId);
     postsRepository.delete(post);
     return true;

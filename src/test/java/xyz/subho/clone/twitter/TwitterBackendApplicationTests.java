@@ -18,14 +18,61 @@
 
 package xyz.subho.clone.twitter;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+import xyz.subho.clone.twitter.entity.HashtagPosts;
+import xyz.subho.clone.twitter.entity.Hashtags;
+import xyz.subho.clone.twitter.entity.Posts;
+import xyz.subho.clone.twitter.entity.Users;
+import xyz.subho.clone.twitter.repository.HashtagPostsRepository;
+import xyz.subho.clone.twitter.repository.HashtagsRepository;
+import xyz.subho.clone.twitter.repository.PostsRepository;
+import xyz.subho.clone.twitter.repository.UsersRepository;
 
 @SpringBootTest
 @ActiveProfiles("test")
 class TwitterBackendApplicationTests {
 
+  @Autowired private HashtagPostsRepository hashtagPostsRepository;
+  @Autowired private HashtagsRepository hashtagsRepository;
+  @Autowired private PostsRepository postsRepository;
+  @Autowired private UsersRepository usersRepository;
+
   @Test
   void contextLoads() {}
+
+  @Test
+  @Transactional
+  void deletingAPostCanDecrementItsPersistedHashtagCount() {
+    Users user = new Users();
+    user.setUsername("hashtag-test-user");
+    user.setName("Hashtag Test User");
+    user.setEmail("hashtag-test@example.com");
+    user.setPassword("hashed-password");
+    usersRepository.saveAndFlush(user);
+
+    Posts post = new Posts();
+    post.setText("post");
+    post.setUsers(user);
+    postsRepository.saveAndFlush(post);
+
+    Hashtags hashtag = new Hashtags();
+    hashtag.setTag("hashtag-test");
+    hashtag.setRecentPostCount(1);
+    hashtagsRepository.saveAndFlush(hashtag);
+
+    HashtagPosts join = new HashtagPosts();
+    join.setPosts(post);
+    join.setHashtags(hashtag);
+    hashtagPostsRepository.saveAndFlush(join);
+
+    assertThat(hashtagsRepository.decrementRecentPostCountForPost(post.getId())).isEqualTo(1);
+    assertThat(hashtagsRepository.findById(hashtag.getId()).orElseThrow().getRecentPostCount())
+        .isZero();
+  }
 }

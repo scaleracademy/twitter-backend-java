@@ -17,7 +17,7 @@ import jakarta.validation.constraints.Size;
 /** Fields that an authenticated user may change on their own profile. */
 public record UserUpdateRequest(
     @NotBlank @Size(max = 50) String name,
-    @NotBlank @Email String email,
+    @NotBlank @Email @Size(max = 255) String email,
     @Size(max = 240) String avatar,
     @Size(max = 240) String bio,
     @Size(min = 8, max = 72) String password) {}

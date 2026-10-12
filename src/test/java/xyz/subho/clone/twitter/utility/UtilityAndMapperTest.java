@@ -12,6 +12,7 @@ package xyz.subho.clone.twitter.utility;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.validation.Validation;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -89,5 +90,25 @@ class UtilityAndMapperTest {
     assertThat(user.getFollowerCount()).isZero();
     assertThat(user.getFollowingCount()).isZero();
     assertThat(user.getVerified()).isFalse();
+  }
+
+  @Test
+  void userEmailsAreBoundedToTheDatabaseColumnLength() {
+    var validator = Validation.buildDefaultValidatorFactory().getValidator();
+    var user =
+        new UserModel(
+            null,
+            "alice",
+            "Alice",
+            "password",
+            "a".repeat(245) + "@example.com",
+            null,
+            null,
+            null,
+            null,
+            null);
+
+    assertThat(validator.validate(user))
+        .anyMatch(violation -> violation.getPropertyPath().toString().equals("email"));
   }
 }

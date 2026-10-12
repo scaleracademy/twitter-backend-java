@@ -113,7 +113,7 @@ public class PostServiceImpl implements PostService {
   @Transactional
   public boolean deletePost(@NonNull UUID postId, @NonNull UUID userId) {
 
-    var post = getPostEntity(postId);
+    var post = getPostEntityForUpdate(postId);
     if (!post.getUsers().getId().equals(userId)) {
       throw new AccessDeniedException("You cannot delete another user's post");
     }

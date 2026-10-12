@@ -100,7 +100,7 @@ class PostServiceImplTest {
   @Test
   void deletePostRequiresOwnership() {
     Posts post = post(postId, userId);
-    when(postsRepository.findById(postId)).thenReturn(Optional.of(post));
+    when(postsRepository.findByIdForUpdate(postId)).thenReturn(Optional.of(post));
 
     assertThrows(AccessDeniedException.class, () -> service.deletePost(postId, otherUserId));
     verify(postsRepository, never()).delete(post);

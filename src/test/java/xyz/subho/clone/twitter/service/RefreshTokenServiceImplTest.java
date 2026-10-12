@@ -99,6 +99,15 @@ class RefreshTokenServiceImplTest {
   }
 
   @Test
+  void nonPositiveRefreshDurationFailsFast() {
+    ReflectionTestUtils.setField(service, "refreshTokenDurationMs", 0L);
+
+    assertThrows(
+        IllegalStateException.class,
+        () -> ReflectionTestUtils.invokeMethod(service, "validateConfiguration"));
+  }
+
+  @Test
   void logoutDelegatesToRepository() {
     Users user = user();
     when(usersRepository.getReferenceById(userId)).thenReturn(user);

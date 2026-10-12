@@ -11,6 +11,7 @@
 package xyz.subho.clone.twitter.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -79,6 +80,16 @@ class JwtSecurityTest {
             .compact();
 
     assertThat(jwtUtil.validateToken(token, user)).isFalse();
+  }
+
+  @Test
+  void weakJwtConfigurationFailsFast() {
+    JwtUtil jwtUtil = jwtUtil(60_000L);
+    ReflectionTestUtils.setField(jwtUtil, "secret", "too-short");
+
+    assertThatThrownBy(() -> jwtUtil.validateConfiguration())
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessage("jwt.secret must contain at least 32 UTF-8 bytes");
   }
 
   @Test

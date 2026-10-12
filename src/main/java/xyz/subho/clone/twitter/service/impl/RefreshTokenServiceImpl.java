@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.service.impl;
 
+import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -43,6 +44,13 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   private final RefreshTokenRepository refreshTokenRepository;
   private final UsersRepository usersRepository;
+
+  @PostConstruct
+  void validateConfiguration() {
+    if (refreshTokenDurationMs == null || refreshTokenDurationMs <= 0) {
+      throw new IllegalStateException("jwt.refreshExpiration must be positive");
+    }
+  }
 
   public RefreshTokenServiceImpl(
       RefreshTokenRepository refreshTokenRepository, UsersRepository usersRepository) {

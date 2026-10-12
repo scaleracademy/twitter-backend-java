@@ -41,7 +41,7 @@ public class RefreshToken extends Auditable {
   private UUID id;
 
   @OneToOne
-  @JoinColumn(name = "users_id", referencedColumnName = "id")
+  @JoinColumn(name = "users_id", referencedColumnName = "id", nullable = false)
   private Users users;
 
   @Column(nullable = false, unique = true)

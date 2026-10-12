@@ -22,6 +22,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,6 +41,16 @@ public class JwtUtil {
 
   @Value("${jwt.expiration}")
   private Long expiration;
+
+  @PostConstruct
+  void validateConfiguration() {
+    if (secret == null || secret.getBytes(StandardCharsets.UTF_8).length < 32) {
+      throw new IllegalStateException("jwt.secret must contain at least 32 UTF-8 bytes");
+    }
+    if (expiration == null || expiration <= 0) {
+      throw new IllegalStateException("jwt.expiration must be positive");
+    }
+  }
 
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);

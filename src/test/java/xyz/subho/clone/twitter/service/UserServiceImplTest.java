@@ -75,7 +75,7 @@ class UserServiceImplTest {
     UserUpdateRequest request =
         new UserUpdateRequest("Alice Updated", "alice@example.com", "avatar", "bio", "newpass");
     UserModel response = userModel(null);
-    when(usersRepository.findByUsername("alice")).thenReturn(entity);
+    when(usersRepository.findByUsernameForUpdate("alice")).thenReturn(entity);
     when(passwordEncoder.encode("newpass")).thenReturn("new-hash");
     when(usersRepository.save(entity)).thenReturn(entity);
     when(userMapper.toModel(entity)).thenReturn(response);
@@ -93,7 +93,7 @@ class UserServiceImplTest {
     entity.setPassword("old-hash");
     UserUpdateRequest request =
         new UserUpdateRequest("Alice", "alice@example.com", null, null, null);
-    when(usersRepository.findByUsername("alice")).thenReturn(entity);
+    when(usersRepository.findByUsernameForUpdate("alice")).thenReturn(entity);
     when(usersRepository.save(entity)).thenReturn(entity);
     when(userMapper.toModel(entity)).thenReturn(userModel(null));
 
@@ -107,7 +107,7 @@ class UserServiceImplTest {
   void editUserKeepsPasswordWhenItIsBlank() {
     Users entity = user("alice");
     entity.setPassword("old-hash");
-    when(usersRepository.findByUsername("alice")).thenReturn(entity);
+    when(usersRepository.findByUsernameForUpdate("alice")).thenReturn(entity);
     when(usersRepository.save(entity)).thenReturn(entity);
     when(userMapper.toModel(entity)).thenReturn(userModel(null));
 
@@ -119,7 +119,7 @@ class UserServiceImplTest {
 
   @Test
   void editUserRejectsUnknownUser() {
-    when(usersRepository.findByUsername("missing")).thenReturn(null);
+    when(usersRepository.findByUsernameForUpdate("missing")).thenReturn(null);
 
     assertThrows(
         ResourceNotFoundException.class,

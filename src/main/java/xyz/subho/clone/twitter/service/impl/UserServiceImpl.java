@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public @NonNull UserModel editUser(
       @NonNull String username, @NonNull UserUpdateRequest userUpdateRequest) {
-    Users users = usersRepository.findByUsername(username);
+    Users users = usersRepository.findByUsernameForUpdate(username);
     if (users == null) {
       throw new ResourceNotFoundException("User is Invalid");
     }

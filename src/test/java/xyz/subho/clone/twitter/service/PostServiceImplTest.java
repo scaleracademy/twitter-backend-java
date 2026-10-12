@@ -13,6 +13,7 @@ package xyz.subho.clone.twitter.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,6 +24,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
@@ -159,6 +161,29 @@ class PostServiceImplTest {
 
     assertThrows(ResourceNotFoundException.class, () -> service.addPost(request));
     verify(postMapper, never()).toEntity(request);
+  }
+
+  @Test
+  void referencedPostsAreLockedInUuidOrder() {
+    UUID lowerId = UUID.fromString("00000000-0000-0000-0000-000000000001");
+    UUID higherId = UUID.fromString("00000000-0000-0000-0000-000000000002");
+    PostModel request =
+        new PostModel(
+            null, "post", userId, List.of(), null, null, higherId, lowerId, null, List.of(),
+            List.of());
+    when(postsRepository.findByIdForUpdate(lowerId)).thenReturn(Optional.of(new Posts()));
+    when(postsRepository.findByIdForUpdate(higherId)).thenReturn(Optional.of(new Posts()));
+    Posts post = new Posts();
+    when(postMapper.toEntity(request)).thenReturn(post);
+    when(usersRepository.getReferenceById(userId)).thenReturn(user(userId));
+    when(postsRepository.save(post)).thenReturn(post);
+    when(hashtagService.getHashtagsByTags(List.of())).thenReturn(List.of());
+
+    service.addPost(request);
+
+    InOrder order = inOrder(postsRepository);
+    order.verify(postsRepository).findByIdForUpdate(lowerId);
+    order.verify(postsRepository).findByIdForUpdate(higherId);
   }
 
   @Test

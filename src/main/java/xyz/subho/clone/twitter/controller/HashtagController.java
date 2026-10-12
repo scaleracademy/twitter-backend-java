@@ -32,6 +32,7 @@ import xyz.subho.clone.twitter.constant.HashtagV1Constants;
 import xyz.subho.clone.twitter.model.HashtagModel;
 import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.service.HashtagService;
+import xyz.subho.clone.twitter.utility.Utility;
 
 @RestController
 @RequestMapping(HashtagV1Constants.BASE_PATH)
@@ -52,6 +53,7 @@ public class HashtagController {
               sort = {"recentPostCount", "id"},
               direction = Sort.Direction.DESC)
           Pageable pageable) {
+    Utility.validatePageable(pageable);
     return hashtagService.getHashtags(pageable);
   }
 
@@ -63,6 +65,7 @@ public class HashtagController {
               sort = {"createdAt", "id"},
               direction = Sort.Direction.DESC)
           Pageable pageable) {
+    Utility.validatePageable(pageable);
     return hashtagService.getPosts(tag, pageable);
   }
 }

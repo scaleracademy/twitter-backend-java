@@ -19,10 +19,21 @@
 package xyz.subho.clone.twitter.utility;
 
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import xyz.subho.clone.twitter.exception.BadRequestException;
 
 @Component
 public class Utility {
+
+  // shortcut: page-based pagination stops at 10,000 rows; replace with cursors for deeper feeds.
+  private static final long MAX_PAGE_OFFSET = 10_000L;
+
+  public static void validatePageable(Pageable pageable) {
+    if (pageable.getOffset() > MAX_PAGE_OFFSET) {
+      throw new BadRequestException("Page is too deep; use a smaller page number");
+    }
+  }
 
   /**
    * @param String uuid

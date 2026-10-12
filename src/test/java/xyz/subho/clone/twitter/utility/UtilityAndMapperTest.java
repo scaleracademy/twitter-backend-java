@@ -11,6 +11,7 @@
 package xyz.subho.clone.twitter.utility;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import jakarta.validation.Validation;
 import java.util.Date;
@@ -19,8 +20,10 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.PageRequest;
 import xyz.subho.clone.twitter.entity.Posts;
 import xyz.subho.clone.twitter.entity.Users;
+import xyz.subho.clone.twitter.exception.BadRequestException;
 import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.model.UserModel;
 
@@ -110,5 +113,12 @@ class UtilityAndMapperTest {
 
     assertThat(validator.validate(user))
         .anyMatch(violation -> violation.getPropertyPath().toString().equals("email"));
+  }
+
+  @Test
+  void deepPageOffsetsAreRejectedBeforeQueryExecution() {
+    assertThatThrownBy(() -> Utility.validatePageable(PageRequest.of(101, 100)))
+        .isInstanceOf(BadRequestException.class)
+        .hasMessage("Page is too deep; use a smaller page number");
   }
 }

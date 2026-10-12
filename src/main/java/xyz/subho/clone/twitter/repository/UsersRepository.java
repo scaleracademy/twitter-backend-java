@@ -32,6 +32,10 @@ public interface UsersRepository extends JpaRepository<Users, UUID> {
   public Users findByUsername(String username);
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
+  @Query("select u from Users u where u.username = :username")
+  Users findByUsernameForUpdate(@Param("username") String username);
+
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
   @Query("select u from Users u where u.id = :id")
   Optional<Users> findByIdForUpdate(@Param("id") UUID id);
 }

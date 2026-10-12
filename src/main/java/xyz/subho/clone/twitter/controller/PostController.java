@@ -41,6 +41,7 @@ import xyz.subho.clone.twitter.constant.PostV1Constants;
 import xyz.subho.clone.twitter.model.PostModel;
 import xyz.subho.clone.twitter.service.PostService;
 import xyz.subho.clone.twitter.service.UserService;
+import xyz.subho.clone.twitter.utility.Utility;
 
 @RestController
 @RequestMapping(PostV1Constants.BASE_PATH)
@@ -62,6 +63,7 @@ public class PostController {
               sort = {"createdAt", "id"},
               direction = Sort.Direction.DESC)
           Pageable pageable) {
+    Utility.validatePageable(pageable);
     Page<PostModel> posts = postService.getAllPosts(pageable);
     return new ResponseEntity<>(posts, HttpStatus.OK);
   }
@@ -142,6 +144,7 @@ public class PostController {
               sort = {"createdAt", "id"},
               direction = Sort.Direction.DESC)
           Pageable pageable) {
+    Utility.validatePageable(pageable);
     return new ResponseEntity<>(postService.getReplies(postId, pageable), HttpStatus.OK);
   }
 }

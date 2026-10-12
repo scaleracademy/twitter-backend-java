@@ -91,8 +91,7 @@ public class PostServiceImpl implements PostService {
   public @NonNull PostModel addPost(@NonNull PostModel postModel) {
 
     List<HashtagPosts> hashtagPosts = new ArrayList<>();
-    validateReferencedPost(postModel.originalPostId(), "Original post ID is invalid");
-    validateReferencedPost(postModel.replyToId(), "Reply post ID is invalid");
+    validateReferencedPosts(postModel.originalPostId(), postModel.replyToId());
     var post = postMapper.toEntity(postModel);
     post.setUsers(usersRepository.getReferenceById(postModel.userId()));
     var savedPost = postsRepository.save(post);
@@ -181,8 +180,21 @@ public class PostServiceImpl implements PostService {
     return repliesPage.map(postMapper::toModel);
   }
 
-  private void validateReferencedPost(UUID postId, String message) {
-    if (postId != null) {
+  private void validateReferencedPosts(UUID originalPostId, UUID replyToId) {
+    List<UUID> referencedPostIds = new ArrayList<>(2);
+    if (originalPostId != null) {
+      referencedPostIds.add(originalPostId);
+    }
+    if (replyToId != null) {
+      referencedPostIds.add(replyToId);
+    }
+    referencedPostIds.sort(UUID::compareTo);
+
+    for (UUID postId : referencedPostIds) {
+      String message =
+          postId.equals(originalPostId)
+              ? "Original post ID is invalid"
+              : "Reply post ID is invalid";
       postsRepository
           .findByIdForUpdate(postId)
           .orElseThrow(() -> new ResourceNotFoundException(message));

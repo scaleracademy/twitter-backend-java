@@ -109,6 +109,8 @@ class PostServiceImplTest {
 
     assertThat(service.deletePost(postId, userId)).isTrue();
     verify(hashtagsRepository).decrementRecentPostCountForPost(postId);
+    verify(hashtagPostsRepository).deleteByPosts(post);
+    verify(likesRepository).deleteByPosts(post);
     verify(postsRepository).clearReferences(postId);
     verify(postsRepository).delete(post);
   }

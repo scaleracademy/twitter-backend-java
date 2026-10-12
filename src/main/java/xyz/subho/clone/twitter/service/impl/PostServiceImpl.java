@@ -117,6 +117,8 @@ public class PostServiceImpl implements PostService {
       throw new AccessDeniedException("You cannot delete another user's post");
     }
     hashtagsRepository.decrementRecentPostCountForPost(postId);
+    hashtagPostRepository.deleteByPosts(post);
+    likeRepository.deleteByPosts(post);
     postsRepository.clearReferences(postId);
     postsRepository.delete(post);
     return true;

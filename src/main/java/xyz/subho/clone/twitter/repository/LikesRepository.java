@@ -20,6 +20,9 @@ package xyz.subho.clone.twitter.repository;
 
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import xyz.subho.clone.twitter.entity.Likes;
 import xyz.subho.clone.twitter.entity.Posts;
 import xyz.subho.clone.twitter.entity.Users;
@@ -29,4 +32,8 @@ public interface LikesRepository extends JpaRepository<Likes, UUID> {
   int deleteByPostsAndUsers(Posts posts, Users users);
 
   boolean existsByPostsAndUsers(Posts posts, Users users);
+
+  @Modifying
+  @Query("delete from Likes l where l.posts = :post")
+  int deleteByPosts(@Param("post") Posts post);
 }

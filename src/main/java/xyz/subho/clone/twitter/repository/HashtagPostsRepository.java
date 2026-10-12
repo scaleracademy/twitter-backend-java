@@ -22,10 +22,18 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import xyz.subho.clone.twitter.entity.HashtagPosts;
 import xyz.subho.clone.twitter.entity.Hashtags;
+import xyz.subho.clone.twitter.entity.Posts;
 
 public interface HashtagPostsRepository extends JpaRepository<HashtagPosts, UUID> {
 
   public Page<HashtagPosts> findByHashtags(Hashtags hashtag, Pageable pageable);
+
+  @Modifying
+  @Query("delete from HashtagPosts hp where hp.posts = :post")
+  int deleteByPosts(@Param("post") Posts post);
 }

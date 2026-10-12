@@ -34,7 +34,7 @@ public interface PostsRepository extends JpaRepository<Posts, UUID> {
 
   public Page<Posts> findByReplyToId(UUID replyToId, Pageable pageable);
 
-  @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Modifying(clearAutomatically = false, flushAutomatically = true)
   @Query(
       "update Posts p set p.replyToId = null, p.originalPostId = null "
           + "where p.replyToId = :postId or p.originalPostId = :postId")

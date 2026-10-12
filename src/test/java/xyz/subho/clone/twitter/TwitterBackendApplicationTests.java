@@ -20,6 +20,7 @@ package xyz.subho.clone.twitter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,12 +28,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.subho.clone.twitter.entity.HashtagPosts;
 import xyz.subho.clone.twitter.entity.Hashtags;
+import xyz.subho.clone.twitter.entity.Likes;
 import xyz.subho.clone.twitter.entity.Posts;
 import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.repository.HashtagPostsRepository;
 import xyz.subho.clone.twitter.repository.HashtagsRepository;
+import xyz.subho.clone.twitter.repository.LikesRepository;
 import xyz.subho.clone.twitter.repository.PostsRepository;
 import xyz.subho.clone.twitter.repository.UsersRepository;
+import xyz.subho.clone.twitter.service.PostService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -40,7 +44,9 @@ class TwitterBackendApplicationTests {
 
   @Autowired private HashtagPostsRepository hashtagPostsRepository;
   @Autowired private HashtagsRepository hashtagsRepository;
+  @Autowired private LikesRepository likesRepository;
   @Autowired private PostsRepository postsRepository;
+  @Autowired private PostService postService;
   @Autowired private UsersRepository usersRepository;
 
   @Test
@@ -74,5 +80,57 @@ class TwitterBackendApplicationTests {
     assertThat(hashtagsRepository.decrementRecentPostCountForPost(post.getId())).isEqualTo(1);
     assertThat(hashtagsRepository.findById(hashtag.getId()).orElseThrow().getRecentPostCount())
         .isZero();
+  }
+
+  @Test
+  @Transactional
+  void deletingAPostRemovesJoinsAndClearsReferences() {
+    Users owner = user("delete-owner", "delete-owner@example.com");
+    Users liker = user("delete-liker", "delete-liker@example.com");
+    usersRepository.saveAllAndFlush(List.of(owner, liker));
+
+    Posts post = new Posts();
+    post.setText("post");
+    post.setUsers(owner);
+    postsRepository.saveAndFlush(post);
+
+    Posts reply = new Posts();
+    reply.setText("reply");
+    reply.setUsers(liker);
+    reply.setReplyToId(post.getId());
+    postsRepository.saveAndFlush(reply);
+
+    Hashtags hashtag = new Hashtags();
+    hashtag.setTag("delete-test");
+    hashtag.setRecentPostCount(1);
+    hashtagsRepository.saveAndFlush(hashtag);
+
+    HashtagPosts join = new HashtagPosts();
+    join.setPosts(post);
+    join.setHashtags(hashtag);
+    hashtagPostsRepository.saveAndFlush(join);
+
+    Likes like = new Likes();
+    like.setPosts(post);
+    like.setUsers(liker);
+    likesRepository.saveAndFlush(like);
+
+    postService.deletePost(post.getId(), owner.getId());
+
+    assertThat(postsRepository.findById(post.getId())).isEmpty();
+    assertThat(hashtagPostsRepository.findById(join.getId())).isEmpty();
+    assertThat(likesRepository.findById(like.getId())).isEmpty();
+    assertThat(postsRepository.findById(reply.getId()).orElseThrow().getReplyToId()).isNull();
+    assertThat(hashtagsRepository.findById(hashtag.getId()).orElseThrow().getRecentPostCount())
+        .isZero();
+  }
+
+  private Users user(String username, String email) {
+    Users user = new Users();
+    user.setUsername(username);
+    user.setName(username);
+    user.setEmail(email);
+    user.setPassword("hashed-password");
+    return user;
   }
 }

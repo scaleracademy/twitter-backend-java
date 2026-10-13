@@ -63,7 +63,7 @@ public class PostController {
               sort = {"createdAt", "id"},
               direction = Sort.Direction.DESC)
           Pageable pageable) {
-    Utility.validatePageable(pageable);
+    Utility.validatePageable(pageable, "createdAt", "id");
     Page<PostModel> posts = postService.getAllPosts(pageable);
     return new ResponseEntity<>(posts, HttpStatus.OK);
   }
@@ -144,7 +144,7 @@ public class PostController {
               sort = {"createdAt", "id"},
               direction = Sort.Direction.DESC)
           Pageable pageable) {
-    Utility.validatePageable(pageable);
+    Utility.validatePageable(pageable, "createdAt", "id");
     return new ResponseEntity<>(postService.getReplies(postId, pageable), HttpStatus.OK);
   }
 }

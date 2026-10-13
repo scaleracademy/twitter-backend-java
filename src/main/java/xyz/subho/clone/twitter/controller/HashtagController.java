@@ -53,7 +53,7 @@ public class HashtagController {
               sort = {"recentPostCount", "id"},
               direction = Sort.Direction.DESC)
           Pageable pageable) {
-    Utility.validatePageable(pageable);
+    Utility.validatePageable(pageable, "recentPostCount", "id");
     return hashtagService.getHashtags(pageable);
   }
 
@@ -65,7 +65,7 @@ public class HashtagController {
               sort = {"createdAt", "id"},
               direction = Sort.Direction.DESC)
           Pageable pageable) {
-    Utility.validatePageable(pageable);
+    Utility.validatePageable(pageable, "createdAt", "id");
     return hashtagService.getPosts(tag, pageable);
   }
 }

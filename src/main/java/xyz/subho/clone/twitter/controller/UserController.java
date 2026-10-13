@@ -132,7 +132,7 @@ public class UserController {
               sort = {"createdAt", "id"},
               direction = Sort.Direction.DESC)
           Pageable pageable) {
-    Utility.validatePageable(pageable);
+    Utility.validatePageable(pageable, "createdAt", "id");
     return userService.getFollowers(userId, pageable);
   }
 
@@ -144,7 +144,7 @@ public class UserController {
               sort = {"createdAt", "id"},
               direction = Sort.Direction.DESC)
           Pageable pageable) {
-    Utility.validatePageable(pageable);
+    Utility.validatePageable(pageable, "createdAt", "id");
     return userService.getFollowings(userId, pageable);
   }
 }

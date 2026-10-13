@@ -21,6 +21,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import xyz.subho.clone.twitter.entity.Posts;
 import xyz.subho.clone.twitter.entity.Users;
 import xyz.subho.clone.twitter.exception.BadRequestException;
@@ -117,8 +118,18 @@ class UtilityAndMapperTest {
 
   @Test
   void deepPageOffsetsAreRejectedBeforeQueryExecution() {
-    assertThatThrownBy(() -> Utility.validatePageable(PageRequest.of(101, 100)))
+    assertThatThrownBy(() -> Utility.validatePageable(PageRequest.of(101, 100), "createdAt", "id"))
         .isInstanceOf(BadRequestException.class)
         .hasMessage("Page is too deep; use a smaller page number");
+  }
+
+  @Test
+  void unsupportedSortPropertiesAreRejectedBeforeQueryExecution() {
+    assertThatThrownBy(
+            () ->
+                Utility.validatePageable(
+                    PageRequest.of(0, 20, Sort.by("password")), "createdAt", "id"))
+        .isInstanceOf(BadRequestException.class)
+        .hasMessage("Unsupported sort property: password");
   }
 }

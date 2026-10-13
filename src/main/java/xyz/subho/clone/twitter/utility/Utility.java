@@ -18,6 +18,7 @@
 
 package xyz.subho.clone.twitter.utility;
 
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -29,10 +30,19 @@ public class Utility {
   // shortcut: page-based pagination stops at 10,000 rows; replace with cursors for deeper feeds.
   private static final long MAX_PAGE_OFFSET = 10_000L;
 
-  public static void validatePageable(Pageable pageable) {
+  public static void validatePageable(Pageable pageable, String... allowedSortProperties) {
     if (pageable.getOffset() > MAX_PAGE_OFFSET) {
       throw new BadRequestException("Page is too deep; use a smaller page number");
     }
+    Set<String> allowedProperties = Set.of(allowedSortProperties);
+    pageable
+        .getSort()
+        .forEach(
+            order -> {
+              if (!allowedProperties.contains(order.getProperty())) {
+                throw new BadRequestException("Unsupported sort property: " + order.getProperty());
+              }
+            });
   }
 
   /**

@@ -19,7 +19,6 @@
 package xyz.subho.clone.twitter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -86,11 +85,11 @@ public class Posts extends Auditable {
 
   @ElementCollection private Map<String, Date> mentions = new HashMap<>();
 
-  @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY)
   @JsonIgnore
   private List<HashtagPosts> postHashtags = new ArrayList<>();
 
-  @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY)
   @JsonIgnore
   private List<Likes> postLikes = new ArrayList<>();
 

@@ -108,7 +108,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   @Override
   @Transactional
   public int deleteByUserId(@NonNull UUID userId) {
-    return refreshTokenRepository.deleteByUsers(usersRepository.getReferenceById(userId));
+    var user = usersRepository.findByIdForUpdate(userId).orElse(null);
+    return user == null ? 0 : refreshTokenRepository.deleteByUsers(user);
   }
 
   private String hashToken(String token) {

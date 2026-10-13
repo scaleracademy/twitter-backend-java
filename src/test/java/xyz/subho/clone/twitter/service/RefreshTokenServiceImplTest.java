@@ -111,7 +111,7 @@ class RefreshTokenServiceImplTest {
   @Test
   void logoutDelegatesToRepository() {
     Users user = user();
-    when(usersRepository.getReferenceById(userId)).thenReturn(user);
+    when(usersRepository.findByIdForUpdate(userId)).thenReturn(Optional.of(user));
     when(refreshTokenRepository.deleteByUsers(user)).thenReturn(1);
 
     assertThat(service.deleteByUserId(userId)).isEqualTo(1);

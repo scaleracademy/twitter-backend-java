@@ -13,6 +13,7 @@ package xyz.subho.clone.twitter.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -68,7 +69,7 @@ class RefreshTokenServiceImplTest {
   @Test
   void expiredTokensAreDeletedAndRejected() {
     RefreshToken token = token(Instant.now().minusSeconds(1));
-    when(refreshTokenRepository.findByTokenForUpdate(any(), any())).thenReturn(Optional.of(token));
+    when(refreshTokenRepository.findByTokenForUpdate(any())).thenReturn(Optional.of(token));
 
     assertThrows(BadRequestException.class, () -> service.rotateRefreshToken("old"));
     verify(refreshTokenRepository).delete(token);
@@ -79,8 +80,7 @@ class RefreshTokenServiceImplTest {
     Users user = user();
     RefreshToken current = token(Instant.now().plusSeconds(60));
     current.setUsers(user);
-    when(refreshTokenRepository.findByTokenForUpdate(any(), any()))
-        .thenReturn(Optional.of(current));
+    when(refreshTokenRepository.findByTokenForUpdate(any())).thenReturn(Optional.of(current));
     when(usersRepository.findByIdForUpdate(userId)).thenReturn(Optional.of(user));
     when(refreshTokenRepository.save(any(RefreshToken.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
@@ -94,9 +94,18 @@ class RefreshTokenServiceImplTest {
 
   @Test
   void unknownTokensAreRejected() {
-    when(refreshTokenRepository.findByTokenForUpdate(any(), any())).thenReturn(Optional.empty());
+    when(refreshTokenRepository.findByTokenForUpdate(any())).thenReturn(Optional.empty());
 
     assertThrows(BadRequestException.class, () -> service.rotateRefreshToken("missing"));
+  }
+
+  @Test
+  void rotationLooksUpOnlyTheHashOfThePresentedToken() {
+    when(refreshTokenRepository.findByTokenForUpdate(any())).thenReturn(Optional.empty());
+
+    assertThrows(BadRequestException.class, () -> service.rotateRefreshToken("presented"));
+
+    verify(refreshTokenRepository).findByTokenForUpdate(argThat(value -> value.length() == 64));
   }
 
   @Test

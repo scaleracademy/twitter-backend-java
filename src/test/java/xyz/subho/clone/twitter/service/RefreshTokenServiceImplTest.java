@@ -68,8 +68,9 @@ class RefreshTokenServiceImplTest {
   @Test
   void expiredTokensAreDeletedAndRejected() {
     RefreshToken token = token(Instant.now().minusSeconds(1));
+    when(refreshTokenRepository.findByTokenForUpdate(any(), any())).thenReturn(Optional.of(token));
 
-    assertThrows(BadRequestException.class, () -> service.verifyExpiration(token));
+    assertThrows(BadRequestException.class, () -> service.rotateRefreshToken("old"));
     verify(refreshTokenRepository).delete(token);
   }
 

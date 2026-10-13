@@ -26,8 +26,6 @@ public interface RefreshTokenService {
 
   public RefreshToken createRefreshToken(@NonNull UUID userId);
 
-  public RefreshToken verifyExpiration(@NonNull RefreshToken token);
-
   public RefreshToken rotateRefreshToken(@NonNull String token);
 
   public int deleteByUserId(@NonNull UUID userId);

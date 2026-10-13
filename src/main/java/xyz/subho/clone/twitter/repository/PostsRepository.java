@@ -36,7 +36,8 @@ public interface PostsRepository extends JpaRepository<Posts, UUID> {
 
   @Modifying(clearAutomatically = false, flushAutomatically = true)
   @Query(
-      "update Posts p set p.replyToId = null, p.originalPostId = null "
+      "update Posts p set p.replyToId = case when p.replyToId = :postId then null else p.replyToId end, "
+          + "p.originalPostId = case when p.originalPostId = :postId then null else p.originalPostId end "
           + "where p.replyToId = :postId or p.originalPostId = :postId")
   int clearReferences(@Param("postId") UUID postId);
 

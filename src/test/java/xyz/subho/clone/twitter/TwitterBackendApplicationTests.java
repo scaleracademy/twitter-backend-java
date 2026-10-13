@@ -94,10 +94,16 @@ class TwitterBackendApplicationTests {
     post.setUsers(owner);
     postsRepository.saveAndFlush(post);
 
+    Posts originalPost = new Posts();
+    originalPost.setText("original");
+    originalPost.setUsers(owner);
+    postsRepository.saveAndFlush(originalPost);
+
     Posts reply = new Posts();
     reply.setText("reply");
     reply.setUsers(liker);
     reply.setReplyToId(post.getId());
+    reply.setOriginalPostId(originalPost.getId());
     postsRepository.saveAndFlush(reply);
 
     Hashtags hashtag = new Hashtags();
@@ -121,6 +127,8 @@ class TwitterBackendApplicationTests {
     assertThat(hashtagPostsRepository.findById(join.getId())).isEmpty();
     assertThat(likesRepository.findById(like.getId())).isEmpty();
     assertThat(postsRepository.findById(reply.getId()).orElseThrow().getReplyToId()).isNull();
+    assertThat(postsRepository.findById(reply.getId()).orElseThrow().getOriginalPostId())
+        .isEqualTo(originalPost.getId());
     assertThat(hashtagsRepository.findById(hashtag.getId()).orElseThrow().getRecentPostCount())
         .isZero();
   }

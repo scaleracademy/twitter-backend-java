@@ -34,6 +34,7 @@ import xyz.subho.clone.twitter.model.UserModel;
 import xyz.subho.clone.twitter.model.UserUpdateRequest;
 import xyz.subho.clone.twitter.repository.FollowRepository;
 import xyz.subho.clone.twitter.repository.UsersRepository;
+import xyz.subho.clone.twitter.service.RefreshTokenService;
 import xyz.subho.clone.twitter.service.UserService;
 import xyz.subho.clone.twitter.utility.UserMapper;
 
@@ -44,16 +45,19 @@ public class UserServiceImpl implements UserService {
   private final FollowRepository followRepository;
   private final PasswordEncoder passwordEncoder;
   private final UserMapper userMapper;
+  private final RefreshTokenService refreshTokenService;
 
   public UserServiceImpl(
       UsersRepository usersRepository,
       FollowRepository followRepository,
       PasswordEncoder passwordEncoder,
-      UserMapper userMapper) {
+      UserMapper userMapper,
+      RefreshTokenService refreshTokenService) {
     this.usersRepository = usersRepository;
     this.followRepository = followRepository;
     this.passwordEncoder = passwordEncoder;
     this.userMapper = userMapper;
+    this.refreshTokenService = refreshTokenService;
   }
 
   @Override
@@ -89,6 +93,7 @@ public class UserServiceImpl implements UserService {
     users.setBio(userUpdateRequest.bio());
     if (userUpdateRequest.password() != null && !userUpdateRequest.password().isBlank()) {
       users.setPassword(passwordEncoder.encode(userUpdateRequest.password()));
+      refreshTokenService.deleteByUserId(users.getId());
     }
     return userMapper.toModel(usersRepository.save(users));
   }

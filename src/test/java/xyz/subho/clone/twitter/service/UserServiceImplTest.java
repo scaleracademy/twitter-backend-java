@@ -46,6 +46,7 @@ class UserServiceImplTest {
   @Mock private FollowRepository followRepository;
   @Mock private PasswordEncoder passwordEncoder;
   @Mock private UserMapper userMapper;
+  @Mock private RefreshTokenService refreshTokenService;
 
   private UserServiceImpl service;
   private final UUID userId = UUID.randomUUID();
@@ -53,7 +54,9 @@ class UserServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    service = new UserServiceImpl(usersRepository, followRepository, passwordEncoder, userMapper);
+    service =
+        new UserServiceImpl(
+            usersRepository, followRepository, passwordEncoder, userMapper, refreshTokenService);
   }
 
   @Test
@@ -72,6 +75,7 @@ class UserServiceImplTest {
   @Test
   void editUserChangesOnlyOwnProfileFieldsAndHashesOptionalPassword() {
     Users entity = user("alice");
+    entity.setId(userId);
     UserUpdateRequest request =
         new UserUpdateRequest("Alice Updated", "alice@example.com", "avatar", "bio", "newpass");
     UserModel response = userModel(null);
@@ -83,6 +87,7 @@ class UserServiceImplTest {
     assertThat(service.editUser("alice", request)).isEqualTo(response);
     assertThat(entity.getUsername()).isEqualTo("alice");
     assertThat(entity.getPassword()).isEqualTo("new-hash");
+    verify(refreshTokenService).deleteByUserId(entity.getId());
     assertThat(entity.getFollowerCount()).isZero();
     assertThat(entity.getVerified()).isFalse();
   }
